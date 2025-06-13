@@ -1,0 +1,11 @@
+model_parameter,source_parameter,in_qsp_file,value,unit,description
+PK_CL,CL_Gantenerumab,Yes,0.0293929,"L / h","GantenerumabCL Based on fit, assuming 100% bioavailability, to digitised data from "
+PK_CLd2,CLd2_Gantenerumab,Yes,0.0,"L / h","Gantenerumab CLD2.  Set to zeo as 2nd compartment not required. Based on fit, assuming 100% bioavailability, "
+PK_Vcent,Vcent_Gantenerumab,Yes,19.6858,"L","Gantenerumab pk model central compartment volume "
+PK_Vper,Vper_Gantenerumab,Yes,1.0,"L","Gantenerumab pk model peripheral compartment volume.  "
+PK_SC_ka,SC_ka_Gantenerumab,Yes,0.0134807,"1 / h","absorption rate for Gantenerumab. "
+PK_SC_bio,SC_bio_Gantenerumab,Yes,1.0,"DIMENSIONLESS","Sub cut bioavailability for Gantenerumab "
+fta0,Gant_fta0 (alt: taffa0_Gantenerumab),Yes (alternative),1270.0,"nano * mol * h / L","affinity of Gantenerumab for monomers.   "
+fta1,Gant_fta1 (alt: taffa1_Gantenerumab),Yes (alternative),1270.0,"nano * mol * h / L","affinity of Gantenerumab for oligomers"
+fta2,Gant_fta2 (alt: taffa2_Gantenerumab),Yes (alternative),1270.0,"nano * mol * h / L","affinity of Gantenerumab for protofibrils "
+fta3,Gant_fta3 (alt: taffa3_Gantenerumab),Yes (alternative),1270.0,"nano * mol * h / L","affinity of Gantenerumab for plaque  "

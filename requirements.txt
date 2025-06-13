@@ -1,0 +1,7 @@
+libsbml
+pandas
+jax==0.5.3
+diffrax==0.7.0
+matplotlib
+numpy
+sbml-to-ode-jax 

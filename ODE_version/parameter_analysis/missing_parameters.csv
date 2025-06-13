@@ -1,0 +1,36 @@
+name,equations_used_in,replacement
+Baseline_hazard3,Surivial_probability_complex1,
+EC50,Surivial_probability_complex1,
+Hill,Surivial_probability_complex1,
+K_F17_Plaque_forty,"AB40_Fibril17, AB40_Monomer, AB40_Plaque_unbound",Baseline_AB40_Oligomer_Fibril_Plaque
+K_F17_Plaque_fortytwo,"AB42_Fibril17, AB42_Monomer, AB42_Plaque_unbound",Baseline_AB42_Oligomer_Fibril_Plaque
+K_F18_Plaque_forty,"AB40_Fibril18, AB40_Monomer, AB40_Plaque_unbound",Baseline_AB40_Oligomer_Fibril_Plaque
+K_F18_Plaque_fortytwo,"AB42_Fibril18, AB42_Monomer, AB42_Plaque_unbound",Baseline_AB42_Oligomer_Fibril_Plaque
+K_O13_Plaque_forty,"AB40_Monomer, AB40_Oligomer13, AB40_Plaque_unbound",Baseline_AB40_Oligomer_Fibril_Plaque
+K_O13_Plaque_fortytwo,"AB42_Monomer, AB42_Oligomer13, AB42_Plaque_unbound",Baseline_AB42_Oligomer_Fibril_Plaque
+K_O14_Plaque_forty,"AB40_Monomer, AB40_Oligomer14, AB40_Plaque_unbound",Baseline_AB40_Oligomer_Fibril_Plaque
+K_O14_Plaque_fortytwo,"AB42_Monomer, AB42_Oligomer14, AB42_Plaque_unbound",Baseline_AB42_Oligomer_Fibril_Plaque
+K_O15_Plaque_forty,"AB40_Monomer, AB40_Oligomer15, AB40_Plaque_unbound",Baseline_AB40_Oligomer_Fibril_Plaque
+K_O15_Plaque_fortytwo,"AB42_Monomer, AB42_Oligomer15, AB42_Plaque_unbound",Baseline_AB42_Oligomer_Fibril_Plaque
+K_O16_Plaque_forty,"AB40_Monomer, AB40_Oligomer16, AB40_Plaque_unbound",Baseline_AB40_Oligomer_Fibril_Plaque
+K_O16_Plaque_fortytwo,"AB42_Monomer, AB42_Oligomer16, AB42_Plaque_unbound",Baseline_AB42_Oligomer_Fibril_Plaque
+Microglia_cells_max,Microglia_cell_count,Microglia_cells_max_nonAPOE4 = Microglia_cells_max_APOE4 = 4
+PS_Ab_ISF_PVS,"Antibody_unbound_ISF, C_Antibody_unbound_PVS",min_PS = 0
+Plasma_Leucine,APP,NA so using 1
+Qbrain_CSF,"PK_Brain_Plasma, PK_central_compartment, PK_CSF_CM, PK_CSF_LV, PK_CSF_SAS, PK_CSF_TFV",Qbrain_CSF_ABMu40 = Qbrain_CSF_ABMu42 = 0.24
+Unit_removal_1,"AB40_Monomer, AB42_Monomer",NA so using 1
+beta_complex3,Surivial_probability_complex1,beta_complex
+k_F24_O12_forty,"AB40_Fibril24, AB40_Oligomer12",Baseline_AB40_Oligomer_Fibril_splitting
+k_F24_O12_fortytwo,"AB42_Fibril24, AB42_Oligomer12",Baseline_AB42_Oligomer_Fibril_splitting
+k_M_O2_forty,"AB40_Monomer, AB40_Oligomer02",monToDiA
+k_M_O2_fortytwo,"AB42_Monomer, AB42_Oligomer02",monToDiB
+k_O2_M_forty,"AB40_Monomer, AB40_Oligomer02",Garai 2013 rate
+k_O2_M_fortytwo,"AB42_Monomer, AB42_Oligomer02",Garai 2013 rate
+k_O2_O3_forty,"AB40_Monomer, AB40_Oligomer02, AB40_Oligomer03",diToTriA
+k_O2_O3_fortytwo,"AB42_Monomer, AB42_Oligomer02, AB42_Oligomer03",diToTriB
+k_O3_O2_forty,"AB40_Monomer, AB40_Oligomer02, AB40_Oligomer03",Garai 2013 rate
+k_O3_O2_fortytwo,"AB42_Monomer, AB42_Oligomer02, AB42_Oligomer03",Garai 2013 rate
+kdeg,"AB40Mb_Blood_Brain_Barrier_unbound, AB40Mb_Blood_CSF_Barrier_unbound, AB42Mb_Blood_Brain_Barrier_unbound, AB42Mb_Blood_CSF_Barrier_unbound, PK_Blood_Brain_Barrier_unbound, PK_Blood_CSF_Barrier_unbound",kdeg_AB40Mu = kdeg_AB42Mu = 26.6 
+plaque_bound,"Surivial_probability_complex1, Surivial_probability_complex",
+vol_brain_ISF,All AB species ,Vol_brain_interstitial = 0.02505
+zzzTime_of_first_dose,"Surivial_probability_complex1, Surivial_probability_complex",

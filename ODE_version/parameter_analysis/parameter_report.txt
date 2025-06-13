@@ -1,0 +1,164 @@
+
+===============================================================
+Comprehensive Parameter Analysis Report for Gant
+===============================================================
+
+This report provides an overview of all parameters in the PBPK/QSP model:
+1. Parameters used in the model and present in the QSP parameter file
+2. Parameters used but missing from the QSP parameter file
+3. Parameters that are handled by special aggregation rate extrapolation
+4. Parameters in the QSP file but not used in the model
+
+
+1. MISSING PARAMETERS: 45
+   These parameters are used in ODEs but missing from the QSP parameter file
+
+   1.1 Parameters with replacements: 12
+       K_F17_Plaque_forty - Used in: AB40_Fibril17, AB40_Monomer, AB40_Plaque_unbound - Replaced by: Baseline_AB40_Oligomer_Fibril_Plaque
+       K_F17_Plaque_fortytwo - Used in: AB42_Fibril17, AB42_Monomer, AB42_Plaque_unbound - Replaced by: Baseline_AB42_Oligomer_Fibril_Plaque
+       K_F18_Plaque_forty - Used in: AB40_Fibril18, AB40_Monomer, AB40_Plaque_unbound - Replaced by: Baseline_AB40_Oligomer_Fibril_Plaque
+       K_F18_Plaque_fortytwo - Used in: AB42_Fibril18, AB42_Monomer, AB42_Plaque_unbound - Replaced by: Baseline_AB42_Oligomer_Fibril_Plaque
+       K_O13_Plaque_forty - Used in: AB40_Monomer, AB40_Oligomer13, AB40_Plaque_unbound - Replaced by: Baseline_AB40_Oligomer_Fibril_Plaque
+       K_O13_Plaque_fortytwo - Used in: AB42_Monomer, AB42_Oligomer13, AB42_Plaque_unbound - Replaced by: Baseline_AB42_Oligomer_Fibril_Plaque
+       K_O14_Plaque_forty - Used in: AB40_Monomer, AB40_Oligomer14, AB40_Plaque_unbound - Replaced by: Baseline_AB40_Oligomer_Fibril_Plaque
+       K_O14_Plaque_fortytwo - Used in: AB42_Monomer, AB42_Oligomer14, AB42_Plaque_unbound - Replaced by: Baseline_AB42_Oligomer_Fibril_Plaque
+       K_O15_Plaque_forty - Used in: AB40_Monomer, AB40_Oligomer15, AB40_Plaque_unbound - Replaced by: Baseline_AB40_Oligomer_Fibril_Plaque
+       K_O15_Plaque_fortytwo - Used in: AB42_Monomer, AB42_Oligomer15, AB42_Plaque_unbound - Replaced by: Baseline_AB42_Oligomer_Fibril_Plaque
+       K_O16_Plaque_forty - Used in: AB40_Monomer, AB40_Oligomer16, AB40_Plaque_unbound - Replaced by: Baseline_AB40_Oligomer_Fibril_Plaque
+       K_O16_Plaque_fortytwo - Used in: AB42_Monomer, AB42_Oligomer16, AB42_Plaque_unbound - Replaced by: Baseline_AB42_Oligomer_Fibril_Plaque
+
+   1.2 Parameters without replacements: 33
+       Baseline_hazard3 - Used in: Surivial_probability_complex1
+       EC50 - Used in: Surivial_probability_complex1
+       Hill - Used in: Surivial_probability_complex1
+       Microglia_cells_max - Used in: Microglia_cell_count
+       PK_CL - Used in: AB40Mb_central_compartment, AB42Mb_central_compartment, PK_central_compartment
+       PK_CLd2 - Used in: AB40Mb_central_compartment, AB40Mb_peripheral_compartment, AB42Mb_central_compartment, AB42Mb_peripheral_compartment, PK_central_compartment, PK_peripheral_compartment
+       PK_SC_bio - Used in: PK_central_compartment, SubCut_absorption_compartment
+       PK_SC_ka - Used in: PK_central_compartment, SubCut_absorption_compartment
+       PK_Vcent - Used in: AB40Mb_Brain_Plasma, AB40Mb_central_compartment, AB40Mb_peripheral_compartment, AB40Mu_central_compartment, AB42Mb_Brain_Plasma, AB42Mb_central_compartment, AB42Mb_peripheral_compartment, AB42Mu_central_compartment, PK_Brain_Plasma, PK_central_compartment, PK_peripheral_compartment
+       PK_Vper - Used in: AB40Mb_central_compartment, AB40Mb_peripheral_compartment, AB42Mb_central_compartment, AB42Mb_peripheral_compartment, PK_central_compartment, PK_peripheral_compartment
+       PS_Ab_ISF_PVS - Used in: Antibody_unbound_ISF, C_Antibody_unbound_PVS
+       Plasma_Leucine - Used in: APP
+       Qbrain_CSF - Used in: PK_Brain_Plasma, PK_central_compartment, PK_CSF_CM, PK_CSF_LV, PK_CSF_SAS, PK_CSF_TFV
+       Unit_removal_1 - Used in: AB40_Monomer, AB42_Monomer
+       beta_complex3 - Used in: Surivial_probability_complex1
+       fta0 - Used in: AB40_monomer_Antibody_bound, AB40_Monomer_PVS_bound, AB40_Monomer_PVS, AB40_Monomer, AB40Mb_Blood_Brain_Barrier_unbound, AB40Mb_Blood_CSF_Barrier_unbound, AB40Mb_Brain_Plasma, AB40Mb_central_compartment, AB40Mb_CSF_CM, AB40Mb_CSF_LV, AB40Mb_CSF_SAS, AB40Mb_CSF_TFV, AB40Mu_Blood_Brain_Barrier, AB40Mu_Blood_CSF_Barrier, AB40Mu_Brain_Plasma, AB40Mu_central_compartment, AB40Mu_CSF_CM, AB40Mu_CSF_LV, AB40Mu_CSF_SAS, AB40Mu_CSF_TFV, AB42_monomer_Antibody_bound, AB42_Monomer_PVS_bound, AB42_Monomer_PVS, AB42_Monomer, AB42Mb_Blood_Brain_Barrier_unbound, AB42Mb_Blood_CSF_Barrier_unbound, AB42Mb_Brain_Plasma, AB42Mb_central_compartment, AB42Mb_CSF_CM, AB42Mb_CSF_LV, AB42Mb_CSF_SAS, AB42Mb_CSF_TFV, AB42Mu_Blood_Brain_Barrier, AB42Mu_Blood_CSF_Barrier, AB42Mu_Brain_Plasma, AB42Mu_central_compartment, AB42Mu_CSF_CM, AB42Mu_CSF_LV, AB42Mu_CSF_SAS, AB42Mu_CSF_TFV, Antibody_unbound_ISF, C_Antibody_unbound_PVS, PK_Blood_Brain_Barrier_unbound, PK_Blood_CSF_Barrier_unbound, PK_Brain_Plasma, PK_central_compartment, PK_CSF_CM, PK_CSF_LV, PK_CSF_SAS, PK_CSF_TFV
+       fta1 - Used in: AB40_Fibril17_Antibody_bound, AB40_Fibril17, AB40_Oligomer02_Antibody_bound, AB40_Oligomer2_PVS_bound, AB40_Oligomer2_PVS, AB40_Oligomer02, AB40_Oligomer03_Antibody_bound, AB40_Oligomer3_PVS_bound, AB40_Oligomer3_PVS, AB40_Oligomer03, AB40_Oligomer04_Antibody_bound, AB40_Oligomer4_PVS_bound, AB40_Oligomer4_PVS, AB40_Oligomer04, AB40_Oligomer05_Antibody_bound, AB40_Oligomer5_PVS_bound, AB40_Oligomer5_PVS, AB40_Oligomer05, AB40_Oligomer06_Antibody_bound, AB40_Oligomer6_PVS_bound, AB40_Oligomer6_PVS, AB40_Oligomer06, AB40_Oligomer07_Antibody_bound, AB40_Oligomer7_PVS_bound, AB40_Oligomer7_PVS, AB40_Oligomer07, AB40_Oligomer08_Antibody_bound, AB40_Oligomer8_PVS_bound, AB40_Oligomer8_PVS, AB40_Oligomer08, AB40_Oligomer09_Antibody_bound, AB40_Oligomer9_PVS_bound, AB40_Oligomer9_PVS, AB40_Oligomer09, AB40_Oligomer10_Antibody_bound, AB40_Oligomer10_PVS_bound, AB40_Oligomer10_PVS, AB40_Oligomer10, AB40_Oligomer11_Antibody_bound, AB40_Oligomer11_PVS_bound, AB40_Oligomer11_PVS, AB40_Oligomer11, AB40_Oligomer12_Antibody_bound, AB40_Oligomer12_PVS_bound, AB40_Oligomer12_PVS, AB40_Oligomer12, AB40_Oligomer13_Antibody_bound, AB40_Oligomer13_PVS_bound, AB40_Oligomer13_PVS, AB40_Oligomer13, AB40_Oligomer14_Antibody_bound, AB40_Oligomer14_PVS_bound, AB40_Oligomer14_PVS, AB40_Oligomer14, AB40_Oligomer15_Antibody_bound, AB40_Oligomer15_PVS_bound, AB40_Oligomer15_PVS, AB40_Oligomer15, AB40_Oligomer16_Antibody_bound, AB40_Oligomer16_PVS_bound, AB40_Oligomer16_PVS, AB40_Oligomer16, AB42_Fibril17_Antibody_bound, AB42_Fibril17, AB42_Oligomer02_Antibody_bound, AB42_Oligomer2_PVS_bound, AB42_Oligomer2_PVS, AB42_Oligomer02, AB42_Oligomer03_Antibody_bound, AB42_Oligomer3_PVS_bound, AB42_Oligomer3_PVS, AB42_Oligomer03, AB42_Oligomer04_Antibody_bound, AB42_Oligomer4_PVS_bound, AB42_Oligomer4_PVS, AB42_Oligomer04, AB42_Oligomer05_Antibody_bound, AB42_Oligomer5_PVS_bound, AB42_Oligomer5_PVS, AB42_Oligomer05, AB42_Oligomer06_Antibody_bound, AB42_Oligomer6_PVS_bound, AB42_Oligomer6_PVS, AB42_Oligomer06, AB42_Oligomer07_Antibody_bound, AB42_Oligomer7_PVS_bound, AB42_Oligomer7_PVS, AB42_Oligomer07, AB42_Oligomer08_Antibody_bound, AB42_Oligomer8_PVS_bound, AB42_Oligomer8_PVS, AB42_Oligomer08, AB42_Oligomer09_Antibody_bound, AB42_Oligomer9_PVS_bound, AB42_Oligomer9_PVS, AB42_Oligomer09, AB42_Oligomer10_Antibody_bound, AB42_Oligomer10_PVS_bound, AB42_Oligomer10_PVS, AB42_Oligomer10, AB42_Oligomer11_Antibody_bound, AB42_Oligomer11_PVS_bound, AB42_Oligomer11_PVS, AB42_Oligomer11, AB42_Oligomer12_Antibody_bound, AB42_Oligomer12_PVS_bound, AB42_Oligomer12_PVS, AB42_Oligomer12, AB42_Oligomer13_Antibody_bound, AB42_Oligomer13_PVS_bound, AB42_Oligomer13_PVS, AB42_Oligomer13, AB42_Oligomer14_Antibody_bound, AB42_Oligomer14_PVS_bound, AB42_Oligomer14_PVS, AB42_Oligomer14, AB42_Oligomer15_Antibody_bound, AB42_Oligomer15_PVS_bound, AB42_Oligomer15_PVS, AB42_Oligomer15, AB42_Oligomer16_Antibody_bound, AB42_Oligomer16_PVS_bound, AB42_Oligomer16_PVS, AB42_Oligomer16, Antibody_unbound_ISF, C_Antibody_unbound_PVS
+       fta2 - Used in: AB40_Fibril17_PVS_bound, AB40_Fibril17_PVS, AB40_Fibril18_Antibody_bound, AB40_Fibril18_PVS_bound, AB40_Fibril18_PVS, AB40_Fibril18, AB40_Fibril19_Antibody_bound, AB40_Fibril19_PVS_bound, AB40_Fibril19_PVS, AB40_Fibril19, AB40_Fibril20_Antibody_bound, AB40_Fibril20_PVS_bound, AB40_Fibril20_PVS, AB40_Fibril20, AB40_Fibril21_Antibody_bound, AB40_Fibril21_PVS_bound, AB40_Fibril21_PVS, AB40_Fibril21, AB40_Fibril22_Antibody_bound, AB40_Fibril22_PVS_bound, AB40_Fibril22_PVS, AB40_Fibril22, AB40_Fibril23_Antibody_bound, AB40_Fibril23_PVS_bound, AB40_Fibril23_PVS, AB40_Fibril23, AB40_Fibril24_Antibody_bound, AB40_Fibril24_PVS_bound, AB40_Fibril24_PVS, AB40_Fibril24, AB42_Fibril17_PVS_bound, AB42_Fibril17_PVS, AB42_Fibril18_Antibody_bound, AB42_Fibril18_PVS_bound, AB42_Fibril18_PVS, AB42_Fibril18, AB42_Fibril19_Antibody_bound, AB42_Fibril19_PVS_bound, AB42_Fibril19_PVS, AB42_Fibril19, AB42_Fibril20_Antibody_bound, AB42_Fibril20_PVS_bound, AB42_Fibril20_PVS, AB42_Fibril20, AB42_Fibril21_Antibody_bound, AB42_Fibril21_PVS_bound, AB42_Fibril21_PVS, AB42_Fibril21, AB42_Fibril22_Antibody_bound, AB42_Fibril22_PVS_bound, AB42_Fibril22_PVS, AB42_Fibril22, AB42_Fibril23_Antibody_bound, AB42_Fibril23_PVS_bound, AB42_Fibril23_PVS, AB42_Fibril23, AB42_Fibril24_Antibody_bound, AB42_Fibril24_PVS_bound, AB42_Fibril24_PVS, AB42_Fibril24, Antibody_unbound_ISF, C_Antibody_unbound_PVS
+       fta3 - Used in: AB40_Plaque_Antibody_bound, AB40_Plaque_unbound, AB42_Plaque_Antibody_bound, AB42_Plaque_unbound, Abeta40_plaque_bound_PVS, Abeta40_plaque_unbound_PVS, Abeta42_plaque_bound_PVS, Abeta42_plaque_unbound_PVS, Antibody_unbound_ISF, C_Antibody_unbound_PVS
+       k_F24_O12_forty - Used in: AB40_Fibril24, AB40_Oligomer12
+       k_F24_O12_fortytwo - Used in: AB42_Fibril24, AB42_Oligomer12
+       k_M_O2_forty - Used in: AB40_Monomer, AB40_Oligomer02
+       k_M_O2_fortytwo - Used in: AB42_Monomer, AB42_Oligomer02
+       k_O2_M_forty - Used in: AB40_Monomer, AB40_Oligomer02
+       k_O2_M_fortytwo - Used in: AB42_Monomer, AB42_Oligomer02
+       k_O2_O3_forty - Used in: AB40_Monomer, AB40_Oligomer02, AB40_Oligomer03
+       k_O2_O3_fortytwo - Used in: AB42_Monomer, AB42_Oligomer02, AB42_Oligomer03
+       k_O3_O2_forty - Used in: AB40_Monomer, AB40_Oligomer02, AB40_Oligomer03
+       k_O3_O2_fortytwo - Used in: AB42_Monomer, AB42_Oligomer02, AB42_Oligomer03
+       kdeg - Used in: AB40Mb_Blood_Brain_Barrier_unbound, AB40Mb_Blood_CSF_Barrier_unbound, AB42Mb_Blood_Brain_Barrier_unbound, AB42Mb_Blood_CSF_Barrier_unbound, PK_Blood_Brain_Barrier_unbound, PK_Blood_CSF_Barrier_unbound
+       plaque_bound - Used in: Surivial_probability_complex1, Surivial_probability_complex
+       vol_brain_ISF - Used in: AB40_Fibril17, AB40_Fibril18, AB40_Fibril19, AB40_Fibril20, AB40_Fibril21, AB40_Fibril22, AB40_Fibril23, AB40_Fibril24, AB40_Monomer, AB40_Oligomer02, AB40_Oligomer03, AB40_Oligomer04, AB40_Oligomer05, AB40_Oligomer06, AB40_Oligomer07, AB40_Oligomer08, AB40_Oligomer09, AB40_Oligomer10, AB40_Oligomer11, AB40_Oligomer12, AB40_Oligomer13, AB40_Oligomer14, AB40_Oligomer15, AB40_Oligomer16, AB42_Fibril17, AB42_Fibril18, AB42_Fibril19, AB42_Fibril20, AB42_Fibril21, AB42_Fibril22, AB42_Fibril23, AB42_Fibril24, AB42_Monomer, AB42_Oligomer02, AB42_Oligomer03, AB42_Oligomer04, AB42_Oligomer05, AB42_Oligomer06, AB42_Oligomer07, AB42_Oligomer08, AB42_Oligomer09, AB42_Oligomer10, AB42_Oligomer11, AB42_Oligomer12, AB42_Oligomer13, AB42_Oligomer14, AB42_Oligomer15, AB42_Oligomer16, Antibody_unbound_ISF
+       zzzTime_of_first_dose - Used in: Surivial_probability_complex1, Surivial_probability_complex
+
+2. AGGREGATION RATE PARAMETERS: 84
+   These parameters are generated by K_rates_extrapolate.py
+
+   2.1 AB40 Parameters:
+       - Oligomer: 26 parameters
+       - Fibril: 14 parameters
+       - Transition: 2 parameters
+   2.1 AB42 Parameters:
+       - Oligomer: 26 parameters
+       - Fibril: 14 parameters
+       - Transition: 2 parameters
+
+3. UNUSED PARAMETERS: 179
+   These parameters are in the QSP parameter file but not used in any ODE
+
+   3.1 Pharmacokinetic Parameters: 29
+       Basal_CL_Ban2401 - Basal value of Ban2401 pk model clearance CL = 0.0191 L/h * (Albumin/43)^-0.267 * 0.786^sex * (Wt/73.6kg)^0.384 
+       Basal_CL_Bapineuzumab - Basal value of Bapineuzumab pk model clearance  CL = 0.007251 L/h * (Wt/70kg)^0.64 * (1.15^race)
+       Basal_Vcent_Ban2401 - Basal value of Ban2401 pk model central compartment volume Vcent = 3.18 L * 0.904^sex * (Wt/73.6kg)^0.621
+       Basal_Vcent_Bapineuzumab - Basal value of Bapineuzumab pk model central compartment volume V1 = 3.13 L * (Wt/70kg)^0.78
+       Basal_Vper_Ban2401 - Basal value of Ban2401 pk model peripheral central compartment volume Vcent = 2.24 L * 0.423^race
+       CL_Aducanumab - Aducanumab CL.  
+       CL_BAN2401 - typical value of Ban2401 pk model clearance CL = 0.0191 L/h * (Albumin/43)^-0.267 * 0.786^sex * (Wt/73.6kg)^0.384 
+       CL_Bapineuzumab - Bapineuzumab pk model clearance ref:  CL = 0.007251 L/h * (Wt/70kg)^0.64 * (1.15^race)
+       CL_Creneuzumab - Creneuzumab pk model clearance ref:  CL = 1.65 mL/day = 0.0068750 L/h
+       CL_Gantenerumab - GantenerumabCL Based on fit, assuming 100% bioavailability, to digitised data from 
+       CL_Solanezumab - Solanezumab CL.  Based on fit to digitised data
+       Macrophage_CL_high_AB40_PVS - Clearance rate of AB40 unbound species by high clearance phenotype cells
+       Macrophage_CL_high_AB42_PVS - Clearance rate of AB42 unbound species by high clearance phenotype cells
+       Macrophage_CL_high_mab - Clearance rate of AB40 and AB42 antiboundy bound species by high clearance phenotype cells
+       Macrophage_CL_low_AB40_PVS - Clearance rate of AB40 unbound species by low clearance phenotype cells
+       Macrophage_CL_low_AB42_PVS - Clearance rate of AB42 unbound species by low clearance phenotype cells
+       Macrophage_CL_low_mAb - Clearance rate of AB40 and AB42 antiboundy bound species by low clearance phenotype cells
+       Vcent_Aducanumab - Aducanumab pk model central compartment volume. 
+       Vcent_BAN2401 - Antibody pk model central compartment volume
+       Vcent_Bapineuzumab - Bapineuzumab pk model central compartment volume 
+       Vcent_Creneuzumab - Creneuzumab pk model central compartment volume 
+       Vcent_Gantenerumab - Gantenerumab pk model central compartment volume 
+       Vcent_Solanezumab - Solanezumab pk model central compartment volume. 
+       Vper_Aducanumab - Aducanumab pk model peripheral compartment volume.  
+       Vper_BAN2401 - BAN2401 pk model peripheral compartment volume
+       Vper_Bapineuzumab - Bapineuzumab pk model peripheral compartment volume.  
+       Vper_Creneuzumab - Creneuzumab pk model peripheral compartment volume.  
+       Vper_Gantenerumab - Gantenerumab pk model peripheral compartment volume.  
+       Vper_Solanezumab - Solanezumab pk model peripheral compartment volume. 
+
+   3.2 Amyloid Beta Parameters: 53
+       AB40_IDE_Kcat_baseline - Maximum rate of IDE removal of AB40 monomer.  . 
+       AB40_IDE_Kcat_exp - Maximum rate of IDE removal of AB40 monomer with exponential decline. 
+       AB40_Plaque_Driven_Mono_Add_Vmax_baseline - Maximum rate for addition of monomer to monomer, oligomer, or fibril catalysed by plaque for AB40.   
+       AB40__CSF - Rate for Abeta 40 leaving brain and entering CSF transit compartment   
+       AB40__CSF_kdelay - Transit compartment rate for Abeta 40 leaving brain and entering CSF.
+       AB42_IDE_Kcat_baseline - Maximum rate of IDE removal of AB42 monomer.  . 
+       AB42_IDE_Kcat_exp - Maximum rate of IDE removal of AB42 monomer with exponential decline. 
+       AB42_Plaque_Driven_Mono_Add_Vmax_baseline - Maximum rate for addition of monomer to monomer, oligomer, or fibril catalysed by plaque for AB42.   
+       AB42__CSF - Rate for Abeta 42 leaving brain and entering CSF transit compartment   
+       AB42__CSF_kdelay - Transit compartment rate for Abeta 42 leaving brain and entering CSF.
+       Antibody_AB40_bound_deg - rate constant for removal of antibody bound AB40 (assumes this is same irrespective of monomer, oligomer or fibril length)
+       Antibody_AB40_koff - binding constant for antibody to AB40 (assumes binding is same irrespective of monomer, oligomer or fibril length, and  no binding to plaque occurs).   
+       Antibody_AB40_kon - binding constant for antibody to AB40 (assumes binding is same irrespective of monomer, oligomer or fibril length, and  no binding to plaque occurs).  
+       Antibody_AB42_bound_deg - rate constant for removal of antibody bound AB42 (assumes this is same irrespective of monomer, oligomer or fibril length).  
+       Antibody_AB42_koff - binding constant for antibody to AB42 (assumes binding is same irrespective of monomer, oligomer or fibril length, and  no binding to plaque occurs).  
+       Antibody_AB42_kon - binding constant for antibody to AB42 (assumes binding is same irrespective of monomer, oligomer or fibril length, and  no binding to plaque occurs).   
+       Baseline_AB40_Oligomer_Fibril_Plaque - Rate constant for formation of plaques from fibrils and oligomers for AB40. 
+       Baseline_AB40_Oligomer_Fibril_splitting - Baseline rate constant for splitting of fibrils and oligomers for AB40.  
+       Baseline_AB40_down_cut_off - Cut off minimum value for the baseline rate constant for removal of a monomer to AB40 oligomer 3 or higher.  
+       Baseline_AB40_up_cut_off - Cut off minimum value for the baseline rate constant for addition of a monomer to AB40 oligomer 3 or higher.  Lower limit set by asymptotic behavior of function, so limit here set to 0.  Based on in vitro data from 
+       Baseline_AB42_Oligomer_Fibril_Plaque - Baseline rate constant for formation of plaques from fibrils and oligomers for AB42.  
+       Baseline_AB42_Oligomer_Fibril_splitting - Baseline rate constant for splitting of fibrils and oligomers for AB42.  
+       Baseline_AB42_down_cut_off - Cut off minimum value for the baseline rate constant for removal of a monomer to AB40 oligomer 3 or higher.  
+       Baseline_AB42_up_cut_off - Cut off minimum value for the baseline rate constant for addition of a monomer to AB42 oligomer 3 or higher.  Lower limit set by asymptotic behavior of function, so limit here set to 0.
+       Dmax_Fibril_Assist_40 - Maximum multiplier of rate for fibril assisted monomer to dimer reaction
+       Dmax_Fibril_Assist_42 - Maximum multiplier of rate for fibril assisted monomer to dimer reaction
+       IC50_AB40_Plaque_Driven_Monomer_Addition_Vmax - IC50 for antibody bound plaque concentration dependent change in Plaque Driven Monomer Addition Vmax for AB40.  Mechanism is only relevent for Aducanumab.
+       IC50_AB42_Plaque_Driven_Monomer_Addition_Vmax - IC50 for antibody bound plaque concentration dependent change in Plaque Driven Monomer Addition Vmax for AB42.  Mechanism is only relevent for Aducanumab.
+       IC50_Dmax_Fibril_Assist_40 - IC50 for antibody bound plaque concentration dependent change in Dmax Fibril asssit for AB40.  Mechanism is only relevent for Aducanumab.
+       IC50_Dmax_Fibril_Assist_42 - IC50 for antibody bound plaque concentration dependent change in Dmax Fibril asssit for AB42.  Mechanism is only relevent for Aducanumab.
+       Kout_AB40_Potter - rate constant for removal of Abeta40
+       Kout_AB40_van_Maanen - rate constant for removal of Abeta40
+       Kout_AB42_Potter - rate constant for removal of Abeta42 
+       Kout_AB42_van_Maanen - rate constant for removal of Abeta42 
+       Macrophage_CL_high_AB40_PVS - Clearance rate of AB40 unbound species by high clearance phenotype cells
+       Macrophage_CL_high_AB42_PVS - Clearance rate of AB42 unbound species by high clearance phenotype cells
+       Macrophage_CL_low_AB40_PVS - Clearance rate of AB40 unbound species by low clearance phenotype cells
+       Macrophage_CL_low_AB42_PVS - Clearance rate of AB42 unbound species by low clearance phenotype cells
+       Macrophage_Hi_Lo_ratio_AB40 - ratio of high to low clearance of AB40 forms by macrophagecells of the high and low CL phenotypes
+       Macrophage_Hi_Lo_ratio_AB42 - ratio of high to low clearance of AB42 forms by macrophage cells of the high and low CL phenotypes
+       Microglia_Hi_Lo_ratio_AB40 - ratio of high to low clearance of AB40 forms by microglia cells of the high and low CL phenotypes
+       Microglia_Hi_Lo_ratio_AB40_APOE4 - ratio of high to low clearance of AB40 forms by microglia cells of the high and low CL phenotypes for APOE4 positive subjuect
+       Microglia_Hi_Lo_ratio_AB40_nonAPOE4 - ratio of high to low clearance of AB40 forms by microglia cells of the high and low CL phenotypes in non APOE4 subject
+       Microglia_Hi_Lo_ratio_AB42 - ratio of high to low clearance of AB42 forms by microglia cells of the high and low CL phenotypes
+       Microglia_Hi_Lo_ratio_AB42_APOE4 - ratio of high to low clearance of AB42 forms by microglia cells of the high and low CL phenotypes in APOE4 postitive subjects
+       Microglia_Hi_Lo_ratio_AB42_nonAPOE4 - ratio of high to low clearance of AB42 forms by microglia cells of the high and low CL phenotypes in non APOE4 subjects
+       Qbrain_plasma_AB40Mu - Plasma flow to brain.
+       Qlymph_Brain_AB40Mu - lymph flow of brain.   Sum of QISF and QCSF 
+       Qlymph_Brain_AB42Mu - lymph flow of brain.   Sum of QISF and QCSF 
+       S50_Fibril_Assist_40 - Stable fibril concentration giving half the maximum multiplier of rate for fibril assisted Ab40 monomer to dimer reaction.
+       S50_Fibril_Assist_42 - Stable fibril concentration giving half the maximum multiplier of rate for fibril assisted Ab42 monomer to dimer reaction.
+       forAsympAB40 - Asymptotic value for extrapolation of forward rate constants for Ab40 aggregation
+       forAsympAB42 - Asymptotic value for extrapolation of forward rate constants for Ab42 aggregation
