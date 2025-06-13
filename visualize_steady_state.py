@@ -35,22 +35,22 @@ plt.rcParams.update({
 root_dir = Path(__file__).parents[1]  # Go up 1 level to reach models directory
 sys.path.append(str(root_dir))
 
-def load_steady_state_data(drug_type="gantenerumab"):
+def load_steady_state_data(drug_type="gantenerumab", years=20):
     """Load steady state data from the saved CSV file
     
     Args:
         drug_type: Type of drug to simulate ("lecanemab" or "gantenerumab")
+        years: Number of years simulated (used to select the correct CSV file)
         
     Returns:
         Tuple of (time_points, species_data, model)
     """
     # Load the saved data
-    data_path = Path(f"generated/100_year_simulation_results_{drug_type.lower()}.csv")
-    #data_path = Path(f"generated/one_year_simulation_results_{drug_type.lower()}.csv")
+    data_path = Path(f"generated/{years}_year_simulation_results_{drug_type.lower()}.csv")
 
     if not data_path.exists():
         print(f"Error: No steady state data found at {data_path}")
-        print("Please run run_combined_master_model.py first")
+        print(f"Please run run_no_dose_combined_master_model.py with --years {years} first")
         sys.exit(1)
     
     # Read the data
@@ -789,16 +789,19 @@ def main():
     parser = argparse.ArgumentParser(description="Visualize steady state data from combined master model")
     parser.add_argument("--drug", type=str, choices=["lecanemab", "gantenerumab"], 
                         default="gantenerumab", help="Drug type to visualize")
+    parser.add_argument("--years", type=int, default=20,
+                        help="Number of years simulated (used to select the correct CSV file)")
     args = parser.parse_args()
     
     # Print summary of visualization settings
     print(f"\n=== STEADY STATE DATA VISUALIZATION ===")
     print(f"Drug: {args.drug.upper()}")
+    print(f"Years: {args.years}")
     print("=" * 40)
     
     # Load steady state data
     print("\nLoading steady state data...")
-    time_points, species_data, model = load_steady_state_data(drug_type=args.drug)
+    time_points, species_data, model = load_steady_state_data(drug_type=args.drug, years=args.years)
     
     # Create solution object
     sol = create_solution_object(time_points, species_data)

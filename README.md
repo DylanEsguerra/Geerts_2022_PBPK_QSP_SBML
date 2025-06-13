@@ -1,6 +1,14 @@
 # Geerts Model Documentation
 
-This folder contains a comprehensive model of amyloid beta (Aβ) dynamics and antibody pharmacokinetics in the brain, based on the work of Geerts et al. The model combines both Quantitative Systems Pharmacology (QSP) components for Aβ kinetics and Physiologically Based Pharmacokinetic (PBPK) components for antibody distribution.
+This repository contains an effort to create an open-sourced implementation of the Geerts et al 2023 combined physiologically-based pharmacokinetic and quantitative systems pharmacology model for modeling amyloid aggregation in Alzheimer's disease. 
+
+We have chosen to use open-sourced tools for all aspects of the model development process and are emphasizing a modular design process. We are using the Systems Biology Markup Language to save the model in XML format with the hope that other researchers can use it with the software of their choice. 
+
+At the moment we have fully translated the available equations from the supplementary material into a reaction-based model with mass units appropriate for SBML. Our translation from ODEs to reactions has been validated against an ODE-based implementation directly copied by an automated equation parsing script from Supplementary Table S1 containing model equations and Supplementary Table S2 containing parameter values. 
+
+We are able to accurately reproduce published results for single dose mAb concentrations, however believe there are issues with the QSP model of Amyloid Beta aggregation. We seek to remedy this by continuing to validate our parameter choices for those without one-to-one correspondence between Supplementary Tables 1 and 2 as well as looking for errors in published equations. 
+
+Given the corespondence between our SBML implementation and parsed ODE implementation we belive the error lies in parameter choices or published material. 
 
 ## Citation
 Geerts H, Walker M, Rose R, et al. A combined physiologically-based pharmacokinetic and quantitative systems pharmacology model for modeling amyloid aggregation in Alzheimer's disease. CPT Pharmacometrics Syst Pharmacol. 2023; 12: 444-461. doi:10.1002/psp4.12912
@@ -8,36 +16,60 @@ Geerts H, Walker M, Rose R, et al. A combined physiologically-based pharmacokine
 ## Usage
 
 To run the SBML model:
-1. Ensure all dependencies are installed
-2. Make sure you are in Geerts directory 
-   `cd models/Geerts` 
-3. Run `python run_combined_master_model_multi_dose.py --drug {gantenerumab,lecanemab}`
-   or `python run_no_dose_combined_master_model.py --drug {gantenerumab,lecanemab} --years 10` 
-   or `python run_mAb.py --drug {gantenerumab,lecanemab}`
-4. Specify drug type (gantenerumab or lecanemab) if needed
+1. Create and activate a virtual environment:
+   ```bash
+   # Create virtual environment
+   python -m venv venv
+   
+   # Activate virtual environment
+   # On macOS/Linux:
+   source venv/bin/activate
+   # On Windows:
+   .\venv\Scripts\activate
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+   
+
+3. Run one of the following commands:
+   ```bash
+   # For multi-dose simulation:
+   python run_combined_master_model_multi_dose.py --drug {gantenerumab,lecanemab}
+   
+   # For no-dose simulation:
+   python run_no_dose_combined_master_model.py --drug {gantenerumab,lecanemab} --years 20
+   
+   # For single-dose simulation:
+   python run_mAb.py --drug {gantenerumab,lecanemab}
+   ```
+
 5. View generated plots in the `generated/figures` directory
 
 ## Runtime and Alternative Versions
 
-The full combined model (`run_combined_master_model_multi_dose.py`) has a long runtime due to its complexity and the number of species being simulated. For faster testing and validation, several alternative versions are available:
+The full combined model (`run_combined_master_model_multi_dose.py`) has a long runtime due to its complexity, the number of species being simulated and the length of the simulation. For faster testing and validation, several alternative versions are available:
 
-1. **Single-Dose Version**
+1. **No Dose Version**
+   - [`python run_no_dose_combined_master_model.py --drug {gantenerumab,lecanemab} --years 20`](run_no_dose_combined_master_model.py)
+   - This version runs the model without any drug dose and is akin to the initial steady state solve done by the dosing versions to get the initial condition. 
+   - The drug argument is still needed as it effects the choice of some volume parameters
+
+2. **Single-Dose Version**
    - [`run_combined_master_model.py`](run_combined_master_model.py) provides a simpler single-dose simulation
    - This version first runs a simulation of the patient's age before treatment (no dose)
    - The final state from this simulation is used as the initial condition
    - Then applies a single dose according to the specified dosing schedule
    - This approach is useful for validating model behavior and comparing with published results
-   - [`run_no_dose_combined_master_model.py`](run_no_dose_combined_master_model.py) also exists for no antibody at all 
-
-2. **Multi-Dose Version**
-   - [`run_combined_master_model_multi_dose.py`](run_combined_master_model_multi_dose.py) 
-3. **No Dose Version**
-   - [`python run_no_dose_combined_master_model.py --drug {gantenerumab,lecanemab} --years 10`](run_no_dose_combined_master_model.py)
-
+   
 
 ## ODE-Based Alternative Implementation
 
-An alternative implementation of the Geerts model is available in the `ODE_version` directory. This version was created by directly translating the differential equations from the Geerts et al. 2023 paper's Supplementary Table S1 into Python code.
+An alternative implementation of the Geerts model is available in the `ODE_version` directory. This version was created by directly translating the differential equations from the Geerts et al. 2023 paper's Supplementary Table S2 and S1 into a JAX based ODE function.
+
+We used this implmentation to validate our translation from an ODE system to a reaction-based SBML model. This ODE version is also significantly faster and we belive is a good choice for new users to interact with since we have validated it as equivalent to the SBML. 
 
 
 ### Model Generation
@@ -47,20 +79,22 @@ The model is generated using `generate_model_2.py`, which:
 - Matches parameters in equations to values in `Geerts_Params_2.csv`
 - Automatically parses and converts the equations into Python/JAX code
 - Generates a standalone ODE model in `generated_model_2.py`
-- Uses its own parameter file for initialization
+- `generated_model_2a.py` contains one hard coded modification to include the age dependent IDE clearance mentioned in the main publication, but missing from TableS2
+- Uses its own parameter file for initialization `Geerts_Params2.csv` 
+
 
 ### Running the ODE Version
 
 To run the ODE-based version without antibody dosing:
 
 ```bash
-cd models/Geerts/ODE_version
-python run_no_dose.py --years 10 --outdir results/no_dose
+cd ODE_version
+python run_no_dose.py --years 20 
 ```
 
 Command line arguments:
 - `--drug`: Choose between 'gantenerumab' or 'lecanemab' (affects parameter values)
-- `--years`: Number of years to simulate (default: 10)
+- `--years`: Number of years to simulate (default: 100)
 - `--outdir`: Directory to save results (default: 'results/no_dose')
 
 The simulation will generate several plots showing:
@@ -75,18 +109,18 @@ The simulation will generate several plots showing:
 
 This ODE-based implementation:
 - Directly uses the equations from the paper without SBML intermediary
-- Uses JAX for efficient computation
-- Currently only implements the no-dose version of the model
 - Much faster computation time and similar results to SBML version
-- Has its own parameters file so changes to PK_Geerts.csv will not chnage this model 
+- Has its own parameters file `Geerts_Params2.csv` so changes to `PK_Geerts.csv` will not chnage this model 
 
 ### Limitations of the ODE Version
 
 The ODE version has some limitations compared to the SBML implementation:
 
 1. **No IDE Clearance Decline with Age**: The decline in IDE-mediated clearance of monomers with age is not implemented in the ODE version because it is not directly written in Supplementary Table 1 of the Geerts et al. paper. This may lead to faster clearance of monomers in older age simulations compared to the SBML model.
+- This limitation is resolved by using `generated_model_2a.py` which is the current default for `run_no_dose.py`.
 
 2. **Microglia Cell Count Limitations**: In the ODE implementation, the microglia cell count never surpasses 1 (the initial value) because the equation for the sum of antibody-bound amyloid is set to zero (`new_state['Anti_ABeta_bound_sum'] = 0`) as specified in the supplementary table. Since this sum is an important term in the microglia cell count equation, it prevents proper microglia proliferation in response to antibody-bound amyloid.
+- Only relevant once a drug has entered the system
 
 
 ## Model Structure
@@ -165,6 +199,7 @@ The model is generated and simulated through several steps:
    - [`Combined_Master_Model.py`](Modules/Combined_Master_Model.py) combines all modules into a single SBML model
    - The generated SBML model is saved in `generated/sbml/combined_master_model_{drug_type}.xml`
    - Each module contributes its specific components to the final model
+   - This file does not need to be run on its own as it is called by the run scripts
 
 2. **Model Simulation**
    - [`run_combined_master_model_multi_dose.py`](run_combined_master_model_multi_dose.py) handles model simulation
@@ -178,7 +213,7 @@ The model is generated and simulated through several steps:
 3. **Alternative Simulation Methods**
    - The model can also be simulated using:
      - `sbml_to_ode_jax`'s built-in `Model_rollout` function
-     - `roadrunner` for direct simulation from the XML file
+     - `Tellurium` for direct simulation from the XML file
      - Other SBML-compatible simulators
 
 ## Visualization Options
@@ -197,14 +232,7 @@ The model provides several tools for visualizing simulation results:
    - [`visualize_steady_state.py`](visualize_steady_state.py): Visualizes steady state or no-dose data
      - Works with data from `run_no_dose_combined_master_model.py` or the intermediate steady-state output from `run_combined_master_model_multi_dose.py`
      - Useful for understanding pre-dose dynamics and baseline Aβ behavior
-     - Usage: `python visualize_steady_state.py --drug {gantenerumab,lecanemab}`
-     - To change which data file is visualized, modify the path in the `load_steady_state_data()` function:
-       ```python
-       # Current options include:
-        data_path = Path(f"generated/steady_state/steady_state_solution_{drug_type.lower()}.csv")
-        # Or for longer simulations:
-        data_path = Path(f"generated/100_year_simulation_results_{drug_type.lower()}.csv")
-       ```
+     - Usage: `python visualize_steady_state.py --drug {gantenerumab,lecanemab} --years 20`
      - Outputs are saved to `generated/figures/steady_state/`
      - This is particularly useful for analyzing longer simulation runs without re-running the model
      - Key plots generated include:
@@ -215,15 +243,10 @@ The model provides several tools for visualizing simulation results:
    - [`compare_no_dose_models.py`](compare_no_dose_models.py): Compares results between SBML and ODE model implementations
      - Provides side-by-side comparison of the modular SBML model versus the direct ODE implementation
      - Does not run models - only visualizes already-saved data
-     - Usage from Geerts folder: `python compare_no_dose_models.py`
-     - By default compares these files (can be modified in the script):
-       ```python
-       csv1 = 'generated/100_year_simulation_results_gantenerumab.csv'  # SBML model output
-       csv2 = 'ODE_version/results/no_dose/Gantenerumab_no_dose_100.0yr_results.csv'  # ODE model output
-       ```
+     - Usage from Geerts folder: `python compare_no_dose_models.py --drug {gantenerumab,lecanemab} --years 20`
      - These files are generated by running:
-       - SBML model: `python run_no_dose_combined_master_model.py --drug {gantenerumab,lecanemab} --years 100`
-       - ODE model: `python run_no_dose.py --drug {gantenerumab,lecanemab} --years 100 --outdir results/no_dose`
+       - SBML model: `python run_no_dose_combined_master_model.py --drug {gantenerumab,lecanemab} --years 20`
+       - ODE model: `python run_no_dose.py --drug {gantenerumab,lecanemab} --years 20`
      - Useful for model validation and ensuring both implementations produce similar results
          ![ODE and SBML brain plasma comparison](generated/figures/comparison/compare_ab42_ab40_monomer_ratio.png)
 
@@ -284,6 +307,8 @@ The model parameters are stored in [`parameters/PK_Geerts.csv`](parameters/PK_Ge
 - Transport coefficients
 - Antibody binding parameters
 - Microglia-related parameters
+
+An aditional parameters file is contained in [`ODE_version/Geerts_Params_2.csv`](ODE_version/Geerts_Params_2.csv`). This is necessary because some parameter names vary between the SBML and ODE versions. The ODE version is true to the publication.
 
 ## Rate Constant Extrapolation
 The amyloid beta aggregation model uses a sophisticated rate extrapolation system implemented in [`K_rates_extrapolate.py`](K_rates_extrapolate.py). This module:
