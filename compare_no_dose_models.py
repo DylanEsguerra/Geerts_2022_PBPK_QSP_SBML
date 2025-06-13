@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
+import argparse
 
 def load_solution(csv_path, scale=1.0):
     df = pd.read_csv(csv_path)
@@ -240,12 +241,17 @@ def plot_ratios_and_loads(sol1, model1, sol2, model2, label1, label2, outdir):
     final_df.to_csv(Path(outdir) / 'final_species_concentrations.csv')
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Compare SBML and ODE model results")
+    parser.add_argument("--years", type=float, default=100.0, help="Number of years simulated")
+    parser.add_argument("--drug", type=str, choices=["lecanemab", "gantenerumab"], default="gantenerumab", help="Drug type simulated")
+    args = parser.parse_args()
+
     # Paths to your two CSVs
-    csv1 = 'generated/100_year_simulation_results_gantenerumab.csv'
-    csv2 = 'ODE_version/results/no_dose/Gantenerumab_no_dose_100.0yr_results.csv'
+    csv1 = f'generated/{args.years}_year_simulation_results_{args.drug}.csv'
+    csv2 = f'ODE_version/results/no_dose/{args.drug.capitalize()}_no_dose_{args.years}yr_results.csv'
     outdir = 'generated/figures/comparison'
     Path(outdir).mkdir(parents=True, exist_ok=True)
-    sol1, model1 = load_solution(csv1, scale=0.2505)
+    sol1, model1 = load_solution(csv1, scale=0.2505) # Division by volume if isf is applied for this comparison
     sol2, model2 = load_solution(csv2, scale=1.0)
     plot_ratios_and_loads(sol1, model1, sol2, model2, 'Combined Master', 'ODE Version', outdir)
     print(f"Comparison plots saved to {outdir}")

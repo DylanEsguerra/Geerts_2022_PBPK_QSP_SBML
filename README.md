@@ -29,12 +29,8 @@ The full combined model (`run_combined_master_model_multi_dose.py`) has a long r
    - This approach is useful for validating model behavior and comparing with published results
    - [`run_no_dose_combined_master_model.py`](run_no_dose_combined_master_model.py) also exists for no antibody at all 
 
-2. **PBPK-Only Model**
-   - [`run_mAb.py`](run_mAb.py) runs only the PBPK component of the model
-   - Simulates antibody pharmacokinetics without amyloid beta dynamics
-   - Runs quickly and shows strong agreement with published plasma concentration data
-   - Useful for validating the PBPK component independently
-
+2. **Multi-Dose Version**
+   - [`run_combined_master_model_multi_dose.py`](run_combined_master_model_multi_dose.py) 
 3. **No Dose Version**
    - [`python run_no_dose_combined_master_model.py --drug {gantenerumab,lecanemab} --years 10`](run_no_dose_combined_master_model.py)
 
@@ -59,7 +55,7 @@ To run the ODE-based version without antibody dosing:
 
 ```bash
 cd models/Geerts/ODE_version
-python run_no_dose.py --drug {gantenerumab,lecanemab} --years 10 --outdir results/no_dose
+python run_no_dose.py --years 10 --outdir results/no_dose
 ```
 
 Command line arguments:
@@ -265,16 +261,6 @@ Each parameter includes:
 
 This structured approach allows for systematic validation of parameter values against the literature.
 
-### Reaction Validation
-
-A dedicated [`reaction_validation`](reaction_validation/) folder contains decompositions of the differential equations for each species:
-
-- [`Monomer_ODE_breakdown.txt`](reaction_validation/Monomer_ODE_breakdown.txt): Complete breakdown of all terms in the monomer dynamics equation
-- Similar files for other oligomer and fibril species
-- Each equation is separated by module, showing exactly where in the SBML model each term originates
-- This allows direct comparison with the supplementary equations from the Geerts 2023 paper
-
-These detailed breakdowns facilitate debugging by allowing inspection of individual reaction terms and their contribution to the overall dynamics.
 
 ## Output and Visualization
 
@@ -312,14 +298,10 @@ The extrapolated rates are used by the oligomer and fibril modules to model the 
 ### SBML (XML) Files
 Located in `generated/sbml/`:
 - `combined_master_model_{drug_type}.xml`: The full combined PBPK-QSP model
-- `qsp_model.xml`: The QSP-only model for amyloid dynamics
-- `geerts_mab_model.xml`: The PBPK-only model for antibody dynamics
 
 ### JAX Model Files
 Located in `generated/jax/`:
 - `combined_master_model_jax.py`: JAX implementation of the full model
-- `qsp_model_jax.py`: JAX implementation of the QSP-only model
-- `geerts_mab_jax.py`: JAX implementation of the PBPK-only model
 
 These files are automatically generated when running the respective model scripts and are used by the simulation routines.
 
@@ -355,13 +337,16 @@ python run_combined_master_model_multi_dose.py --drug {gantenerumab,lecanemab}
 ```
 
 ## Dependencies
-- libsbml
-- pandas
 - jax==0.5.3
+- jaxlib==0.5.3
 - diffrax==0.7.0
-- matplotlib
-- numpy
+- python-libsbml
 - [sbml_to_ode_jax](https://developmentalsystems.org/sbmltoodejax/index.html)
+- tellurium
+- matplotlib
+- pandas
+- numpy
+
 ## Important Note on JAX Configuration
 Before running any of the model scripts, you must set the following environment variable to avoid JAX runtime issues:
 This is due to an issue with newer versions of JAX
@@ -373,5 +358,4 @@ os.environ['XLA_FLAGS'] = '--xla_cpu_use_thunk_runtime=false'
 This flag should be added at the beginning of any script that uses JAX, including:
 - `run_combined_master_model_multi_dose.py`
 - `run_no_dose_combined_master_model.py`
-- `run_mAb.py`
 - Any other scripts that use JAX for model simulation

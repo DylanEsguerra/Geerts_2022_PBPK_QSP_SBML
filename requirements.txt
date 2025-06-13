@@ -1,7 +1,10 @@
-libsbml
-pandas
 jax==0.5.3
+jaxlib==0.5.3
 diffrax==0.7.0
 matplotlib
+pandas
 numpy
-sbml-to-ode-jax 
+python-libsbml
+sbmltoodejax
+tabulate
+tellurium

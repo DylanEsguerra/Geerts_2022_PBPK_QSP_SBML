@@ -125,8 +125,9 @@ def run_simulation(antibody_type='Gant', simulation_years=10, save_dir='results/
     y0 = y0.at[fcrn_free_bbb_idx].set(4.982e04)  # Fcrn_free_BBB
     y0 = y0.at[fcrn_free_bcsfb_idx].set(4.982e04)  # Fcrn_free_BcsfB
     y0 = y0.at[microglia_cell_count_idx].set(1.0)  # Microglia_Cell_Count
-    y0 = y0.at[cl_ab40_ide_idx].set(19650.0)  # CL_AB40_IDE
-    y0 = y0.at[cl_ab42_ide_idx].set(10000.0)  # CL_AB42_IDE
+    # Can Increase clearance to values from Geerts 2024 publication 
+    y0 = y0.at[cl_ab40_ide_idx].set(1500)  # CL_AB40_IDE
+    y0 = y0.at[cl_ab42_ide_idx].set(50)  # CL_AB42_IDE
     
     # Set up time points for simulation
     t0 = 0.0

@@ -29,7 +29,7 @@ root_dir = Path(__file__).parents[1]  # Go up 1 level to reach models directory
 sys.path.append(str(root_dir))
 
 # Import the master model
-from Geerts.Modules.Combined_Master_Model import create_combined_master_model, load_parameters_from_csv, save_model
+from Modules.Combined_Master_Model import create_combined_master_model, load_parameters_from_csv, save_model
 
 def generate_jax_model(drug_type="gantenerumab"):
     """Generate JAX model from the combined master model
@@ -697,7 +697,7 @@ def main():
         plot_fibrils_and_plaques(sol, drug_type=args.drug, plots_dir=figures_dir)
         # Save simulation data to file
         data = {'time': sol.ts, **{name: sol.ys[:, idx] for name, idx in model.y_indexes.items()}}
-        pd.DataFrame(data).to_csv(f"generated/100_year_simulation_results_{args.drug}.csv", index=False)
+        pd.DataFrame(data).to_csv(f"generated/{args.years}_year_simulation_results_{args.drug}.csv", index=False)
     else:
         print("\nSimulation failed. Check error messages above.")
 

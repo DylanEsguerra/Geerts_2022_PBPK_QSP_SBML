@@ -19,6 +19,11 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+venv/
+env/
+ENV/
+.env/
+.venv/
 
 # macOS
 .DS_Store
@@ -33,4 +38,4 @@ wheels/
 *.swo
 
 # Generated files
-generated/ 
+# generated/ 
