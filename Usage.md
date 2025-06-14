@@ -1,7 +1,23 @@
-## Usage
+# Usage Instructions
 
-To run the SBML model:
-1. Create and activate a virtual environment:
+This document provides comprehensive instructions for installing, running, and visualizing results from the Geerts model.
+
+## Table of Contents
+- [Installation](#installation)
+- [Running Simulations](#running-simulations)
+- [Alternative Implementations](#alternative-implementations)
+- [Visualization Options](#visualization-options)
+- [Dependencies and Configuration](#dependencies-and-configuration)
+
+## Installation
+
+### Prerequisites
+- Python 3.8 or higher
+- Virtual environment (recommended)
+
+### Setup Steps
+
+1. **Create and activate a virtual environment:**
    ```bash
    # Create virtual environment
    python -m venv venv
@@ -13,351 +29,213 @@ To run the SBML model:
    .\venv\Scripts\activate
    ```
 
-2. Install dependencies:
+2. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
-   
 
-3. Run one of the following commands:
-   ```bash
-   # For multi-dose simulation:
-   python run_combined_master_model_multi_dose.py --drug {gantenerumab,lecanemab}
-   
-   # For no-dose simulation:
-   python run_no_dose_combined_master_model.py --drug {gantenerumab,lecanemab} --years 20
-   
-   # For single-dose simulation:
-   python run_mAb.py --drug {gantenerumab,lecanemab}
+3. **Configure JAX (Important):**
+   Before running any scripts, set this environment variable to avoid JAX runtime issues:
+   ```python
+   import os
+   os.environ['XLA_FLAGS'] = '--xla_cpu_use_thunk_runtime=false'
    ```
 
-5. View generated plots in the `generated/figures` directory
+## Running Simulations
 
-## Runtime and Alternative Versions
+### Main SBML-Based Simulations
 
-The full combined model (`run_combined_master_model_multi_dose.py`) has a long runtime due to its complexity, the number of species being simulated and the length of the simulation. For faster testing and validation, several alternative versions are available:
-
-1. **No Dose Version**
-   - [`python run_no_dose_combined_master_model.py --drug {gantenerumab,lecanemab} --years 20`](run_no_dose_combined_master_model.py)
-   - This version runs the model without any drug dose and is akin to the initial steady state solve done by the dosing versions to get the initial condition. 
-   - The drug argument is still needed as it effects the choice of some volume parameters
-
-2. **Single-Dose Version**
-   - [`run_combined_master_model.py`](run_combined_master_model.py) provides a simpler single-dose simulation
-   - This version first runs a simulation of the patient's age before treatment (no dose)
-   - The final state from this simulation is used as the initial condition
-   - Then applies a single dose according to the specified dosing schedule
-   - This approach is useful for validating model behavior and comparing with published results
-   
-
-## ODE-Based Alternative Implementation
-
-An alternative implementation of the Geerts model is available in the `ODE_version` directory. This version was created by directly translating the differential equations from the Geerts et al. 2023 paper's Supplementary Table S2 and S1 into a JAX based ODE function.
-
-We used this implmentation to validate our translation from an ODE system to a reaction-based SBML model. This ODE version is also significantly faster and we belive is a good choice for new users to interact with since we have validated it as equivalent to the SBML. 
-
-
-### Model Generation
-
-The model is generated using `generate_model_2.py`, which:
-- Reads equations directly from an Excel file `Geerts_ODE.xlsx`containing the ODEs from Supplementary Table S1
-- Matches parameters in equations to values in `Geerts_Params_2.csv`
-- Automatically parses and converts the equations into Python/JAX code
-- Generates a standalone ODE model in `generated_model_2.py`
-- `generated_model_2a.py` contains one hard coded modification to include the age dependent IDE clearance mentioned in the main publication, but missing from TableS2
-- Uses its own parameter file for initialization `Geerts_Params2.csv` 
-
-
-### Running the ODE Version
-
-To run the ODE-based version without antibody dosing:
-
-```bash
-cd ODE_version
-python run_no_dose.py --years 20 
-```
-
-Command line arguments:
-- `--drug`: Choose between 'gantenerumab' or 'lecanemab' (affects parameter values)
-- `--years`: Number of years to simulate (default: 100)
-- `--outdir`: Directory to save results (default: 'results/no_dose')
-
-The simulation will generate several plots showing:
-- AB42/AB40 ratios over time
-- Oligomer and monomer loads
-- Plaque and fibril dynamics
-- SUVR progression
-- Microglia activation
-- Species composition for both AB40 and AB42
-
-### Key Differences from SBML Version
-
-This ODE-based implementation:
-- Directly uses the equations from the paper without SBML intermediary
-- Much faster computation time and similar results to SBML version
-- Has its own parameters file `Geerts_Params2.csv` so changes to `PK_Geerts.csv` will not chnage this model 
-
-### Limitations of the ODE Version
-
-The ODE version has some limitations compared to the SBML implementation:
-
-1. **No IDE Clearance Decline with Age**: The decline in IDE-mediated clearance of monomers with age is not implemented in the ODE version because it is not directly written in Supplementary Table 1 of the Geerts et al. paper. This may lead to faster clearance of monomers in older age simulations compared to the SBML model.
-- This limitation is resolved by using `generated_model_2a.py` which is the current default for `run_no_dose.py`.
-
-2. **Microglia Cell Count Limitations**: In the ODE implementation, the microglia cell count never surpasses 1 (the initial value) because the equation for the sum of antibody-bound amyloid is set to zero (`new_state['Anti_ABeta_bound_sum'] = 0`) as specified in the supplementary table. Since this sum is an important term in the microglia cell count equation, it prevents proper microglia proliferation in response to antibody-bound amyloid.
-- Only relevant once a drug has entered the system
-
-
-## Model Structure
-
-The model is organized into several modules, each responsible for specific aspects of the system:
-
-### QSP Components (Amyloid Beta Kinetics)
-
-1. **[AB_production.py](Modules/AB_production.py)**
-   - Models amyloid precursor protein (APP) processing and Aβ production
-   - Includes APP production, C99 fragment formation, Aβ40 and Aβ42 monomer production
-   - Accounts for IDE-mediated clearance of Aβ monomers
-
-2. **[Geerts_dimer.py](Modules/Geerts_dimer.py)**
-   - Models Aβ dimer formation and dynamics
-   - Includes dimer formation from monomers, dissociation back to monomers
-   - Accounts for plaque-catalyzed dimer formation and antibody binding
-   - Includes microglia-mediated clearance of dimers
-
-3. **[Geerts_Oligomer_3_12.py](Modules/Geerts_Oligomer_3_12.py)**
-   - Models small Aβ oligomer formation and dynamics (3-12mers)
-   - Includes oligomer formation from smaller species and monomers
-   - Accounts for oligomer dissociation, plaque formation, and antibody binding
-   - Includes microglia-mediated clearance and transport coefficients
-
-4. **[Geerts_Oligomer_13_16.py](Modules/Geerts_Oligomer_13_16.py)**
-   - Models medium Aβ oligomer formation and dynamics (13-16mers)
-   - Similar processes to small oligomers but for larger species
-   - Includes transition to plaque formation
-
-5. **[Geerts_Fibril_17_18.py](Modules/Geerts_Fibril_17_18.py)**
-   - Models small Aβ fibril formation and dynamics (17-18mers)
-   - Includes fibril formation from oligomers and monomers
-   - Accounts for fibril dissociation and plaque formation
-   - Includes antibody binding and microglia-mediated clearance
-
-6. **[Geerts_Fibril_19_24.py](Modules/Geerts_Fibril_19_24.py)**
-   - Models large Aβ fibril (19-24mers) and plaque formation and dynamics 
-   - Similar processes to small fibrils but for larger species
-   - Includes final transition to plaque formation
-
-### PBPK Components (Antibody Distribution)
-
-1. **[Geerts_PBPK_mAb.py](Modules/Geerts_PBPK_mAb.py)**
-   - Models monoclonal antibody (mAb) pharmacokinetics in the brain
-   - Includes antibody distribution across blood-brain barrier (BBB)
-   - Accounts for FcRn-mediated antibody recycling
-   - Includes antibody binding to Aβ species and clearance mechanisms
-
-2. **[Geerts_PBPK_monomers.py](Modules/Geerts_PBPK_monomers.py)**
-   - Models Aβ monomer pharmacokinetics in the brain
-   - Could be considerd part of the QSP model, but this is very Physiology Based 
-   - Includes monomer distribution across BBB and blood-CSF barrier
-   - Accounts for monomer clearance through various pathways
-   - Includes monomer production and degradation
-   - Includes monomer antibody binding reactions 
-
-3. **[Geerts_PVS_ARIA.py](Modules/Geerts_PVS_ARIA.py)**
-   - Models perivascular space (PVS) dynamics and ARIA
-   - Includes perivascular space fluid flow and transport
-   - Includes clearance of Aβ through the glymphatic system
-   - Models antibody and Aβ transport between PVS and ISF
-
-4. **[geerts_microglia.py](Modules/geerts_microglia.py)**
-   - Models microglia-mediated clearance of Aβ species
-   - Includes microglia dependent clearance of bound species 
-   - Accounts for high and low activity states
-   - Includes antibody-dependent microglial activation
-   - Models microglia cell population dynamics
-
-## Tellurium Implementation
-
-The `Tellurium` folder contains an alternative way to run our model using the Tellurium/RoadRunner simulator. This implementation:
-
-1. Uses the same SBML model generated by the main codebase
-2. Leverages RoadRunner's fast and robust ODE solver
-3. Has been validated to produce identical results to both the ODE and SBML_to_ODEJAX versions in the no-dose case (see `plot_simulation_results.py`)
-
-### Advantages for Parameter Analysis
-
-The Tellurium implementation is particularly useful for:
-1. **Sensitivity Analysis**: Running long (100-year) no-dose simulations to understand parameter effects
-2. **Parameter Optimization**: Efficiently testing different parameter combinations
-3. **Debugging**: Quick iteration when investigating parameter choice issues
-
-### Available Analysis Scripts
-
-1. **[agg_rate_sensitivity.py](Tellurium/agg_rate_sensitivity.py)**
-   - Analyzes sensitivity to amyloid beta aggregation rates
-   - Tests different backward rate constants (kb0, kb1)
-   - Generates plots showing effects on monomer, oligomer, fibril, and plaque concentrations
-
-2. **[CL_sensitivity.py](Tellurium/CL_sensitivity.py)**
-   - Analyzes sensitivity to IDE-mediated clearance rates
-   - Tests different clearance rate constants and their effects on monomer concentrations
-   - Useful for understanding the impact of age-dependent clearance changes
-
-### Usage
-
-To run Tellurium-based sensitivity analyses:
-```bash
-cd Tellurium
-python agg_rate_sensitivity.py  # For aggregation rate sensitivity
-python CL_sensitivity.py        # For clearance rate sensitivity
-```
-
-Results are saved in the `simulation_plots/sensitivity_analysis` directory.
-
-## Model Generation and Simulation
-
-The model is generated and simulated through several steps:
-
-1. **Model Generation**
-   - [`Combined_Master_Model.py`](Modules/Combined_Master_Model.py) combines all modules into a single SBML model
-   - The generated SBML model is saved in `generated/sbml/combined_master_model_{drug_type}.xml`
-   - Each module contributes its specific components to the final model
-   - This file does not need to be run on its own as it is called by the run scripts
-
-2. **Model Simulation**
-   - [`run_combined_master_model_multi_dose.py`](run_combined_master_model_multi_dose.py) handles model simulation
-   - The script:
-     - Creates and loads the SBML model
-     - Converts it to a JAX model using `sbml_to_ode_jax`
-     - Extracts rates and assignment rules
-     - Solves the system using `diffrax` instead of the sbml_to_ode_jax built-in `Model_rollout`
-     - Generates various plots of the simulation results
-
-3. **Alternative Simulation Methods**
-   - The model can also be simulated using:
-     - `sbml_to_ode_jax`'s built-in `Model_rollout` function
-     - `Tellurium` for direct simulation from the XML file
-     - Other SBML-compatible simulators
-
-## Visualization Options
-
-The model provides several tools for visualizing simulation results:
-
-1. **Real-time Visualization**
-   - When running simulations, plots are automatically generated in the `generated/figures` directory
-
-2. **Post-simulation Visualization**
-   - [`plot_saved_solution.py`](plot_saved_solution.py): Visualizes data from full model runs with dosing
-     - Used for analyzing output from `run_combined_master_model_multi_dose.py`
-     - Creates comprehensive plots of drug concentrations, Aβ dynamics, and compartmental distributions
-     - Usage: `python plot_saved_solution.py --drug {gantenerumab,lecanemab}`
-
-   - [`visualize_steady_state.py`](visualize_steady_state.py): Visualizes steady state or no-dose data
-     - Works with data from `run_no_dose_combined_master_model.py` or the intermediate steady-state output from `run_combined_master_model_multi_dose.py`
-     - Useful for understanding pre-dose dynamics and baseline Aβ behavior
-     - Usage: `python visualize_steady_state.py --drug {gantenerumab,lecanemab} --years 20`
-     - Outputs are saved to `generated/figures/steady_state/`
-     - This is particularly useful for analyzing longer simulation runs without re-running the model
-     - Key plots generated include:
-       - **AB42 Ratios and Concentrations**: Shows brain plasma AB42/AB40 ratio, total ISF AB42, and CSF SAS AB42 over time
-         - Example: `gantenerumab_ab42_ratios_and_concentrations.png`
-         ![AB42/40 Brain Plasma Ratio](generated/figures/steady_state/gantenerumab_ab42_ratios_and_concentrations.png)
-
-   - [`compare_no_dose_models.py`](compare_no_dose_models.py): Compares results between SBML and ODE model implementations
-     - Provides side-by-side comparison of the modular SBML model versus the direct ODE implementation
-     - Does not run models - only visualizes already-saved data
-     - Usage from Geerts folder: `python compare_no_dose_models.py --drug {gantenerumab,lecanemab} --years 20`
-     - These files are generated by running:
-       - SBML model: `python run_no_dose_combined_master_model.py --drug {gantenerumab,lecanemab} --years 20`
-       - ODE model: `python run_no_dose.py --drug {gantenerumab,lecanemab} --years 20`
-     - Useful for model validation and ensuring both implementations produce similar results
-         ![ODE and SBML brain plasma comparison](generated/figures/comparison/compare_ab42_ab40_monomer_ratio.png)
-
-
-These visualization tools provide flexible options for analyzing different aspects of the model behavior, from baseline Aβ dynamics to the effects of antibody treatment across various compartments and timeframes.
-
-## Parameter Files
-
-The model parameters are stored in [`parameters/PK_Geerts.csv`](parameters/PK_Geerts.csv). This file contains:
-- Initial concentrations for all species
-- Rate constants for reactions
-- Transport coefficients
-- Antibody binding parameters
-- Microglia-related parameters
-
-An aditional parameters file is contained in [`ODE_version/Geerts_Params_2.csv`](ODE_version/Geerts_Params_2.csv`). This is necessary because some parameter names vary between the SBML and ODE versions. The ODE version is true to the publication.
-
-## Rate Constant Extrapolation
-The amyloid beta aggregation model uses a sophisticated rate extrapolation system implemented in [`K_rates_extrapolate.py`](K_rates_extrapolate.py). This module:
-- Takes experimentally determined rate constants for small oligomers (dimers and trimers) as anchor points
-- Uses Hill function-based relationships to extrapolate forward and backward rates for larger species
-- Handles both Aβ40 and Aβ42 separately, accounting for their different aggregation propensities
-- Converts literature rate constants from standard units (M⁻¹s⁻¹, s⁻¹) to model units (nM⁻¹h⁻¹, h⁻¹)
-- Generates a complete set of kinetic parameters for the oligomerization and fibrillization cascade
-
-The extrapolated rates are used by the oligomer and fibril modules to model the complete aggregation process from monomers through oligomers to fibrils and plaques. This approach allows the model to capture the size-dependent behavior of amyloid aggregation while maintaining consistency with experimental measurements.
-
-### SBML (XML) Files
-Located in `generated/sbml/`:
-- `combined_master_model_{drug_type}.xml`: The full combined PBPK-QSP model
-
-### JAX Model Files
-Located in `generated/jax/`:
-- `combined_master_model_jax.py`: JAX implementation of the full model
-
-These files are automatically generated when running the respective model scripts and are used by the simulation routines.
-
-## Running Scheme for Multi-Dose Model
-
-The full multi-dose model (`run_combined_master_model_multi_dose.py`) follows this execution scheme:
-
-1. **Model Generation**
-   - Creates the combined SBML model by merging all modules
-   - Saves to `generated/sbml/combined_master_model_{drug_type}.xml`
-   - Converts to JAX format and saves to `generated/jax/combined_master_model_jax.py`
-
-2. **Simulation Setup**
-   - Loads parameters from `parameters/PK_Geerts.csv`
-   - Imports the generated JAX model
-   - Sets up the ODE solver (Tsit5) with appropriate tolerances
-   - Configures dosing schedule based on drug type
-
-3. **Simulation Execution**
-   - Runs the full simulation with no dose to reach my initial condition
-   - Runs the full simulation with multiple doses 
-   - Uses diffrax for efficient ODE solving
-   - Handles both IV (lecanemab) and SC (gantenerumab) dosing
-
-4. **Output Generation**
-   - Creates plots in `generated/figures/`
-   - Saves concentration data and other metrics
-   - Generates visualizations of various model components
-
-The simulation can be run with:
+#### 1. Multi-Dose Simulation (Full Model)
 ```bash
 python run_combined_master_model_multi_dose.py --drug {gantenerumab,lecanemab}
 ```
+- **Runtime**: Multiple hours
+- **Purpose**: Complete treatment simulation with multiple doses
+- **Output**: Comprehensive drug and Aβ dynamics over treatment period
 
-## Dependencies
-- jax==0.5.3
-- jaxlib==0.5.3
-- diffrax==0.7.0
-- python-libsbml
-- [sbml_to_ode_jax](https://developmentalsystems.org/sbmltoodejax/index.html)
-- tellurium
-- matplotlib
-- pandas
-- numpy
+#### 2. No-Dose Simulation (Natural History)
+```bash
+python run_no_dose_combined_master_model.py --drug {gantenerumab,lecanemab} --years 20
+```
+- **Runtime**: 
+- **Purpose**: Natural amyloid aggregation without treatment
+- **Arguments**: 
+  - `--drug`: Required for volume parameter selection
+  - `--years`: Simulation duration (default: 100)
 
-## Important Note on JAX Configuration
-Before running any of the model scripts, you must set the following environment variable to avoid JAX runtime issues:
-This is due to an issue with newer versions of JAX
-```python
-import os
-os.environ['XLA_FLAGS'] = '--xla_cpu_use_thunk_runtime=false'
+#### 3. Single-Dose Simulation (Validation)
+```bash
+python run_combined_master_model.py --drug {gantenerumab,lecanemab}
+```
+- **Runtime**:   
+- **Purpose**: Single dose validation against published data
+- **Process**: Runs steady-state first, then applies single dose
+
+### Command Line Arguments
+
+| Argument | Options | Description |
+|----------|---------|-------------|
+| `--drug` | `gantenerumab`, `lecanemab` | Antibody type (affects parameters) |
+| `--years` | Integer | Simulation duration for no-dose runs |
+| `--outdir` | Path | Output directory (ODE version only) |
+
+### Viewing Results
+- Generated plots are saved in `generated/figures/` directory
+- Different simulation types create subdirectories:
+  - `drug_simulation/`: Single/multi-dose results
+  - `steady_state/`: No-dose simulation results
+  - `comparison/`: Model validation comparisons
+
+## Alternative Implementations
+
+### ODE-Based Implementation (Faster)
+
+For faster simulations and parameter exploration, use the direct ODE implementation:
+
+```bash
+cd ODE_version
+python run_no_dose.py --drug {gantenerumab,lecanemab} --years 20
 ```
 
-This flag should be added at the beginning of any script that uses JAX, including:
-- `run_combined_master_model_multi_dose.py`
-- `run_no_dose_combined_master_model.py`
-- Any other scripts that use JAX for model simulation
+**Key Features:**
+- Directly implements published equations from Supplementary Tables
+- Much faster computation time
+- Validated against SBML implementation
+- Uses exact parameter names from source material
+
+**Generated Outputs:**
+- AB42/AB40 ratios over time
+- Oligomer and monomer loads
+- Plaque and fibril dynamics
+- SUVR progression (not validated)
+- Microglia activation
+- Species composition for both AB40 and AB42
+
+**Limitations:**
+- Microglia cell count limitations when antibodies are present
+- Uses separate parameter file (`Geerts_Params2.csv`)
+
+### Tellurium Implementation (Parameter Analysis)
+
+For sensitivity analysis and parameter exploration:
+
+```bash
+cd Tellurium
+python agg_rate_sensitivity.py  # Aggregation rate sensitivity
+python CL_sensitivity.py        # IDE clearance sensitivity
+```
+
+**Advantages:**
+- Fast simulations for parameter exploration
+- Robust numerical stability
+- Validated against other implementations
+- Ideal for sensitivity analysis
+
+**Current Limitation:**
+- Multi-dose simulations not currently supported
+
+## Visualization Options
+
+### Real-time Visualization
+- Plots are automatically generated during simulation runs
+- Saved to appropriate subdirectories in `generated/figures/`
+
+### Post-simulation Visualization
+
+#### 1. Full Model Results
+```bash
+python plot_saved_solution.py --drug {gantenerumab,lecanemab}
+```
+- Visualizes multi-dose simulation results
+- Creates comprehensive plots of drug concentrations and Aβ dynamics
+
+#### 2. Steady State/No-Dose Results  
+```bash
+python visualize_steady_state.py --drug {gantenerumab,lecanemab} --years 20
+```
+- Visualizes natural history simulations
+- Useful for understanding baseline Aβ behavior
+- Saves plots to `generated/figures/steady_state/`
+
+#### 3. Model Comparison
+```bash
+python compare_no_dose_models.py --drug {gantenerumab,lecanemab} --years 20
+```
+- Compares SBML vs ODE implementations
+- Requires data from both implementations to be generated first:
+  ```bash
+  # Generate SBML data
+  python run_no_dose_combined_master_model.py --drug gantenerumab --years 20
+  
+  # Generate ODE data  
+  cd ODE_version
+  python run_no_dose.py --drug gantenerumab --years 20
+  ```
+
+### Key Visualizations Generated
+
+- **AB42 Ratios and Concentrations**: Brain plasma AB42/AB40 ratio, ISF AB42, CSF AB42
+- **Drug Pharmacokinetics**: Plasma and brain antibody concentrations
+- **Amyloid Species**: Individual oligomer, fibril, and plaque concentrations
+- **Microglia Dynamics**: Activation and cell count changes
+- **Transport Dynamics**: Blood-brain barrier and CSF transport
+
+## Model Generation Process
+
+The SBML model is automatically generated through these steps:
+
+1. **Module Combination**: `Combined_Master_Model.py` merges all modules
+2. **SBML Export**: Model saved as XML in `generated/sbml/`
+3. **JAX Conversion**: SBML converted to JAX using `sbml_to_ode_jax`
+4. **Simulation**: Uses `diffrax` for ODE solving
+
+**Generated Files:**
+- `generated/sbml/combined_master_model_{drug_type}.xml`: SBML model
+- `generated/jax/combined_master_model_jax.py`: JAX implementation
+
+## Runtime Considerations
+
+| Simulation Type | Typical Runtime | Use Case |
+|----------------|----------------|----------|
+| Multi-dose (SBML) | hours | Complete treatment analysis |
+| No-dose (SBML) |  hours | Natural history, validation |
+| Single-dose (SBML) | hours | Pharmacokinetic validation |
+| No-dose (ODE) | minutes | Fast parameter exploration |
+| Tellurium sensitivity | seconds | Parameter sensitivity analysis |
+
+**Optimization Tips:**
+- Use ODE version for parameter exploration
+- Use Tellurium for sensitivity analysis  
+- Run shorter simulations (fewer years) for testing
+
+## Dependencies and Configuration
+
+### Required Dependencies
+```txt
+jax==0.5.3
+jaxlib==0.5.3
+diffrax==0.7.0
+python-libsbml
+sbml_to_ode_jax
+tellurium
+matplotlib
+pandas
+numpy
+```
+
+### Important Configuration Notes
+
+1. **JAX Configuration**: Always set the XLA flag before running JAX-based scripts
+2. **Parameter Files**: 
+   - SBML version uses `parameters/PK_Geerts.csv`
+   - ODE version uses `ODE_version/Geerts_Params_2.csv`
+3. **Output Directories**: Automatically created if they don't exist
+4. **Memory Requirements**: Multi-dose simulations may require 8GB+ RAM
+
+### Troubleshooting
+
+**Common Issues:**
+- JAX runtime errors: Ensure XLA_FLAGS is set
+- Long runtimes: Consider using ODE version or Tellurium simulation periods
+- Missing dependencies: Run `pip install -r requirements.txt`
+- File path errors: Run scripts from the directory they exist in
