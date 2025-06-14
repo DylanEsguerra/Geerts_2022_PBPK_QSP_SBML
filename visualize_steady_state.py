@@ -46,6 +46,7 @@ def load_steady_state_data(drug_type="gantenerumab", years=20):
         Tuple of (time_points, species_data, model)
     """
     # Load the saved data
+    years = float(years)
     data_path = Path(f"generated/{years}_year_simulation_results_{drug_type.lower()}.csv")
 
     if not data_path.exists():

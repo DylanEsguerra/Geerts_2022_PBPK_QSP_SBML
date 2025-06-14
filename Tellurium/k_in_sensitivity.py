@@ -2,15 +2,22 @@ import tellurium as te
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import os
 
 
-# Load the Antimony model from the text file
-with open("Geerts_2023_Antimony-3.txt", "r") as f:
-    antimony_str = f.read()
+# Add parent directory to path
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Create directory for sensitivity analysis figures if it doesn't exist
+sensitivity_figures_dir = os.path.join('simulation_plots', 'sensitivity_analysis')
+os.makedirs(sensitivity_figures_dir, exist_ok=True)
+
+# Load the SBML model
+xml_path = os.path.join(parent_dir, 'generated', 'sbml', 'combined_master_model.xml')
+with open(xml_path, "r") as f:
+    sbml_str = f.read()
 # Load the model
-rr = te.loada(antimony_str)
-#rr = te.loadSBMLModel(sbml_str)
+rr = te.loadSBMLModel(sbml_str)
 rr.setIntegrator('cvode')
 rr.integrator.absolute_tolerance = 1e-12
 rr.integrator.relative_tolerance = 1e-8
@@ -43,7 +50,7 @@ ax2.set_title('AB42 Oligomer16', fontsize=14)
 ax1.tick_params(axis='both', which='major', labelsize=11)
 ax2.tick_params(axis='both', which='major', labelsize=11)
 plt.tight_layout(pad=2.0)
-plt.savefig('K_in_AB42_rate_sensitivity.png', dpi=300, bbox_inches='tight')
+plt.savefig(os.path.join(sensitivity_figures_dir, 'K_in_AB42_rate_sensitivity.png'), dpi=300, bbox_inches='tight')
 plt.show() 
 
 # --- Sensitivity analysis for k_APP_production ---
@@ -72,5 +79,5 @@ ax4.set_title('AB42 Oligomer16', fontsize=14)
 ax3.tick_params(axis='both', which='major', labelsize=11)
 ax4.tick_params(axis='both', which='major', labelsize=11)
 plt.tight_layout(pad=2.0)
-plt.savefig('k_APP_production_sensitivity.png', dpi=300, bbox_inches='tight')
+plt.savefig(os.path.join(sensitivity_figures_dir, 'k_APP_production_sensitivity.png'), dpi=300, bbox_inches='tight')
 plt.show() 

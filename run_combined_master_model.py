@@ -26,7 +26,7 @@ root_dir = Path(__file__).parents[1]  # Go up 1 level to reach models directory
 sys.path.append(str(root_dir))
 
 # Import the master model
-from Geerts.Modules.Combined_Master_Model import create_combined_master_model, load_parameters_from_csv, save_model
+from Modules.Combined_Master_Model import create_combined_master_model, load_parameters_from_csv, save_model
 
 def generate_jax_model(drug_type="gantenerumab"):
     """Generate JAX model from the combined master model

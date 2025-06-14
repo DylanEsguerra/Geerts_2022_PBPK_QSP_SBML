@@ -1,7 +1,17 @@
 import tellurium as te
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+import sys
+
+# Add parent directory to path to import K_rates_extrapolate
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent_dir)
 from K_rates_extrapolate import calculate_k_rates
+
+# Create directory for sensitivity analysis figures if it doesn't exist
+sensitivity_figures_dir = os.path.join('simulation_plots', 'sensitivity_analysis')
+os.makedirs(sensitivity_figures_dir, exist_ok=True)
 
 # Define sensitivity ranges at the top for consistency across all analyses
 # These are in units of 1/h and need to be converted to 1/s before being used 
@@ -22,15 +32,16 @@ simulation_selections = ['time', '[AB42_Monomer]',
                         '[AB42_Plaque_unbound]']
 
 # Load the SBML model
-with open("combined_master_model.xml", "r") as f:
+xml_path = os.path.join(parent_dir, 'generated', 'sbml', 'combined_master_model.xml')
+with open(xml_path, "r") as f:
     sbml_str = f.read()
 
 rr = te.loadSBMLModel(sbml_str)
 
 # More robust integrator settings
 rr.setIntegrator('cvode')
-rr.integrator.absolute_tolerance = 1e-15  # Tighter tolerance
-rr.integrator.relative_tolerance = 1e-15  # Tighter tolerance
+rr.integrator.absolute_tolerance = 1e-8  # Less strict tolerance
+rr.integrator.relative_tolerance = 1e-8  # Less strict tolerance
 rr.integrator.setValue('stiff', True)
 
 def plot_extrapolated_rates_sensitivity(kb0_sim_results, kb1_sim_results):
@@ -275,7 +286,7 @@ def plot_extrapolated_rates_sensitivity(kb0_sim_results, kb1_sim_results):
                  fontsize=18, fontweight='bold', y=0.98)
     
     plt.tight_layout(pad=3.0)
-    plt.savefig('simulation_plots/agg_rate_extrapolation_sensitivity.png', dpi=300, bbox_inches='tight')
+    plt.savefig(os.path.join(sensitivity_figures_dir, 'agg_rate_extrapolation_sensitivity.png'), dpi=300, bbox_inches='tight')
     plt.show()
     
     # Reset font parameters
@@ -395,7 +406,7 @@ fig.suptitle('AB42 Aggregation Sensitivity vs kb0 (Dimer→Monomer)\nOriginal va
              fontsize=18, fontweight='bold', y=0.98)
 
 plt.tight_layout(pad=3.0)
-plt.savefig('simulation_plots/agg_rate_sensitivity_kb0.png', dpi=300, bbox_inches='tight')
+plt.savefig(os.path.join(sensitivity_figures_dir, 'agg_rate_sensitivity_kb0.png'), dpi=300, bbox_inches='tight')
 plt.show()
 
 # --- Sensitivity analysis for kb1_fortytwo ---
@@ -411,8 +422,8 @@ for i, kb1 in enumerate(kb1_fortytwo_values):
         rr.reset()
         # More robust integrator reset
         rr.setIntegrator('cvode')
-        rr.integrator.absolute_tolerance = 1e-12
-        rr.integrator.relative_tolerance = 1e-12
+        rr.integrator.absolute_tolerance = 1e-8
+        rr.integrator.relative_tolerance = 1e-8
         rr.integrator.setValue('stiff', True)
         
         Garai_kb1 = kb1 / 3600  # Convert to 1/s for calculate_k_rates
@@ -494,7 +505,7 @@ fig2.suptitle('AB42 Aggregation Sensitivity vs kb1 (Trimer→Dimer)\nOriginal va
               fontsize=18, fontweight='bold', y=0.98)
 
 plt.tight_layout(pad=3.0)
-plt.savefig('simulation_plots/agg_rate_sensitivity_kb1.png', dpi=300, bbox_inches='tight')
+plt.savefig(os.path.join(sensitivity_figures_dir, 'agg_rate_sensitivity_kb1.png'), dpi=300, bbox_inches='tight')
 plt.show()
 
 # Reset font parameters to original values
