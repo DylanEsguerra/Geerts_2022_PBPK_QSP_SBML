@@ -40,18 +40,19 @@ The model is organized into several modules, each responsible for specific aspec
    - Models Aβ dimer formation and dynamics
    - Includes dimer formation from monomers, dissociation back to monomers
    - Accounts for plaque-catalyzed dimer formation and antibody binding
-   - Includes microglia-mediated clearance of dimers
 
 3. **[Geerts_Oligomer_3_12.py](Modules/Geerts_Oligomer_3_12.py)**
    - Models small Aβ oligomer formation and dynamics (3-12mers)
    - Includes oligomer formation from smaller species and monomers
    - Accounts for oligomer dissociation, plaque formation, and antibody binding
-   - Includes microglia-mediated clearance and transport coefficients
+   - Includes antibody binding and microglia-mediated clearance
 
 4. **[Geerts_Oligomer_13_16.py](Modules/Geerts_Oligomer_13_16.py)**
    - Models medium Aβ oligomer formation and dynamics (13-16mers)
    - Similar processes to small oligomers but for larger species
    - Includes transition to plaque formation
+   - Includes antibody binding and microglia-mediated clearance
+
 
 5. **[Geerts_Fibril_17_18.py](Modules/Geerts_Fibril_17_18.py)**
    - Models small Aβ fibril formation and dynamics (17-18mers)
@@ -63,6 +64,8 @@ The model is organized into several modules, each responsible for specific aspec
    - Models large Aβ fibril (19-24mers) and plaque formation and dynamics 
    - Similar processes to small fibrils but for larger species
    - Includes final transition to plaque formation
+   - Includes antibody binding and microglia-mediated clearance
+
 
 ### PBPK Components (Antibody Distribution)
 
@@ -81,7 +84,8 @@ The model is organized into several modules, each responsible for specific aspec
    - Includes monomer antibody binding reactions 
 
 3. **[Geerts_PVS_ARIA.py](Modules/Geerts_PVS_ARIA.py)**
-   - Models perivascular space (PVS) dynamics and ARIA
+   - Models perivascular space (PVS) dynamics
+   - ARIA is not implemented yet
    - Includes perivascular space fluid flow and transport
    - Includes clearance of Aβ through the glymphatic system
    - Models antibody and Aβ transport between PVS and ISF
@@ -113,7 +117,7 @@ Each ODE term is translated into corresponding reactions:
 - Some Rate Rules / Assignment Rules are still required for time dependent terms 
     - Microglia Cell Count
     - IDE clearance rate 
-    - Antibody Dosing Dynamics 
+    - Antibody Dosing forcing function 
 
 ### Rate Constant Handling
 Rate constants are carefully managed to ensure:
@@ -126,23 +130,45 @@ Rate constants are carefully managed to ensure:
 
 The model uses sophisticated rate extrapolation implemented in `K_rates_extrapolate.py`:
 
-**Add Equation from Publication** 
+![K_rates_extrapolate](generated/figures/K_Rates_Extrapolate.png)
+
+*Forward and Backward rate constants for higher order aggregates extrapolated from experimentally determined low order rates. This section of the model has minimal information in the supplement and is likely to be one of the primary areas for improvement. We suspect issues with the backward rate constants being much lower than the referenced material.*
+
+
 
 **Key Features:**
 - Uses experimentally determined rates for small oligomers as anchor points
 - Handles Aβ40 and Aβ42 separately with different aggregation propensities
-- **Note**: Backward rates are not provided in the original supplement and are copied from referenced paper Garai 2013
+- **Note**: Backward rates are not provided in the original supplement and are copied from referenced paper [Garai 2013](https://www.pnas.org/doi/10.1073/pnas.1222478110?url_ver=Z39.88-2003&rfr_id=ori%3Arid%3Acrossref.org&rfr_dat=cr_pub++0pubmed)
 - **Note**: Found issues with Garai Rates including one issue in publication itself and another discrepancy between rate in Geerts and published rate
+    - Garai et al. 2013 Figure 7 fails for published value of dimer to trimer rate for Abeta 42: k+23 (kf1 in Geerts) = 38 (M⁻¹s⁻¹), but is reproducible with k+23 = 380 (M⁻¹s⁻¹)
+    - Geerts TableS2 cites Garai for kf0 and kf1, but is missing kb0 and kb1
+    - Geerts TableS2 has kf0 ABeta 42 = 0.0003564 nM/h = 9.9 (M⁻¹s⁻¹) when Garai has 9.9 (M⁻¹s⁻¹) × 10²
+
+The full rate extrapolation can be seen here with the x-axis being oligomer size. Notice how for Abeta 42 the backward rate is always above the forward rate. We believe this is responsible for the overabundance in monomers and failure to aggregate. 
+
+![Rate Extrapolation](generated/figures/rate_extrapolation.png)
+
 
 ### IDE Clearance Decline with Age
 
-The model implements age-dependent decline in insulin-degrading enzyme (IDE) clearance:
+The model implements age-dependent decline in insulin-degrading enzyme (IDE) clearance in the equation for monomer dynamics:
 
-**Decline Equation From Paper:**
+![Abeta 42 Monomer](generated/figures/Abeta42_M_equation.png)
 
-**Note** Show what was in supplement. Mention that only exponential rate is available
+The clearance term has its own time-dependent behavior 
+![IDE](generated/figures/IDE_CL.png)
 
 **Important Note**: This age-dependent decline is mentioned in the main publication but the specific equation and parameters are not provided in Supplementary Table 2. 
+
+```
+# This term is represented here as it is in TableS2 without the slope or time dependent behavior
+
+ -(IDE_conc * AB42_IDE_Kcat_lin * ((AB42_Monomer * Unit_removal_1)^AB42_IDE_Hill / ((AB42_Monomer * Unit_removal_1)^AB42_IDE_Hill 
+
+```
+
+No equation is given to show how clearance changes with age so we chose to implement one based on the IDE equation from the main paper. A linear slope was unavailable in the supplement so we chose to use the published exponential decline rate. 
 
 ### Individual Oligomer Tracking
 
@@ -153,27 +179,14 @@ The model tracks individual oligomer species (2-mers through 24-mers) rather tha
 - **Validation Capability**: Individual species can be compared with experimental data
 - **Mechanistic Insight**: Understanding of aggregation cascade progression
 
-### Aβ Production
-
-The APP processing module models the early stages of Aβ production:
-
-**APP Processing Cascade Show Figure:**
-```
-APP → C99 → Aβ40/Aβ42
-```
-
-**Key Features:**
-- Models APP production and turnover
-- Accounts for γ-secretase activity variations
-- Includes Aβ40/Aβ42 ratio regulation
-- Incorporates IDE-mediated monomer clearance
 
 ### Microglia Dynamics with Dosing
 
 Microglia activation responds to antibody-bound amyloid:
 
-**Show Published Activation Equation and Results:**
+![Microglia Dynamics](generated/figures/drug_simulation_multi_dose/gantenerumab_microglia_dynamics.png)
 
+*Results for Gantenerumab 3-year study with dosing every 4 weeks for 1.5 years*
 
 **Dynamic Features:**
 - Baseline activation level in absence of treatment
@@ -248,10 +261,10 @@ The model uses sophisticated ODE solvers:
 1. **Aggregation Dynamics**: Investigating discrepancies in Aβ aggregation behavior
 2. **Parameter Uncertainty**: Some parameters lack direct experimental validation
 3. **Computational Cost**: Full model has significant runtime for long simulations
+4. **Initial Condition**: Given the issues with Abeta aggregation when simulating the natural life cycle we cannot use the 70-year result as an initial condition for drug dosing. At the moment we use 1000 hours. Anything more increases runtime likely due to unrealistic amounts of Abeta. 
 
 ### Ongoing Validation
 
-- Cross-validation between SBML, ODE, and Tellurium implementations
 - Parameter sensitivity analysis using Tellurium framework
 - Comparison with published experimental data
 - Investigation of aggregation pathway parameters 

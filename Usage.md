@@ -12,7 +12,7 @@ This document provides comprehensive instructions for installing, running, and v
 ## Installation
 
 ### Prerequisites
-- Python 3.8 or higher
+- Python 3.12
 - Virtual environment (recommended)
 
 ### Setup Steps
@@ -41,6 +41,9 @@ This document provides comprehensive instructions for installing, running, and v
    os.environ['XLA_FLAGS'] = '--xla_cpu_use_thunk_runtime=false'
    ```
 
+   This is due to a known diffrax/JAX issue with jax==0.5.3.
+   See [XLA_FLAGS issue](https://github.com/jax-ml/jax/discussions/25711) for details.
+
 ## Running Simulations
 
 ### Main SBML-Based Simulations
@@ -49,16 +52,16 @@ This document provides comprehensive instructions for installing, running, and v
 ```bash
 python run_combined_master_model_multi_dose.py --drug {gantenerumab,lecanemab}
 ```
-- **Runtime**: Multiple hours
-- **Purpose**: Complete treatment simulation with multiple doses
+- **Runtime**: NA
+- **Purpose**: Complete treatment simulation with full dosing regimen (3 years)
 - **Output**: Comprehensive drug and Aβ dynamics over treatment period
 
 #### 2. No-Dose Simulation (Natural History)
 ```bash
 python run_no_dose_combined_master_model.py --drug {gantenerumab,lecanemab} --years 20
 ```
-- **Runtime**: 
-- **Purpose**: Natural amyloid aggregation without treatment
+- **Runtime**: NA
+- **Purpose**: Natural amyloid aggregation without treatment. This can be used to set the initial condition (70 years) for drug studies
 - **Arguments**: 
   - `--drug`: Required for volume parameter selection
   - `--years`: Simulation duration (default: 100)
@@ -67,7 +70,7 @@ python run_no_dose_combined_master_model.py --drug {gantenerumab,lecanemab} --ye
 ```bash
 python run_combined_master_model.py --drug {gantenerumab,lecanemab}
 ```
-- **Runtime**:   
+- **Runtime**: NA
 - **Purpose**: Single dose validation against published data
 - **Process**: Runs steady-state first, then applies single dose
 
@@ -75,7 +78,7 @@ python run_combined_master_model.py --drug {gantenerumab,lecanemab}
 
 | Argument | Options | Description |
 |----------|---------|-------------|
-| `--drug` | `gantenerumab`, `lecanemab` | Antibody type (affects parameters) |
+| `--drug` | `gantenerumab`, `lecanemab` | Antibody type (affects parameters and dosing method) |
 | `--years` | Integer | Simulation duration for no-dose runs |
 | `--outdir` | Path | Output directory (ODE version only) |
 
@@ -114,6 +117,7 @@ python run_no_dose.py --drug {gantenerumab,lecanemab} --years 20
 **Limitations:**
 - Microglia cell count limitations when antibodies are present
 - Uses separate parameter file (`Geerts_Params2.csv`)
+- Not set up for drug dosing
 
 ### Tellurium Implementation (Parameter Analysis)
 
@@ -127,12 +131,12 @@ python CL_sensitivity.py        # IDE clearance sensitivity
 
 **Advantages:**
 - Fast simulations for parameter exploration
-- Robust numerical stability
 - Validated against other implementations
 - Ideal for sensitivity analysis
 
 **Current Limitation:**
 - Multi-dose simulations not currently supported
+- Lower numerical stability
 
 ## Visualization Options
 
@@ -230,12 +234,12 @@ numpy
    - SBML version uses `parameters/PK_Geerts.csv`
    - ODE version uses `ODE_version/Geerts_Params_2.csv`
 3. **Output Directories**: Automatically created if they don't exist
-4. **Memory Requirements**: Multi-dose simulations may require 8GB+ RAM
+4. **Directory Navigation**: All scripts are set up to be run from the directory they exist in
 
 ### Troubleshooting
 
 **Common Issues:**
 - JAX runtime errors: Ensure XLA_FLAGS is set
-- Long runtimes: Consider using ODE version or Tellurium simulation periods
+- Long runtimes: Consider using ODE version or Tellurium for simulations
 - Missing dependencies: Run `pip install -r requirements.txt`
 - File path errors: Run scripts from the directory they exist in

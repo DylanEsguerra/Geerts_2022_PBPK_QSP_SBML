@@ -12,7 +12,7 @@ This document presents the key validation results, model comparisons, and sensit
 
 ### Single Dose Antibody Pharmacokinetics (Figure 4 Replication)
 
-The figure below demonstrates that our model accurately reproduces the published plasma pharmacokinetics (PK) for a single 300 mg subcutaneous dose of gantenerumab. The solid black line shows the model output, while the red circles represent experimental data from the literature.
+The figure below demonstrates that our model accurately reproduces the published plasma pharmacokinetics (PK) for a single 300 mg subcutaneous dose of gantenerumab. The solid black line shows the model output, while the red circles represent experimental data from the literature extracted using WebPlotDigitizer.
 
 ![Gantenerumab Plasma PK: 300 mg subcutaneous](generated/figures/drug_simulation/gantenerumab_pk_brain_plasma_master.png)
 
@@ -26,11 +26,14 @@ However, running our model for the natural life cycle of amyloid aggregation sho
 
 *Replication of Figure 3: Simulation of the natural life cycle (from 20–100 years) of amyloid aggregation for an individual virtual Alzheimer's disease patient as in an observational study. Age-related pathology is implemented as an exponential decrease in monomer degradation. The publication used linear decline, but stated that both provide similar results and only the exponential parameters were made available. This decline resulted in an increased amount of monomers being pushed into the aggregation pathway. We fail to reproduce the steep transition around the age of 60 years followed by a slow saturation at higher ages for the ABeta42/40 ratio, ISF or CSF ABeta 42 concentration.*
 
+![Figure 3 Geerts](generated/figures/Figure3.png)
+*Published Fig 3*
+
 **Key Discrepancies:**
 - ❌ Missing steep transition around age 60
 - ❌ Insufficient saturation behavior at higher ages  
-- ❌ ABeta42/40 ratio dynamics don't match published curves
-- ❌ ISF and CSF ABeta42 concentrations show same issues
+- ❌ ISF and CSF ABeta42 concentrations don't match published curves
+- ❌ ABeta 42/40 ratio shows the same issue although it does match in terms of scale
 
 ## Implementation Comparisons
 
@@ -79,21 +82,19 @@ Analysis of sensitivity to amyloid beta aggregation rates reveals key model beha
 
 *Sensitivity analysis showing the effects of varying backward rate constants (kb0, kb1) on monomer, oligomer, fibril, and plaque concentrations over a 100-year simulation.*
 
+![Dimer to Trimer Rate Sensitivity and Gain values](Tellurium/simulation_plots/sensitivity_analysis/agg_rate_extrapolation_sensitivity.png)
+
+*Sensitivity analysis showing the effects of varying backward rate constants (kb0, kb1), higher order backward rates, and calculated Gain factors*
+
 **Key Findings:**
+
+- Much lower backward rates can result in more interesting Abeta42 dynamics and Gain factors that more closely match those published in the supplement
 
 
 **Parameter Ranges Tested:**
-- kb0 (dimer dissociation): 
-- kb1 (trimer dissociation): 
+- kb0 (dimer dissociation Abeta 42): [0.1, 50.0]
+- kb1 (trimer dissociation Abeta 42): [1e-05, 0.01] 
 - Forward rates: Maintained at literature values
-
-### IDE Clearance Sensitivity
-
-Analysis of insulin-degrading enzyme (IDE) clearance sensitivity:
-**Add Figures**
-
-### Sensitivity Analysis Summary
-
 
 ## Known Limitations
 
@@ -127,18 +128,18 @@ Some parameters lack direct experimental validation:
 ### Computational Performance
 
 **Runtime Considerations:**
-- Full multi-dose simulation: multiple Hours
-- No-dose simulation (20 years): 20 minutes (confirm)
-- Parameter sensitivity analysis: 2-5 hours per parameter set
+- Full multi-dose simulation: NA
+- No-dose simulation (20 years): NA
+- Parameter sensitivity analysis: NA
 
 **Optimization Approaches:**
 - Use Tellurium or ODE version for sensitivity analysis
-
+- Scipy or JAX Optax for optimization
 
 ## Validation Roadmap
 
 ### Short-term Goals
-1. **Aggregation Parameter Investigation**: Systematic review of all aggregation-related parameters
+1. **Parameter Investigation**: Systematic review of all parameters in the supplementary Tables
 2. **Literature Cross-validation**: Detailed comparison with additional published datasets
 3. **Parameter Sensitivity Completion**: Full sensitivity analysis across all uncertain parameters
 
