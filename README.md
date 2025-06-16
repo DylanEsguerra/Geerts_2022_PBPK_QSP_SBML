@@ -1,6 +1,6 @@
 # Geerts Model: Open-Source PBPK-QSP Model for Alzheimer's Disease
 
-![GitHub Repository](https://github.com/DylanEsguerra/Geerts_2023_PBPK_QSP_SBML_Model?tab=readme-ov-file)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/DylanEsguerra/Geerts_2023_PBPK_QSP_SBML_Model)
 
 This repository contains an open-sourced implementation of the Geerts et al. 2023 combined physiologically-based pharmacokinetic and quantitative systems pharmacology model for modeling amyloid aggregation in Alzheimer's disease.
 
