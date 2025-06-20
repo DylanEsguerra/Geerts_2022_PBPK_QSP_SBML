@@ -16,9 +16,7 @@ from pathlib import Path
 import traceback
 import re
 
-# Add parent directory to path to import K_rates_extrapolate
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from K_rates_extrapolate import calculate_k_rates
 
 def calculate_suvr(states, state_names, c1=2.52, c2=400000, c3=1.3, c4=3.5):
     """
@@ -99,7 +97,8 @@ def run_simulation(antibody_type='Gant', simulation_years=10, save_dir='results/
     save_path.mkdir(parents=True, exist_ok=True)
     
     # Load parameters
-    params = load_parameters(antibody_type)
+    antibody_name = "Gantenerumab" if antibody_type == 'Gant' else "Lecanemab"
+    params = load_parameters(antibody_name=antibody_type, enable_forward_rate_multiplier=True)
     
     # Get state names
     state_names = get_state_names()
@@ -120,7 +119,7 @@ def run_simulation(antibody_type='Gant', simulation_years=10, save_dir='results/
     microglia_cell_count_idx = state_names.index('Microglia_cell_count')
     cl_ab40_ide_idx = state_names.index('CL_AB40_IDE')
     cl_ab42_ide_idx = state_names.index('CL_AB42_IDE')
-    
+     
     # Set initial values
     y0 = y0.at[fcrn_free_bbb_idx].set(4.982e04)  # Fcrn_free_BBB
     y0 = y0.at[fcrn_free_bcsfb_idx].set(4.982e04)  # Fcrn_free_BcsfB

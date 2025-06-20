@@ -18,8 +18,8 @@ with open(xml_path, "r") as f:
 # Load the model
 rr = te.loadSBMLModel(sbml_str)
 rr.setIntegrator('cvode')
-rr.integrator.absolute_tolerance = 1e-12
-rr.integrator.relative_tolerance = 1e-12
+rr.integrator.absolute_tolerance = 1e-10
+rr.integrator.relative_tolerance = 1e-10
 rr.integrator.setValue('stiff', True)
 
 # Get all floating species, global parameters, and reactions

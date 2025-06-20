@@ -86,13 +86,13 @@ EC50_Up,1,nano*mol/L, EC50_Up,Geerts fitted,0,
 SmaxPro,100,dimensionless, SmaxPro,Geerts fitted,0,
 EC50_pro,1,nano*mol/L, EC50_pro,Geerts fitted,0,
 original_kf0_forty,50.0,M⁻¹s⁻¹,AB40 monomer to dimer forward rate,Garai Tabel 1,0,
-original_kf0_fortytwo,990.0,M⁻¹s⁻¹,AB42 monomer to dimer forward rate,Garai Tabel 1,0, using a value an order of magnitude lower than Garai
+original_kf0_fortytwo,99.0,M⁻¹s⁻¹,AB42 monomer to dimer forward rate,Garai Tabel 1,0, using a value an order of magnitude lower than Garai
 original_kf1_forty,20.0,M⁻¹s⁻¹,AB40 dimer to trimer forward rate,Garai Tabel 1,0,
 original_kf1_fortytwo,38.0,M⁻¹s⁻¹,AB42 dimer to trimer forward rate,Garai Tabel 1,0,
 original_kb0_forty,0.0027,s⁻¹,AB40 dimer to monomer backward rate,Garai Tabel 1,0,
 original_kb0_fortytwo,12.7e-03,s⁻¹,AB42 dimer to monomer backward rate,Garai Tabel 1,0,
 original_kb1_forty,2.777777777777778e-09,s⁻¹,AB40 trimer to dimer backward rate using baseline,Garai,0,
-original_kb1_fortytwo,0.3e-03,s⁻¹,AB42 trimer to dimer backward rate,Garai,0,
+original_kb1_fortytwo,2.777777777777778e-09,s⁻¹,AB42 trimer to dimer backward rate,Garai,0,
 forAsymp40,0.3,dimensionless,forAsympA,Geerts assumed,0,
 forAsymp42,2.0,dimensionless,forAsympB,Geerts assumed,0,
 backAsymp40,0.3,dimensionless,NA,Geerts assumed,0,
@@ -109,7 +109,7 @@ k_O2_M_fortytwo,45.72,1/h,NA,Garai Tabel 1 ,1,Unsure of these
 k_O2_O3_forty,0.000072,L / (nano * mol * h),diToTriA, Garai Tabel 1 ,1,Unsure of these
 k_O3_O2_forty,0.00001,1/h,Baseline_AB40_down_cut_off,Garai value was 0 so using Geerts baseline,1,Unsure of these
 k_O2_O3_fortytwo,0.0001368,L / (nano * mol * h),diToTriB, Garai Tabel 1 ,0,
-k_O3_O2_fortytwo,1.08,1/h, NA,Garai Tabel 1 ,0,
+k_O3_O2_fortytwo,0.00001,1/h, NA,Garai Tabel 1 ,0,
 k_F24_O12_forty,2,dimensionless,Baseline_AB40_Oligomer_Fibril_splitting,Geerts assumed,0,
 k_F24_O12_fortytwo,1,dimensionless,Baseline_AB42_Oligomer_Fibril_splitting,Geerts assumed,0,
 k_O13_Plaque_forty,0.000005,L / (nano * mol * h),Baseline_AB40_Oligomer_Fibril_Plaque,Geerts assumed,0,

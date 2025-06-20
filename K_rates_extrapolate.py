@@ -12,6 +12,7 @@ Key Features:
 - Implements Hill function-based extrapolation with asymptotic behavior
 - Converts rates from literature units (M⁻¹s⁻¹, s⁻¹) to model units (nM⁻¹h⁻¹, h⁻¹)
 - Calculates gain factors (forward/backward ratios) to assess aggregation propensity
+- Calculates size-dependent plaque formation rates (multiplied by oligomer/fibril length)
 
 The extrapolated rates are used by the oligomer and fibril modules to model the complete
 aggregation cascade from monomers through oligomers to fibrils and plaques.
@@ -63,6 +64,80 @@ def extrapolate_kb(kb0, kb1, j, Asymp, HillB, rate_cutoff=None):
         
     return kj_b
 
+
+def calculate_plaque_rates(baseline_ab40_rate, baseline_ab42_rate, forward_rates_forty, forward_rates_fortytwo, enable_forward_rate_multiplier=True):
+    """
+    Calculate plaque formation rates for oligomers and fibrils.
+    If enable_forward_rate_multiplier is True, rates are multiplied by the forward rate for that aggregate.
+    
+    Args:
+        baseline_ab40_rate: Baseline plaque formation rate for AB40
+        baseline_ab42_rate: Baseline plaque formation rate for AB42
+        forward_rates_forty: Dictionary of forward rates for AB40 aggregates
+        forward_rates_fortytwo: Dictionary of forward rates for AB42 aggregates
+        enable_forward_rate_multiplier: If True, multiply rates by forward rate for that aggregate
+    
+    Returns:
+        Dictionary containing plaque formation rates
+    """
+    plaque_rates = {}
+    
+    # Generate oligomer sizes from 13 to 16 (oligomers that can form plaques)
+    oligomer_sizes = list(range(13, 17))
+    
+    # Generate fibril sizes from 17 to 20 (fibrils that can form plaques)
+    fibril_sizes = list(range(17, 21))
+    
+    # Calculate plaque rates for oligomers
+    for size in oligomer_sizes:
+        if enable_forward_rate_multiplier:
+            # Get the forward rate for this oligomer size
+            forward_rate_key_40 = f'k_O{size-1}_O{size}_forty'
+            forward_rate_key_42 = f'k_O{size-1}_O{size}_fortytwo'
+            
+            if forward_rate_key_40 in forward_rates_forty and forward_rate_key_42 in forward_rates_fortytwo:
+                # Multiply baseline by forward rate
+                plaque_rates[f'k_O{size}_Plaque_forty'] = baseline_ab40_rate * forward_rates_forty[forward_rate_key_40]
+                plaque_rates[f'k_O{size}_Plaque_fortytwo'] = baseline_ab42_rate * forward_rates_fortytwo[forward_rate_key_42]
+            else:
+                # Fallback to baseline rates if forward rates not found
+                print(f"Warning: Forward rates not found for oligomer size {size}, using baseline rates")
+                plaque_rates[f'k_O{size}_Plaque_forty'] = baseline_ab40_rate
+                plaque_rates[f'k_O{size}_Plaque_fortytwo'] = baseline_ab42_rate
+        else:
+            # Use baseline rates
+            plaque_rates[f'k_O{size}_Plaque_forty'] = baseline_ab40_rate
+            plaque_rates[f'k_O{size}_Plaque_fortytwo'] = baseline_ab42_rate
+    
+    # Calculate plaque rates for fibrils
+    for size in fibril_sizes:
+        if enable_forward_rate_multiplier:
+            # Get the forward rate for this fibril size
+            if size == 17:
+                # Special case: transition from oligomer to fibril
+                forward_rate_key_40 = f'k_O{size-1}_F{size}_forty'
+                forward_rate_key_42 = f'k_O{size-1}_F{size}_fortytwo'
+            else:
+                # Normal fibril growth
+                forward_rate_key_40 = f'k_F{size-1}_F{size}_forty'
+                forward_rate_key_42 = f'k_F{size-1}_F{size}_fortytwo'
+            
+            if forward_rate_key_40 in forward_rates_forty and forward_rate_key_42 in forward_rates_fortytwo:
+                # Multiply baseline by forward rate
+                plaque_rates[f'k_F{size}_Plaque_forty'] = baseline_ab40_rate * forward_rates_forty[forward_rate_key_40]
+                plaque_rates[f'k_F{size}_Plaque_fortytwo'] = baseline_ab42_rate * forward_rates_fortytwo[forward_rate_key_42]
+            else:
+                # Fallback to baseline rates if forward rates not found
+                print(f"Warning: Forward rates not found for fibril size {size}, using baseline rates")
+                plaque_rates[f'k_F{size}_Plaque_forty'] = baseline_ab40_rate
+                plaque_rates[f'k_F{size}_Plaque_fortytwo'] = baseline_ab42_rate
+        else:
+            # Use baseline rates
+            plaque_rates[f'k_F{size}_Plaque_forty'] = baseline_ab40_rate
+            plaque_rates[f'k_F{size}_Plaque_fortytwo'] = baseline_ab42_rate
+    
+    return plaque_rates
+
 def convert_forward_rate(rate_M_s):
     """Convert from M⁻¹s⁻¹ to nM⁻¹h⁻¹"""
     # 1 M⁻¹s⁻¹ = 3.6 × 10⁻⁶ nM⁻¹h⁻¹
@@ -82,7 +157,7 @@ def calculate_k_rates(
     original_kb0_forty=2.7 * 10**-3,  # AB40 dimer to monomer
     original_kb0_fortytwo=12.7 * 10**-3,  # AB42 dimer to monomer
     original_kb1_forty=0.00001 / 3600,  # AB40 trimer to dimer
-    original_kb1_fortytwo=0.3 * 10**-3,  # AB42 trimer to dimer
+    original_kb1_fortytwo=0.00001 / 3600,  # AB42 trimer to dimer
     
     # Hill coefficients and asymptotic values
     forAsymp40=0.3,  # Asymptotic value for AB40 forward rates
@@ -95,7 +170,12 @@ def calculate_k_rates(
     BackHill42=3.0,   # Hill coefficient for AB42 backward rates
     
     # Rate cutoff
-    rate_cutoff=0.00001
+    rate_cutoff=0.00001,
+    
+    # Plaque formation parameters
+    baseline_ab40_plaque_rate=0.000005,  # Baseline plaque formation rate for AB40
+    baseline_ab42_plaque_rate=0.00005,   # Baseline plaque formation rate for AB42
+    enable_plaque_forward_rate_multiplier=True   # If True, multiply plaque rates by forward rate for that aggregate
 ):
     """
     Calculate forward and backward rates for both AB40 and AB42 oligomers
@@ -137,11 +217,17 @@ def calculate_k_rates(
         Hill coefficient for AB42 backward rates
     rate_cutoff: float
         Minimum allowed rate for backward reactions
+    baseline_ab40_plaque_rate: float
+        Baseline plaque formation rate for AB40
+    baseline_ab42_plaque_rate: float
+        Baseline plaque formation rate for AB42
+    enable_plaque_forward_rate_multiplier: bool
+        If True, multiply plaque rates by forward rate for that aggregate
     
     Returns:
     --------
     dict
-        Dictionary containing all extrapolated rate constants
+        Dictionary containing all extrapolated rate constants including plaque rates
     """
     # Convert rates to appropriate units
     kf0_forty = convert_forward_rate(original_kf0_forty)  
@@ -200,6 +286,62 @@ def calculate_k_rates(
             rates[f'k_F{size}_F{size-1}_forty'] = kb_forty[i]
             rates[f'k_F{size-1}_F{size}_fortytwo'] = kf_fortytwo[i]
             rates[f'k_F{size}_F{size-1}_fortytwo'] = kb_fortytwo[i]
+    
+    # Create separate dictionaries for forward rates only (needed for plaque calculation)
+    forward_rates_forty = {}
+    forward_rates_fortytwo = {}
+    
+    for i, size in enumerate(oligomer_sizes):
+        if size < 17:
+            # Oligomer forward rates
+            forward_rates_forty[f'k_O{size-1}_O{size}_forty'] = kf_forty[i]
+            forward_rates_fortytwo[f'k_O{size-1}_O{size}_fortytwo'] = kf_fortytwo[i]
+        elif size == 17:
+            # Transition forward rates
+            forward_rates_forty[f'k_O{size-1}_F{size}_forty'] = kf_forty[i]
+            forward_rates_fortytwo[f'k_O{size-1}_F{size}_fortytwo'] = kf_fortytwo[i]
+        else:
+            # Fibril forward rates
+            forward_rates_forty[f'k_F{size-1}_F{size}_forty'] = kf_forty[i]
+            forward_rates_fortytwo[f'k_F{size-1}_F{size}_fortytwo'] = kf_fortytwo[i]
+    
+    # Calculate and add plaque formation rates
+    plaque_rates = calculate_plaque_rates(
+        baseline_ab40_plaque_rate, 
+        baseline_ab42_plaque_rate, 
+        forward_rates_forty,
+        forward_rates_fortytwo,
+        enable_forward_rate_multiplier=enable_plaque_forward_rate_multiplier
+    )
+    rates.update(plaque_rates)
+    
+    # Print plaque rate information if forward rate multiplier is enabled
+    if enable_plaque_forward_rate_multiplier:
+        print(f"\nPlaque formation rates with forward rate multiplier enabled:")
+        print(f"Baseline AB40 rate: {baseline_ab40_plaque_rate:.6f} L/(nM·h)")
+        print(f"Baseline AB42 rate: {baseline_ab42_plaque_rate:.6f} L/(nM·h)")
+        print("\nExample plaque rates (rate = baseline × forward_rate):")
+        example_sizes = [13, 16, 17, 20, 24]
+        for size in example_sizes:
+            if size < 17:
+                key_40 = f'k_O{size}_Plaque_forty'
+                key_42 = f'k_O{size}_Plaque_fortytwo'
+                forward_key_40 = f'k_O{size-1}_O{size}_forty'
+                forward_key_42 = f'k_O{size-1}_O{size}_fortytwo'
+            else:
+                key_40 = f'k_F{size}_Plaque_forty'
+                key_42 = f'k_F{size}_Plaque_fortytwo'
+                forward_key_40 = f'k_F{size-1}_F{size}_forty'
+                forward_key_42 = f'k_F{size-1}_F{size}_fortytwo'
+            
+            if key_40 in plaque_rates and key_42 in plaque_rates:
+                forward_rate_40 = forward_rates_forty.get(forward_key_40, 0)
+                forward_rate_42 = forward_rates_fortytwo.get(forward_key_42, 0)
+                print(f"  Size {size}: AB40 = {plaque_rates[key_40]:.6f} (forward_rate = {forward_rate_40:.6f}), AB42 = {plaque_rates[key_42]:.6f} (forward_rate = {forward_rate_42:.6f})")
+    else:
+        print(f"\nPlaque formation rates using baseline values (no forward rate multiplier):")
+        print(f"AB40 rate: {baseline_ab40_plaque_rate:.6f} L/(nM·h)")
+        print(f"AB42 rate: {baseline_ab42_plaque_rate:.6f} L/(nM·h)")
     
     return rates
 
