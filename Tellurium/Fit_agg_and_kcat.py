@@ -162,10 +162,10 @@ def objective_function(log_params):
         return 1e10  # Large penalty for any errors
 
 def optimize_parameters():
-    """Simple parameter optimization with early stopping and parameter bounds"""
+    """Multi-start parameter optimization with early stopping and parameter bounds"""
     
-    print("Starting parameter optimization for Aβ42/Aβ40 plasma ratio...")
-    print("Using current PK_Geerts values as initial conditions")
+    print("Starting multi-start parameter optimization for Aβ42/Aβ40 plasma ratio...")
+    print("Using multiple starting points to avoid local minima")
     print(f"Experimental data: {exp_ratios[0]:.3f} to {exp_ratios[-1]:.3f} ratio")
     print(f"Time range: {exp_years[0]:.1f} to {exp_years[-1]:.1f} years")
     
@@ -232,41 +232,12 @@ def optimize_parameters():
     print(f"  AB42_IDE_Kcat: {np.exp(bounds[10][0]):.1e} to {np.exp(bounds[10][1]):.1e}")
     print(f"  AB40_IDE_Kcat: {np.exp(bounds[11][0]):.1e} to {np.exp(bounds[11][1]):.1e}")
     
-    # Early stopping variables
-    best_error = float('inf')
-    best_params = None
-    no_improvement_count = 0
-    patience = 20  # Stop if no improvement for 20 iterations
+    # Generate multiple starting points
+    n_starts = 8  # Number of different starting points to try
+    np.random.seed(42)  # For reproducibility
     
-    def obj_func_wrapper_with_early_stopping(log_params):
-        nonlocal best_error, best_params, no_improvement_count
-        
-        error = objective_function(log_params)
-        
-        # Check for improvement
-        if error < best_error * 0.999:  # Require at least 0.1% improvement
-            best_error = error
-            best_params = log_params.copy()
-            no_improvement_count = 0
-        else:
-            no_improvement_count += 1
-            
-        # Early stopping check
-        if no_improvement_count >= patience:
-            print(f"\nEarly stopping triggered after {no_improvement_count} iterations without improvement")
-            print(f"Best error so far: {best_error:.2e}")
-            # Return a large value to signal stopping
-            return best_error
-            
-        return error
-    
-    # Clear history
-    global loss_history, param_history
-    loss_history = []
-    param_history = []
-    
-    # Starting point using current values
-    starting_point_log = [
+    # Starting point 1: Current values
+    starting_points = [[
         np.log(current_kb0_forty_h),
         np.log(current_kb1_forty_h),
         np.log(current_kb0_fortytwo_h),
@@ -279,50 +250,152 @@ def optimize_parameters():
         np.log(current_baseline_ab42_rate),
         np.log(current_AB42_IDE_Kcat_exp),
         np.log(current_AB40_IDE_Kcat_exp),
-    ]
+    ]]
     
-    print(f"\nStarting optimization with bounds and early stopping...")
-    print(f"Early stopping patience: {patience} iterations")
+    # Generate additional random starting points within bounds
+    for i in range(n_starts - 1):
+        random_start = []
+        for bound in bounds:
+            # Sample uniformly in log space between bounds
+            random_val = np.random.uniform(bound[0], bound[1])
+            random_start.append(random_val)
+        starting_points.append(random_start)
     
-    try:
-        result = minimize(
-            obj_func_wrapper_with_early_stopping,
-            starting_point_log,
-            method='L-BFGS-B',
-            bounds=bounds,  # Apply parameter bounds
-            options={
-                'maxiter': 200,  # Reduced from 300 since we have early stopping
-                'disp': True,
-                'gtol': 1e-6,   # Slightly relaxed tolerance
-                'ftol': 1e-9    # Relaxed function tolerance
-            }
-        )
+    print(f"\nRunning multi-start optimization with {n_starts} starting points...")
+    
+    # Store results from all starting points
+    all_results = []
+    best_global_error = float('inf')
+    best_global_params = None
+    best_global_result = None
+    
+    for start_idx, starting_point in enumerate(starting_points):
+        print(f"\n{'='*50}")
+        print(f"STARTING POINT {start_idx + 1}/{n_starts}")
+        print(f"{'='*50}")
         
-        # Use best parameters if early stopping was triggered
-        if best_params is not None and best_error < result.fun:
-            print(f"Using early stopping result (better than final result)")
-            final_params = best_params
-            final_error = best_error
-        else:
-            final_params = result.x
-            final_error = result.fun
+        # Print starting values for this run
+        start_real = [np.exp(x) for x in starting_point]
+        print(f"Starting values: kb0_40={start_real[0]:.2e}, kb1_40={start_real[1]:.2e}, kb0_42={start_real[2]:.2e}, kb1_42={start_real[3]:.2e}")
+        print(f"                kf0_40={start_real[4]:.2e}, kf1_40={start_real[5]:.2e}, kf0_42={start_real[6]:.2e}, kf1_42={start_real[7]:.2e}")
+        print(f"                base_40={start_real[8]:.2e}, base_42={start_real[9]:.2e}, AB42_IDE_Kcat={start_real[10]:.2e}, AB40_IDE_Kcat={start_real[11]:.2e}")
         
-        # Convert optimized parameters back to real space
-        opt_real = [np.exp(x) for x in final_params]
-        print(f"\nOptimization complete!")
-        print(f"Result: kb0_40={opt_real[0]:.2e}, kb1_40={opt_real[1]:.2e}, kb0_42={opt_real[2]:.2e}, kb1_42={opt_real[3]:.2e}, "
-              f"kf0_40={opt_real[4]:.2e}, kf1_40={opt_real[5]:.2e}, kf0_42={opt_real[6]:.2e}, kf1_42={opt_real[7]:.2e}, "
-              f"base_40={opt_real[8]:.2e}, base_42={opt_real[9]:.2e}, AB42_IDE_Kcat={opt_real[10]:.2e}, AB40_IDE_Kcat={opt_real[11]:.2e}")
-        print(f"Error: {final_error:.2e}, Success: {result.success}")
+        # Early stopping variables for this run
+        best_error = float('inf')
+        best_params = None
+        no_improvement_count = 0
+        patience = 15  # Reduced patience for multi-start
         
-        if not result.success:
-            print("Warning: Optimization may not have converged!")
+        def obj_func_wrapper_with_early_stopping(log_params):
+            nonlocal best_error, best_params, no_improvement_count
             
-        return opt_real, final_error
+            error = objective_function(log_params)
+            
+            # Check for improvement
+            if error < best_error * 0.999:  # Require at least 0.1% improvement
+                best_error = error
+                best_params = log_params.copy()
+                no_improvement_count = 0
+            else:
+                no_improvement_count += 1
+                
+            # Early stopping check
+            if no_improvement_count >= patience:
+                print(f"  Early stopping triggered after {no_improvement_count} iterations without improvement")
+                print(f"  Best error so far: {best_error:.2e}")
+                # Return a large value to signal stopping
+                return best_error
+                
+            return error
         
-    except Exception as e:
-        print(f"Optimization failed: {e}")
-        raise RuntimeError("Optimization failed!")
+        # Clear history for this run
+        global loss_history, param_history
+        loss_history = []
+        param_history = []
+        
+        try:
+            result = minimize(
+                obj_func_wrapper_with_early_stopping,
+                starting_point,
+                method='L-BFGS-B',
+                bounds=bounds,
+                options={
+                    'maxiter': 150,  # Reduced since we're doing multiple runs
+                    'disp': False,   # Reduce verbosity for multi-start
+                    'gtol': 1e-6,
+                    'ftol': 1e-9
+                }
+            )
+            
+            # Use best parameters if early stopping was triggered
+            if best_params is not None and best_error < result.fun:
+                final_params = best_params
+                final_error = best_error
+            else:
+                final_params = result.x
+                final_error = result.fun
+            
+            # Convert to real space for display
+            opt_real = [np.exp(x) for x in final_params]
+            
+            # Store results
+            run_result = {
+                'start_idx': start_idx,
+                'starting_point': starting_point,
+                'final_params': final_params,
+                'final_params_real': opt_real,
+                'final_error': final_error,
+                'success': result.success,
+                'n_evaluations': len(loss_history),
+                'loss_history': loss_history.copy(),
+                'param_history': param_history.copy()
+            }
+            all_results.append(run_result)
+            
+            print(f"  Final result: error={final_error:.2e}, success={result.success}, evaluations={len(loss_history)}")
+            
+            # Check if this is the best result so far
+            if final_error < best_global_error:
+                best_global_error = final_error
+                best_global_params = final_params
+                best_global_result = run_result
+                print(f"  *** NEW BEST RESULT! ***")
+            
+        except Exception as e:
+            print(f"  Optimization failed for starting point {start_idx + 1}: {e}")
+            continue
+    
+    # Summary of all runs
+    print(f"\n{'='*60}")
+    print(f"MULTI-START OPTIMIZATION SUMMARY")
+    print(f"{'='*60}")
+    
+    if len(all_results) == 0:
+        raise RuntimeError("All optimization runs failed!")
+    
+    # Sort results by error
+    all_results.sort(key=lambda x: x['final_error'])
+    
+    print(f"Results from {len(all_results)} successful runs (sorted by error):")
+    for i, result in enumerate(all_results):
+        status = "BEST" if result == best_global_result else f"#{i+1}"
+        print(f"  {status:>4}: Start {result['start_idx']+1}, Error={result['final_error']:.2e}, "
+              f"Success={result['success']}, Evals={result['n_evaluations']}")
+    
+    # Use the best result
+    optimal_params = best_global_result['final_params_real']
+    
+    # Restore the best result's history for plotting
+    loss_history = best_global_result['loss_history']
+    param_history = best_global_result['param_history']
+    
+    print(f"\nBest result from starting point {best_global_result['start_idx']+1}:")
+    print(f"Final optimized parameters: kb0_40={optimal_params[0]:.2e}, kb1_40={optimal_params[1]:.2e}, kb0_42={optimal_params[2]:.2e}, kb1_42={optimal_params[3]:.2e}")
+    print(f"                           kf0_40={optimal_params[4]:.2e}, kf1_40={optimal_params[5]:.2e}, kf0_42={optimal_params[6]:.2e}, kf1_42={optimal_params[7]:.2e}")
+    print(f"                           base_40={optimal_params[8]:.2e}, base_42={optimal_params[9]:.2e}, AB42_IDE_Kcat={optimal_params[10]:.2e}, AB40_IDE_Kcat={optimal_params[11]:.2e}")
+    print(f"Final error: {best_global_error:.2e}")
+            
+    return optimal_params, best_global_error
 
 def analyze_optimized_parameters(optimal_params):
     """Analyze the optimized parameters and plot results"""

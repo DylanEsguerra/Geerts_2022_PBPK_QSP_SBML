@@ -541,6 +541,7 @@ def plot_ab42_ratios_and_concentrations(sol, model, drug_type="gantenerumab", pl
     
     fig_ab42.savefig(plots_dir / f'{drug_type.lower()}_ab42_ratios_and_concentrations.png', 
                      dpi=300, bbox_inches='tight')
+    plt.show()
     fig_ab40.savefig(plots_dir / f'{drug_type.lower()}_ab40_concentrations.png', 
                      dpi=300, bbox_inches='tight')
     plt.close(fig_ab42)

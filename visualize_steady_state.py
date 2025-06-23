@@ -613,7 +613,7 @@ def plot_ab42_ratios_and_concentrations(sol, drug_type="gantenerumab", plots_dir
     ax1.set_title('Brain Plasma AB42/AB40 Ratio', fontsize=30)
     ax1.grid(True, alpha=0.3)
     ax1.legend(fontsize=20)
-    ax1.set_ylim(0.06, 0.15)
+    #ax1.set_ylim(0.06, 0.15)
     ax1.tick_params(axis='both', which='major', labelsize=22)
     
     # Calculate total ISF AB42 and convert to pg/mL

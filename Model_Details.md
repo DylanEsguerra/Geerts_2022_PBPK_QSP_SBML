@@ -132,23 +132,39 @@ The model uses sophisticated rate extrapolation implemented in `K_rates_extrapol
 
 ![K_rates_extrapolate](generated/figures/K_Rates_Extrapolate.png)
 
-*Forward and Backward rate constants for higher order aggregates extrapolated from experimentally determined low order rates. This section of the model has minimal information in the supplement and is likely to be one of the primary areas for improvement. We suspect issues with the backward rate constants being much lower than the referenced material.*
+*Forward and Backward rate constants for higher order aggregates extrapolated from experimentally determined low order rates. This file also creates the 𝐹𝑖𝑏𝐹𝑜𝑟𝐴𝑗 rates used for direct formation of Plaques from higher order oligomers. This section of the model has minimal information in the supplement and has required significant assumptions to be made.*
 
 
 
 **Key Features:**
 - Uses experimentally determined rates for small oligomers as anchor points
 - Handles Aβ40 and Aβ42 separately with different aggregation propensities
+- Defines $\text{FibForAj}$ rates as $K_{\text{O13\_Plaque\_42}} = K_{\text{O13\_O14\_42}} \times \text{Baseline\_AB42\_Oligomer\_Fibril\_Plaque}$ using Oligomer_13 as an example
 - **Note**: Backward rates are not provided in the original supplement and are copied from referenced paper [Garai 2013](https://www.pnas.org/doi/10.1073/pnas.1222478110?url_ver=Z39.88-2003&rfr_id=ori%3Arid%3Acrossref.org&rfr_dat=cr_pub++0pubmed)
 - **Note**: Found issues with Garai Rates including one issue in publication itself and another discrepancy between rate in Geerts and published rate
     - Garai et al. 2013 Figure 7 fails for published value of dimer to trimer rate for Abeta 42: k+23 (kf1 in Geerts) = 38 (M⁻¹s⁻¹), but is reproducible with k+23 = 380 (M⁻¹s⁻¹)
     - Geerts TableS2 cites Garai for kf0 and kf1, but is missing kb0 and kb1
     - Geerts TableS2 has kf0 ABeta 42 = 0.0003564 nM/h = 9.9 (M⁻¹s⁻¹) when Garai has 9.9 (M⁻¹s⁻¹) × 10²
 
-The full rate extrapolation can be seen here with the x-axis being oligomer size. Notice how for Abeta 42 the backward rate is always above the forward rate. We believe this is responsible for the overabundance in monomers and failure to aggregate. 
+The full rate extrapolation is shown below with oligomer size on the x-axis. Notice that for Aβ42, the backward rate consistently exceeds the forward rate throughout the size range. We believe this imbalance is responsible for the overabundance of monomers and failure to aggregate effectively.
 
-![Rate Extrapolation](generated/figures/rate_extrapolation.png)
+![Rate Extrapolation](generated/figures/rate_extrapolation_garai.png)
 
+Through sensitivity analysis of the low-order backward rates omitted from the Geerts supplement, we determined that the reported values for Aβ42 in Garai 2013 are likely much higher than physiologically realistic. The table below compares the original Garai values with our adjusted parameters:
+
+| Parameter | Garai 2013 | Our Model |
+|-----------|------------|-----------|
+| k_O2_M_42 | 45.72 | 45.72 |
+| k_O3_O2_42 | 1.08 | 1E-05 |
+
+We maintained the dimer-to-monomer rate at the original value but reduced the trimer-to-dimer rate to the reported cutoff threshold for backward rates. This deviation from the original Garai rates was essential to capture age-dependent aggregation behavior, which is crucial for this model's physiological relevance.
+
+
+![Modified Rate Extrapolation](generated/figures/rate_extrapolation.png)
+
+With these adjustments, the forward rate now exceeds the backward rate for both Aβ40 and Aβ42 species, enabling proper aggregation dynamics.
+
+- **Note** Similar bahvior can be reacted by lowering k_O2_M_42 or increasing low order forwarded rates. 
 
 ### IDE Clearance Decline with Age
 
@@ -253,6 +269,7 @@ The model uses sophisticated ODE solvers:
 - **Primary Solver**: Tsit5 (5th order Runge-Kutta)
 - **JAX Integration**: Leverages JAX for automatic differentiation 
 - **Diffrax Backend**: Modern ODE solving with advanced numerical methods
+- **CVODE**: Used in Tellurium
 
 ## Technical Limitations and Considerations
 
@@ -261,7 +278,7 @@ The model uses sophisticated ODE solvers:
 1. **Aggregation Dynamics**: Investigating discrepancies in Aβ aggregation behavior
 2. **Parameter Uncertainty**: Some parameters lack direct experimental validation
 3. **Computational Cost**: Full model has significant runtime for long simulations
-4. **Initial Condition**: Given the issues with Abeta aggregation when simulating the natural life cycle we cannot use the 70-year result as an initial condition for drug dosing. At the moment we use 1000 hours. Anything more increases runtime likely due to unrealistic amounts of Abeta. 
+4. **Dosing in Tellurium**: Currently the use of Tellurium helps reduce runtime significantly for our no dose simulations, but we are unable to get the dosing scheduale to work using this tool. 
 
 ### Ongoing Validation
 
