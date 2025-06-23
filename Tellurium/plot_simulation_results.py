@@ -473,15 +473,15 @@ if __name__ == '__main__':
 
     # Paths to your two simulation results CSVs
     csv1 = f'default_simulation_results_{args.years}yr_all_vars.csv'  # Tellurium results
-    #csv2 = f'../ODE_version/results/no_dose/{args.drug.capitalize()}_no_dose_{args.years}yr_results.csv'
-    csv2 = f'../generated/{args.years}_year_simulation_results_{args.drug}.csv' # Diffrax/JAX results
+    csv2 = f'../ODE_version/results/no_dose/{args.drug.capitalize()}_no_dose_{args.years}yr_results.csv'
+    #csv2 = f'../generated/{args.years}_year_simulation_results_{args.drug}.csv' # Diffrax/JAX results
 
     outdir = 'simulation_plots'
     Path(outdir).mkdir(parents=True, exist_ok=True)
     
     # Load both solutions
     sol1, model1 = load_solution(csv1, scale=0.2505) # Division by volume if isf is applied for this comparison
-    sol2, model2 = load_solution(csv2, scale=0.2505)
+    sol2, model2 = load_solution(csv2, scale=1.0)
     
     # Create comparison plots
     plot_comparison_analysis(sol1, model1, sol2, model2, 'Tellurium', 'Diffrax/JAX', outdir)

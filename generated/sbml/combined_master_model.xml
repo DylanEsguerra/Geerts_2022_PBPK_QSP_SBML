@@ -621,7 +621,7 @@
       <parameter id="CL_AB40_IDE" value="1500" constant="false"/>
       <parameter id="CL_AB42_IDE" value="50" constant="false"/>
       <parameter id="k_M_O2_forty" value="0.00018" units="per_nanomole_per_hour" constant="true"/>
-      <parameter id="k_M_O2_fortytwo" value="0.003564" units="per_nanomole_per_hour" constant="true"/>
+      <parameter id="k_M_O2_fortytwo" value="0.0003564" units="per_nanomole_per_hour" constant="true"/>
       <parameter id="k_O2_O3_forty" value="7.2e-05" units="per_nanomole_per_hour" constant="true"/>
       <parameter id="k_O2_O3_fortytwo" value="0.0001368" units="per_nanomole_per_hour" constant="true"/>
       <parameter id="k_O2_M_forty" value="9.72" units="per_hour" constant="true"/>

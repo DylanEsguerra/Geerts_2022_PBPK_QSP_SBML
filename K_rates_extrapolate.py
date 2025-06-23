@@ -321,7 +321,7 @@ def calculate_k_rates(
         print(f"Baseline AB40 rate: {baseline_ab40_plaque_rate:.6f} L/(nM·h)")
         print(f"Baseline AB42 rate: {baseline_ab42_plaque_rate:.6f} L/(nM·h)")
         print("\nExample plaque rates (rate = baseline × forward_rate):")
-        example_sizes = [13, 16, 17, 20, 24]
+        example_sizes = [13, 16, 17, 20]
         for size in example_sizes:
             if size < 17:
                 key_40 = f'k_O{size}_Plaque_forty'

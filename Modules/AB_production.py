@@ -395,13 +395,13 @@ def create_geerts_monomer_production_model(params, params_with_units):
     ide_rule40.setId("CL_AB40_IDE_rule")
     ide_rule40.setVariable("CL_AB40_IDE")
     ide_rule40.setMath(libsbml.parseL3Formula("-exp_decline_rate_IDE_forty*CL_AB40_IDE"))
-    #ide_rule40.setMath(libsbml.parseL3Formula("-lin_decline_rate_IDE_forty"))
+    #ide_rule40.setMath(libsbml.parseL3Formula("AB40_IDE_Kcat_lin"))
     # AB42 IDE efficiency rule
     ide_rule42 = model.createRateRule()
     ide_rule42.setId("CL_AB42_IDE_rule")
     ide_rule42.setVariable("CL_AB42_IDE")
     ide_rule42.setMath(libsbml.parseL3Formula("-exp_decline_rate_IDE_fortytwo*CL_AB42_IDE"))
-    #ide_rule42.setMath(libsbml.parseL3Formula("-lin_decline_rate_IDE_fortytwo"))
+    #ide_rule42.setMath(libsbml.parseL3Formula("AB42_IDE_Kcat_lin"))
     
     # Add AB40 clearance reaction
     
