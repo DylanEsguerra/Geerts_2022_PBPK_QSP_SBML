@@ -1,8 +1,13 @@
 import tellurium as te
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.optimize import minimize
+import sys
+import os
+
+# Add parent directory to path to import K_rates_extrapolate
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from K_rates_extrapolate import calculate_k_rates
+from scipy.optimize import minimize
 
 # Target gain factor (Geerts value)
 TARGET_GAIN = 7.0

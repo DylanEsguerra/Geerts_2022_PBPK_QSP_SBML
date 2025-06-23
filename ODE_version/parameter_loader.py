@@ -13,7 +13,7 @@ def load_parameters(antibody_name='Gant', **agg_kwargs):
     
     Args:
         antibody_name: Name of the antibody to use ('Gant' or 'Lec')
-        **agg_kwargs: Optional overrides for aggregation parameters (e.g., forAsymp42, backAsymp42, BackHill42, original_kb0_fortytwo, original_kb1_fortytwo)
+        **agg_kwargs: Optional overrides for aggregation parameters (e.g., forAsymp42, backAsymp42, BackHill42, original_kb0_fortytwo, original_kb1_fortytwo, baseline_ab40_plaque_rate, baseline_ab42_plaque_rate, enable_forward_rate_multiplier)
     
     Returns:
         Dictionary of all parameters as JAX arrays
@@ -48,20 +48,31 @@ def load_parameters(antibody_name='Gant', **agg_kwargs):
         'forHill42': params['forHill42'],
         'BackHill40': params['BackHill40'],
         'BackHill42': params['BackHill42'],
-        'rate_cutoff': params.get('rate_cutoff', 0.00001)
+        'rate_cutoff': params.get('rate_cutoff', 0.00001),
+        # Add plaque formation parameters
+        'baseline_ab40_plaque_rate': params.get('k_O13_Plaque_forty', 0.000005),  # Use existing parameter as baseline
+        'baseline_ab42_plaque_rate': params.get('k_O13_Plaque_fortytwo', 0.00005),  # Use existing parameter as baseline
+        'enable_plaque_forward_rate_multiplier': True  # Default to enabled
     }
+    
     # Only pass keys to calculate_k_rates that it expects
     k_rates_keys = {
         'original_kf0_forty', 'original_kf0_fortytwo', 'original_kf1_forty', 'original_kf1_fortytwo',
         'original_kb0_forty', 'original_kb0_fortytwo', 'original_kb1_forty', 'original_kb1_fortytwo',
         'forAsymp40', 'forAsymp42', 'backAsymp40', 'backAsymp42',
-        'forHill40', 'forHill42', 'BackHill40', 'BackHill42', 'rate_cutoff'
+        'forHill40', 'forHill42', 'BackHill40', 'BackHill42', 'rate_cutoff',
+        'baseline_ab40_plaque_rate', 'baseline_ab42_plaque_rate', 'enable_plaque_forward_rate_multiplier'
     }
+    
+    # Apply overrides from agg_kwargs
     for k, v in agg_kwargs.items():
         if k in k_rates_keys:
             rate_params[k] = v
+    
+    # Calculate all rates including plaque rates
     rates_dict = calculate_k_rates(**rate_params)
     params.update(rates_dict)
+    
     # Add any extra overrides (not used by calculate_k_rates) to params
     for k, v in agg_kwargs.items():
         if k not in k_rates_keys:

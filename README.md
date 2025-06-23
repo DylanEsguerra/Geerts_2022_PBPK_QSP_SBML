@@ -4,7 +4,7 @@
 
 This repository contains an open-sourced implementation of the Geerts et al. 2023 combined physiologically-based pharmacokinetic and quantitative systems pharmacology model for modeling amyloid aggregation in Alzheimer's disease.
 
-We have chosen to use open-sourced tools for all aspects of the model development process and are emphasizing a modular design process. We are using the Systems Biology Markup Language to save the model in XML format with the hope that other researchers can use it with the software of their choice. Our model is written in python with libsbml and solved using JAX diffrax library. 
+We have chosen to use open-sourced tools for all aspects of the model development process and are emphasizing a modular design process. We are using the Systems Biology Markup Language to save the model in XML format with the hope that other researchers can use it with the software of their choice. Our model is written in python with libsbml and solved using JAX diffrax library as well as Tellurium. 
 
 ## Citation
 
@@ -26,8 +26,10 @@ source venv/bin/activate  # On macOS/Linux
 # Install dependencies
 pip install -r requirements.txt
 
+# Navigate to Tellurium folder for fast initial simulation
+cd Tellurium
 # Run a quick simulation
-python run_no_dose_combined_master_model.py --drug gantenerumab --years 20
+python run_default_simulation.py
 ```
 
 ## Documentation

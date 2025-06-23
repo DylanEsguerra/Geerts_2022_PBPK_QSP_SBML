@@ -195,8 +195,8 @@ def plot_Ab_t_dynamics(df, c, dosing_times, drug_type="gantenerumab", plots_dir=
     plt.tight_layout(rect=[0, 0, 1, 0.97])
     
     # Save figure
-    #fig.savefig(plots_dir / f'{drug_name.lower()}_ab_t_and_bound_dynamics.png', 
-    #            dpi=300, bbox_inches='tight')
+    fig.savefig(plots_dir / f'{drug_name.lower()}_ab_t_and_bound_dynamics.png', 
+                dpi=300, bbox_inches='tight')
     #plt.show()
 
 def plot_csf_subplots(df, c, dosing_times, drug_type="gantenerumab", plots_dir=None):
@@ -1012,9 +1012,179 @@ def plot_pvs_components(df, c, dosing_times, drug_type="gantenerumab", plots_dir
     plt.tight_layout(rect=[0, 0, 1, 0.97])
     
     # Save figure
-    #fig.savefig(plots_dir / f'{drug_name.lower()}_pvs_components.png',
-    #            dpi=300, bbox_inches='tight')
+    fig.savefig(plots_dir / f'{drug_name.lower()}_pvs_components.png',
+                dpi=300, bbox_inches='tight')
     #plt.show()
+
+def plot_amyloid_dynamics(df, c, dosing_times, drug_type="gantenerumab", plots_dir=None):
+    """Plot total AB40 and AB42 for oligomers, fibrils, and plaques in separate subplots with concentrations"""
+    if plots_dir is None:
+        plots_dir = Path("generated/figures")
+    plots_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Import the generated model to get species indices
+    module_name = "combined_master_jax"
+    import importlib
+    try:
+        jax_module = importlib.import_module(module_name)
+        c_indexes = jax_module.c_indexes
+    except ImportError:
+        print(f"Error: Could not import module {module_name}")
+        return
+    
+    # Create figure with 3x2 subplots (AB40 left column, AB42 right column)
+    fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(3, 2, figsize=(15, 18), sharex=True)
+    
+    # Initialize arrays for total concentrations
+    total_ab40_oligomers = np.zeros_like(df['time'].values)
+    total_ab42_oligomers = np.zeros_like(df['time'].values)
+    total_ab40_fibrils = np.zeros_like(df['time'].values)
+    total_ab42_fibrils = np.zeros_like(df['time'].values)
+    total_ab40_plaques = np.zeros_like(df['time'].values)
+    total_ab42_plaques = np.zeros_like(df['time'].values)
+    
+    # Sum all AB40 oligomers (both free and bound)
+    ab40_oligomer_count = 0
+    for i in range(2, 17):
+        species_name = f'AB40_Oligomer{i:02d}'
+        if species_name in df.columns:
+            total_ab40_oligomers += df[species_name].values
+            ab40_oligomer_count += 1
+        # Also add antibody-bound species if they exist
+        bound_species_name = f'AB40_Oligomer{i:02d}_Antibody_bound'
+        if bound_species_name in df.columns:
+            total_ab40_oligomers += df[bound_species_name].values
+    
+    # Sum all AB42 oligomers (both free and bound)
+    ab42_oligomer_count = 0
+    for i in range(2, 17):
+        species_name = f'AB42_Oligomer{i:02d}'
+        if species_name in df.columns:
+            total_ab42_oligomers += df[species_name].values
+            ab42_oligomer_count += 1
+        # Also add antibody-bound species if they exist
+        bound_species_name = f'AB42_Oligomer{i:02d}_Antibody_bound'
+        if bound_species_name in df.columns:
+            total_ab42_oligomers += df[bound_species_name].values
+    
+    # Sum all AB40 fibrils (both free and bound)
+    ab40_fibril_count = 0
+    for i in range(17, 25):
+        species_name = f'AB40_Fibril{i:02d}'
+        if species_name in df.columns:
+            total_ab40_fibrils += df[species_name].values
+            ab40_fibril_count += 1
+        # Also add antibody-bound species if they exist
+        bound_species_name = f'AB40_Fibril{i:02d}_Antibody_bound'
+        if bound_species_name in df.columns:
+            total_ab40_fibrils += df[bound_species_name].values
+    
+    # Sum all AB42 fibrils (both free and bound)
+    ab42_fibril_count = 0
+    for i in range(17, 25):
+        species_name = f'AB42_Fibril{i:02d}'
+        if species_name in df.columns:
+            total_ab42_fibrils += df[species_name].values
+            ab42_fibril_count += 1
+        # Also add antibody-bound species if they exist
+        bound_species_name = f'AB42_Fibril{i:02d}_Antibody_bound'
+        if bound_species_name in df.columns:
+            total_ab42_fibrils += df[bound_species_name].values
+    
+    # Sum AB40 plaques (free and bound)
+    if "AB40_Plaque_unbound" in df.columns:
+        total_ab40_plaques += df["AB40_Plaque_unbound"].values
+    if "AB40_Plaque_Antibody_bound" in df.columns:
+        total_ab40_plaques += df["AB40_Plaque_Antibody_bound"].values
+    
+    # Sum AB42 plaques (free and bound)
+    if "AB42_Plaque_unbound" in df.columns:
+        total_ab42_plaques += df["AB42_Plaque_unbound"].values
+    if "AB42_Plaque_Antibody_bound" in df.columns:
+        total_ab42_plaques += df["AB42_Plaque_Antibody_bound"].values
+    
+    # Convert to concentrations by dividing by ISF brain volume
+    vis_brain_volume = c[c_indexes['VIS_brain']]
+    total_ab40_oligomers_conc = total_ab40_oligomers / vis_brain_volume
+    total_ab42_oligomers_conc = total_ab42_oligomers / vis_brain_volume
+    total_ab40_fibrils_conc = total_ab40_fibrils / vis_brain_volume
+    total_ab42_fibrils_conc = total_ab42_fibrils / vis_brain_volume
+    total_ab40_plaques_conc = total_ab40_plaques / vis_brain_volume
+    total_ab42_plaques_conc = total_ab42_plaques / vis_brain_volume
+    
+    # Plot using years on x-axis
+    x_values = df['time'].values / 24.0 / 365.0  # Convert hours to years
+    
+    # Plot AB40 oligomers (top left)
+    ax1.plot(x_values, total_ab40_oligomers_conc, 
+             label=f'Total (n={ab40_oligomer_count})', 
+             linewidth=2, color='blue')
+    ax1.set_ylabel('Concentration (nM)', fontsize=12)
+    ax1.set_title('AB40 Oligomers', fontsize=14)
+    
+    # Plot AB42 oligomers (top right)
+    ax2.plot(x_values, total_ab42_oligomers_conc, 
+             label=f'Total (n={ab42_oligomer_count})', 
+             linewidth=2, color='red')
+    ax2.set_title('AB42 Oligomers', fontsize=14)
+    
+    # Plot AB40 fibrils (middle left)
+    ax3.plot(x_values, total_ab40_fibrils_conc,
+             label=f'Total (n={ab40_fibril_count})',
+             linewidth=2, color='blue')
+    ax3.set_ylabel('Concentration (nM)', fontsize=12)
+    ax3.set_title('AB40 Fibrils', fontsize=14)
+    
+    # Plot AB42 fibrils (middle right)
+    ax4.plot(x_values, total_ab42_fibrils_conc,
+             label=f'Total (n={ab42_fibril_count})',
+             linewidth=2, color='red')
+    ax4.set_title('AB42 Fibrils', fontsize=14)
+    
+    # Plot AB40 plaques (bottom left)
+    ax5.plot(x_values, total_ab40_plaques_conc,
+             label='Total',
+             linewidth=2, color='blue')
+    ax5.set_ylabel('Concentration (nM)', fontsize=12)
+    ax5.set_xlabel('Time (years)', fontsize=12)
+    ax5.set_title('AB40 Plaques', fontsize=14)
+    
+    # Plot AB42 plaques (bottom right)
+    ax6.plot(x_values, total_ab42_plaques_conc,
+             label='Total',
+             linewidth=2, color='red')
+    ax6.set_xlabel('Time (years)', fontsize=12)
+    ax6.set_title('AB42 Plaques', fontsize=14)
+    
+    # Set x-axis limits and formatting for all subplots
+    for ax in (ax1, ax2, ax3, ax4, ax5, ax6):
+        _setup_year_axis(ax, x_values)
+        ax.tick_params(axis='both', which='major', labelsize=10)
+        ax.grid(True, alpha=0.3)
+        ax.legend(fontsize=10, loc='upper right')
+        
+        # Add dosing markers
+        for dose_time in dosing_times:
+            ax.axvline(x=dose_time/24.0/365.0, color='gray', linestyle='--', alpha=0.3)
+        
+        # Add end of dosing line
+        ax.axvline(x=1.5, color='red', linestyle='-', alpha=0.5,
+                  label='End of Dosing (1.5 years)')
+    
+    # Add overall title
+    is_lecanemab = drug_type.lower() == "lecanemab"
+    drug_name = "Lecanemab" if is_lecanemab else "Gantenerumab"
+    dose_info = "10 mg/kg IV q2w" if is_lecanemab else "1200 mg SC q4w"
+    plt.suptitle(f'{drug_name} Amyloid Dynamics: {dose_info}', 
+                 fontsize=16, fontweight='bold')
+    
+    # Adjust layout
+    plt.tight_layout(rect=[0, 0, 1, 0.95])
+    
+    # Save figure
+    fig.savefig(plots_dir / f'{drug_type.lower()}_amyloid_dynamics.png', 
+                dpi=300, bbox_inches='tight')
+    plt.close()
 
 def main():
     """Main function to plot saved solution data"""
@@ -1084,6 +1254,9 @@ def main():
     
     print("Generating PVS components plot...")
     plot_pvs_components(df, c, dosing_times, drug_type=args.drug, plots_dir=plots_dir)
+    
+    print("Generating amyloid dynamics plot...")
+    plot_amyloid_dynamics(df, c, dosing_times, drug_type=args.drug, plots_dir=plots_dir)
     
     print(f"\nAll plots saved in {plots_dir}")
 

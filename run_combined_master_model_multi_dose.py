@@ -3,6 +3,9 @@ Run script for the combined master model.
 This script runs the combined model that includes both AB_Master_Model and Geerts_Master_Model components.
 It uses the saved data from run_no_dose_combined_master_model.py as initial conditions
 for a simulation with antibody dosing.
+
+
+Before running we need to change plots to divide by volume of the compartment.
 """
 import os
 os.environ['XLA_FLAGS'] = '--xla_cpu_use_thunk_runtime=false'
@@ -521,7 +524,7 @@ def plot_amyloid_dynamics(sol, drug_type="gantenerumab", plots_dir=None):
     total_ab40_plaques = np.zeros_like(sol.ts)
     total_ab42_plaques = np.zeros_like(sol.ts)
     
-
+    # Sum all AB40 oligomers (both free and bound)
     ab40_oligomer_count = 0
     for i in range(2, 17):
         species_name = f'AB40_Oligomer{i:02d}'
@@ -1369,7 +1372,7 @@ def main():
     print("=" * 40)
     
     # Define the steady state simulation duration (in hours)
-    steady_state_duration = 1000 #20*365*24  # 70 years in hours
+    steady_state_duration = 70*365*24  # 70 years in hours
     
     # Run simulation until steady state with specified initial age
     print("Running to steady state (no drug dose)...")

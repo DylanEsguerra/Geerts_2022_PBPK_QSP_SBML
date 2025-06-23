@@ -139,6 +139,11 @@ def load_parameters_from_csv(csv_path, drug_type="gantenerumab"):
     
     # Add extrapolated rates using the parameterized version
     print("\n3. Adding extrapolated rate constants...")
+    
+    # Get baseline plaque rates from existing parameters (use k_O13_Plaque as baseline)
+    baseline_ab40_plaque_rate = params.get('k_O13_Plaque_forty', 0.000005)
+    baseline_ab42_plaque_rate = params.get('k_O13_Plaque_fortytwo', 0.00005)
+    
     extrapolated_rates = calculate_k_rates(
         original_kf0_forty=params['original_kf0_forty'],
         original_kf0_fortytwo=params['original_kf0_fortytwo'],
@@ -156,12 +161,20 @@ def load_parameters_from_csv(csv_path, drug_type="gantenerumab"):
         forHill42=params['forHill42'],
         BackHill40=params['BackHill40'],
         BackHill42=params['BackHill42'],
-        rate_cutoff=params['rate_cutoff']
+        rate_cutoff=params['rate_cutoff'],
+        # Add new plaque formation parameters
+        baseline_ab40_plaque_rate=baseline_ab40_plaque_rate,
+        baseline_ab42_plaque_rate=baseline_ab42_plaque_rate,
+        enable_plaque_forward_rate_multiplier=True  # Enable forward rate-dependent plaque rates
     )
     
     for rate_name, rate_value in extrapolated_rates.items():
         params[rate_name] = rate_value
-        params_with_units[rate_name] = (rate_value, "1/h")
+        # Set appropriate units for plaque rates vs other rates
+        if 'Plaque' in rate_name:
+            params_with_units[rate_name] = (rate_value, "L/(nano*mol*h)")
+        else:
+            params_with_units[rate_name] = (rate_value, "1/h")
     
     # Verify that all critical parameters are available
     print("\n4. Validating parameter completeness...")
@@ -171,7 +184,8 @@ def load_parameters_from_csv(csv_path, drug_type="gantenerumab"):
         "Oligomerization": ['k_M_O2_forty', 'k_M_O2_fortytwo', 'k_O2_M_forty', 'k_O2_M_fortytwo'],
         "Initial conditions": ['AB40_Monomer_0', 'AB42_Monomer_0', 'AB40_Oligomer02_0', 'AB42_Oligomer02_0'],
         "Production": ['AB40Mu_systemic_synthesis_rate', 'AB42Mu_systemic_synthesis_rate', 'k_APP_production'],
-        "PVS parameters": ['Q_PVS', 'sigma_PVS', 'V_PVS', 'sigma_ISF', 'PS_Ab_ISF_PVS']
+        "PVS parameters": ['Q_PVS', 'sigma_PVS', 'V_PVS', 'sigma_ISF', 'PS_Ab_ISF_PVS'],
+        "Plaque formation": ['k_O13_Plaque_forty', 'k_O13_Plaque_fortytwo', 'k_F17_Plaque_forty', 'k_F17_Plaque_fortytwo']
     }
     
     # Check each group of critical parameters
@@ -183,8 +197,48 @@ def load_parameters_from_csv(csv_path, drug_type="gantenerumab"):
             else:
                 print(f"  ✗ {param}: NOT FOUND - Model may not function correctly!")
     
+    # Validate plaque rate calculation
+    print("\n5. Validating plaque rate calculation...")
+    plaque_rates_found = []
+    for param_name in params.keys():
+        if 'Plaque' in param_name and ('k_O' in param_name or 'k_F' in param_name):
+            plaque_rates_found.append(param_name)
+    
+    print(f"Found {len(plaque_rates_found)} plaque formation rates:")
+    for rate_name in sorted(plaque_rates_found):
+        print(f"  {rate_name}: {params[rate_name]:.6f}")
+    
+    # Check if forward rate multiplier is working correctly
+    if len(plaque_rates_found) > 0:
+        # Check a few specific rates to verify forward rate multiplier
+        test_cases = [
+            ('k_O13_Plaque_forty', 'k_O12_O13_forty', baseline_ab40_plaque_rate),
+            ('k_O16_Plaque_forty', 'k_O15_O16_forty', baseline_ab40_plaque_rate),
+            ('k_F17_Plaque_forty', 'k_O16_F17_forty', baseline_ab40_plaque_rate),
+            ('k_F20_Plaque_forty', 'k_F19_F20_forty', baseline_ab40_plaque_rate)
+        ]
+        
+        print("\nVerifying forward rate multiplier calculation:")
+        for plaque_rate_name, forward_rate_name, baseline_rate in test_cases:
+            if plaque_rate_name in params and forward_rate_name in params:
+                actual_plaque_rate = params[plaque_rate_name]
+                forward_rate = params[forward_rate_name]
+                expected_plaque_rate = baseline_rate * forward_rate
+                if abs(actual_plaque_rate - expected_plaque_rate) < 1e-10:
+                    print(f"  ✓ {plaque_rate_name}: {actual_plaque_rate:.6f} (forward_rate {forward_rate_name} = {forward_rate:.6f} × {baseline_rate:.6f})")
+                else:
+                    print(f"  ✗ {plaque_rate_name}: {actual_plaque_rate:.6f} (expected {expected_plaque_rate:.6f})")
+            else:
+                missing = []
+                if plaque_rate_name not in params:
+                    missing.append(plaque_rate_name)
+                if forward_rate_name not in params:
+                    missing.append(forward_rate_name)
+                print(f"  ✗ Missing parameters: {missing}")
+    
     # Print summary statistics
     print(f"\nTotal parameters loaded: {len(params)}")
+    print(f"Plaque rates with forward rate multiplier: {len(plaque_rates_found)}")
     
     return params, params_with_units
 

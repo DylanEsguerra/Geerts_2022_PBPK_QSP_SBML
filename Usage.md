@@ -52,7 +52,7 @@ This document provides comprehensive instructions for installing, running, and v
 ```bash
 python run_combined_master_model_multi_dose.py --drug {gantenerumab,lecanemab}
 ```
-- **Runtime**: NA
+- **Runtime**: TBT
 - **Purpose**: Complete treatment simulation with full dosing regimen (3 years)
 - **Output**: Comprehensive drug and Aβ dynamics over treatment period
 
@@ -60,7 +60,7 @@ python run_combined_master_model_multi_dose.py --drug {gantenerumab,lecanemab}
 ```bash
 python run_no_dose_combined_master_model.py --drug {gantenerumab,lecanemab} --years 20
 ```
-- **Runtime**: NA
+- **Runtime**: TBT
 - **Purpose**: Natural amyloid aggregation without treatment. This can be used to set the initial condition (70 years) for drug studies
 - **Arguments**: 
   - `--drug`: Required for volume parameter selection
@@ -70,7 +70,7 @@ python run_no_dose_combined_master_model.py --drug {gantenerumab,lecanemab} --ye
 ```bash
 python run_combined_master_model.py --drug {gantenerumab,lecanemab}
 ```
-- **Runtime**: NA
+- **Runtime**: TBT
 - **Purpose**: Single dose validation against published data
 - **Process**: Runs steady-state first, then applies single dose
 
@@ -125,6 +125,7 @@ For sensitivity analysis and parameter exploration:
 
 ```bash
 cd Tellurium
+python run_default_simulation.py
 python agg_rate_sensitivity.py  # Aggregation rate sensitivity
 python CL_sensitivity.py        # IDE clearance sensitivity
 ```
@@ -233,6 +234,7 @@ numpy
 2. **Parameter Files**: 
    - SBML version uses `parameters/PK_Geerts.csv`
    - ODE version uses `ODE_version/Geerts_Params_2.csv`
+   - Tellurium uses the XML file from the SBML version 
 3. **Output Directories**: Automatically created if they don't exist
 4. **Directory Navigation**: All scripts are set up to be run from the directory they exist in
 

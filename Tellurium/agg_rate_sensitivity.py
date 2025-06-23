@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import sys
+from matplotlib.colors import Normalize
+import matplotlib.cm as cm
 
 # Add parent directory to path to import K_rates_extrapolate
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -16,8 +18,8 @@ os.makedirs(sensitivity_figures_dir, exist_ok=True)
 # Define sensitivity ranges at the top for consistency across all analyses
 # These are in units of 1/h and need to be converted to 1/s before being used 
 # in K_rates_extrapolate as the "original" values in the units of the Garai paper
-kb0_fortytwo_values = np.linspace(0.1, 50.0, 10)     # kb0 range for AB42 dimer to monomer (1/h)
-kb1_fortytwo_values = np.linspace(1e-05, 0.01, 10)    # kb1 range for AB42 trimer to dimer (1/h)
+kb0_fortytwo_values = np.linspace(1e-04, 50.0, 100)     # kb0 range for AB42 dimer to monomer (1/h)
+kb1_fortytwo_values = np.linspace(1e-05, 1.0, 100)    # kb1 range for AB42 trimer to dimer (1/h)
 
 # Define simulation selections once
 simulation_selections = ['time', '[AB42_Monomer]', 
@@ -62,8 +64,16 @@ def plot_extrapolated_rates_sensitivity(kb0_sim_results, kb1_sim_results):
         'axes.linewidth': 1.5,
     })
     
-    # Create figure with 2x2 layout for backward rates and gain factors
-    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(16, 12))
+    # Create figure with 2x2 layout plus colorbar space
+    fig = plt.figure(figsize=(18, 12))
+    gs = fig.add_gridspec(2, 3, width_ratios=[1, 1, 0.1], height_ratios=[1, 1])
+    
+    ax1 = fig.add_subplot(gs[0, 0])
+    ax2 = fig.add_subplot(gs[0, 1])
+    ax3 = fig.add_subplot(gs[1, 0])
+    ax4 = fig.add_subplot(gs[1, 1])
+    cax1 = fig.add_subplot(gs[0, 2])  # Colorbar for kb0
+    cax2 = fig.add_subplot(gs[1, 2])  # Colorbar for kb1
     
     # --- Plot 1: kb0 variation effect on backward rates ---
     colors_kb0 = plt.cm.viridis(np.linspace(0, 1, len(kb0_fortytwo_values)))
@@ -83,16 +93,23 @@ def plot_extrapolated_rates_sensitivity(kb0_sim_results, kb1_sim_results):
                 backward_rates_42.append(rates[f'k_F{size}_F{size-1}_fortytwo'])
         
         ax1.plot(oligomer_sizes, backward_rates_42, 'o-', color=colors_kb0[i], 
-                linewidth=3, markersize=6, label=f'{kb0:.0f} h⁻¹')
+                linewidth=3, markersize=6)
     
     ax1.axvline(x=17, color='grey', linestyle='-', alpha=0.8, linewidth=2)
     ax1.set_yscale('log')
     ax1.set_xlabel('Oligomer Size', fontsize=14, fontweight='bold')
     ax1.set_ylabel('Backward Rate (h⁻¹)', fontsize=14, fontweight='bold')
     ax1.set_title('kb0 (Dimer→Monomer)', fontsize=16, fontweight='bold', pad=20)
-    ax1.legend(title='kb0 Values', fontsize=11, title_fontsize=12, frameon=True, fancybox=True, shadow=True)
     ax1.grid(True, alpha=0.4, linestyle=':')
     ax1.set_xlim(3.5, 24.5)
+    
+    # Add colorbar for kb0
+    norm1 = Normalize(vmin=kb0_fortytwo_values.min(), vmax=kb0_fortytwo_values.max())
+    sm1 = cm.ScalarMappable(cmap='viridis', norm=norm1)
+    sm1.set_array([])
+    cbar1 = plt.colorbar(sm1, cax=cax1)
+    cbar1.set_label('kb0 Values (h⁻¹)', fontsize=14, fontweight='bold')
+    cbar1.ax.tick_params(labelsize=12)
     
     # --- Plot 2: kb1 variation effect on backward rates ---
     colors_kb1 = plt.cm.plasma(np.linspace(0, 1, len(kb1_fortytwo_values)))
@@ -112,14 +129,13 @@ def plot_extrapolated_rates_sensitivity(kb0_sim_results, kb1_sim_results):
                 backward_rates_42.append(rates[f'k_F{size}_F{size-1}_fortytwo'])
         
         ax2.plot(oligomer_sizes, backward_rates_42, 'o-', color=colors_kb1[i], 
-                linewidth=3, markersize=6, label=f'{kb1:.3f} h⁻¹')
+                linewidth=3, markersize=6)
     
     ax2.axvline(x=17, color='grey', linestyle='-', alpha=0.8, linewidth=2)
     ax2.set_yscale('log')
     ax2.set_xlabel('Oligomer Size', fontsize=14, fontweight='bold')
     ax2.set_ylabel('Backward Rate (h⁻¹)', fontsize=14, fontweight='bold')
     ax2.set_title('kb1 (Trimer→Dimer)', fontsize=16, fontweight='bold', pad=20)
-    ax2.legend(title='kb1 Values', fontsize=11, title_fontsize=12, frameon=True, fancybox=True, shadow=True)
     ax2.grid(True, alpha=0.4, linestyle=':')
     ax2.set_xlim(3.5, 24.5)
     
@@ -281,6 +297,14 @@ def plot_extrapolated_rates_sensitivity(kb0_sim_results, kb1_sim_results):
     ax4.grid(True, alpha=0.4, linestyle=':')
     ax4.set_xlim(3.5, 24.5)
     
+    # Add colorbar for kb1
+    norm2 = Normalize(vmin=kb1_fortytwo_values.min(), vmax=kb1_fortytwo_values.max())
+    sm2 = cm.ScalarMappable(cmap='plasma', norm=norm2)
+    sm2.set_array([])
+    cbar2 = plt.colorbar(sm2, cax=cax2)
+    cbar2.set_label('kb1 Values (h⁻¹)', fontsize=14, fontweight='bold')
+    cbar2.ax.tick_params(labelsize=12)
+    
     # Add global title
     fig.suptitle('AB42 Backward Rates and Gain Factors Sensitivity Analysis\nOriginal values: kb0 = 45.72 h⁻¹, kb1 = 1.08 h⁻¹', 
                  fontsize=18, fontweight='bold', y=0.98)
@@ -318,7 +342,15 @@ plt.rcParams.update({
     'axes.linewidth': 1.5,
 })
 
-fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(16, 12))
+# Create figure with colorbar
+fig = plt.figure(figsize=(18, 12))
+gs = fig.add_gridspec(2, 3, width_ratios=[1, 1, 0.1], height_ratios=[1, 1])
+
+ax1 = fig.add_subplot(gs[0, 0])
+ax2 = fig.add_subplot(gs[0, 1])
+ax3 = fig.add_subplot(gs[1, 0])
+ax4 = fig.add_subplot(gs[1, 1])
+cax = fig.add_subplot(gs[:, 2])  # Colorbar axis
 
 # Store simulation results for reuse in plotting function
 kb0_simulation_results = {}
@@ -373,14 +405,10 @@ for i, kb0 in enumerate(kb0_fortytwo_values):
         # Get plaque load
         plaque_load = result[:,25]
         
-        ax1.semilogy(time, monomer, label=f'{kb0:.0f} h⁻¹', 
-                    color=colors[i], linewidth=2.5, alpha=0.8)
-        ax2.semilogy(time, oligomer_load, label=f'{kb0:.0f} h⁻¹', 
-                    color=colors[i], linewidth=2.5, alpha=0.8)
-        ax3.semilogy(time, fibril_load, label=f'{kb0:.0f} h⁻¹', 
-                    color=colors[i], linewidth=2.5, alpha=0.8)
-        ax4.semilogy(time, plaque_load, label=f'{kb0:.0f} h⁻¹', 
-                    color=colors[i], linewidth=2.5, alpha=0.8)
+        ax1.semilogy(time, monomer, color=colors[i], linewidth=2.5, alpha=0.8)
+        ax2.semilogy(time, oligomer_load, color=colors[i], linewidth=2.5, alpha=0.8)
+        ax3.semilogy(time, fibril_load, color=colors[i], linewidth=2.5, alpha=0.8)
+        ax4.semilogy(time, plaque_load, color=colors[i], linewidth=2.5, alpha=0.8)
         successful_sims += 1
         
     except Exception as e:
@@ -398,8 +426,13 @@ for ax in (ax1, ax2, ax3, ax4):
     ax.set_ylabel('Concentration (nM)', fontsize=14, fontweight='bold')
     ax.grid(True, alpha=0.4, linestyle=':')
 
-# Only add legend to top right panel
-ax2.legend(title='kb0 Values', fontsize=11, title_fontsize=12, frameon=True, fancybox=True, shadow=True)
+# Add colorbar
+norm = Normalize(vmin=kb0_fortytwo_values.min(), vmax=kb0_fortytwo_values.max())
+sm = cm.ScalarMappable(cmap='viridis', norm=norm)
+sm.set_array([])
+cbar = plt.colorbar(sm, cax=cax)
+cbar.set_label('kb0 Values (h⁻¹)', fontsize=14, fontweight='bold')
+cbar.ax.tick_params(labelsize=12)
 
 # Add global title for kb0 sensitivity
 fig.suptitle('AB42 Aggregation Sensitivity vs kb0 (Dimer→Monomer)\nOriginal value: 45.72 h⁻¹', 
@@ -412,7 +445,16 @@ plt.show()
 # --- Sensitivity analysis for kb1_fortytwo ---
 # original value is 1.08 h⁻¹ - using range defined at top of script
 colors2 = plt.cm.plasma(np.linspace(0, 1, len(kb1_fortytwo_values)))
-fig2, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(16, 12))
+
+# Create figure with colorbar for kb1
+fig2 = plt.figure(figsize=(18, 12))
+gs2 = fig2.add_gridspec(2, 3, width_ratios=[1, 1, 0.1], height_ratios=[1, 1])
+
+ax1 = fig2.add_subplot(gs2[0, 0])
+ax2 = fig2.add_subplot(gs2[0, 1])
+ax3 = fig2.add_subplot(gs2[1, 0])
+ax4 = fig2.add_subplot(gs2[1, 1])
+cax2 = fig2.add_subplot(gs2[:, 2])  # Colorbar axis
 
 # Store simulation results for reuse in plotting function
 kb1_simulation_results = {}
@@ -472,14 +514,10 @@ for i, kb1 in enumerate(kb1_fortytwo_values):
         # Get plaque load
         plaque_load = result[:,25]
         
-        ax1.semilogy(time, monomer, label=f'{kb1:.3f} h⁻¹', 
-                    color=colors2[i], linewidth=2.5, alpha=0.8)
-        ax2.semilogy(time, oligomer_load, label=f'{kb1:.3f} h⁻¹', 
-                    color=colors2[i], linewidth=2.5, alpha=0.8)
-        ax3.semilogy(time, fibril_load, label=f'{kb1:.3f} h⁻¹', 
-                    color=colors2[i], linewidth=2.5, alpha=0.8)
-        ax4.semilogy(time, plaque_load, label=f'{kb1:.3f} h⁻¹', 
-                    color=colors2[i], linewidth=2.5, alpha=0.8)
+        ax1.semilogy(time, monomer, color=colors2[i], linewidth=2.5, alpha=0.8)
+        ax2.semilogy(time, oligomer_load, color=colors2[i], linewidth=2.5, alpha=0.8)
+        ax3.semilogy(time, fibril_load, color=colors2[i], linewidth=2.5, alpha=0.8)
+        ax4.semilogy(time, plaque_load, color=colors2[i], linewidth=2.5, alpha=0.8)
         successful_sims2 += 1
         
     except Exception as e:
@@ -497,8 +535,13 @@ for ax in (ax1, ax2, ax3, ax4):
     ax.set_ylabel('Concentration (nM)', fontsize=14, fontweight='bold')
     ax.grid(True, alpha=0.4, linestyle=':')
 
-# Only add legend to top right panel
-ax2.legend(title='kb1 Values', fontsize=11, title_fontsize=12, frameon=True, fancybox=True, shadow=True)
+# Add colorbar for kb1
+norm2 = Normalize(vmin=kb1_fortytwo_values.min(), vmax=kb1_fortytwo_values.max())
+sm2 = cm.ScalarMappable(cmap='plasma', norm=norm2)
+sm2.set_array([])
+cbar2 = plt.colorbar(sm2, cax=cax2)
+cbar2.set_label('kb1 Values (h⁻¹)', fontsize=14, fontweight='bold')
+cbar2.ax.tick_params(labelsize=12)
 
 # Add global title for kb1 sensitivity
 fig2.suptitle('AB42 Aggregation Sensitivity vs kb1 (Trimer→Dimer)\nOriginal value: 1.08 h⁻¹', 
