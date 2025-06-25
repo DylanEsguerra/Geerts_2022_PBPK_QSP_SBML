@@ -448,6 +448,131 @@ def analyze_optimized_parameters(optimal_params):
     
     return sim_ratios_interp, sim_result
 
+def calculate_percent_change_table(optimal_params):
+    """Calculate and display percent changes in optimized parameters"""
+    import pandas as pd
+    
+    kb0_forty_h, kb1_forty_h, kb0_fortytwo_h, kb1_fortytwo_h, \
+    kf0_forty_h, kf1_forty_h, kf0_fortytwo_h, kf1_fortytwo_h, \
+    baseline_ab40_rate, baseline_ab42_rate = optimal_params
+    
+    # Initial parameter values (from optimization code)
+    initial_kb0_forty_h = convert_backward_rate(2.7e-3)
+    initial_kb1_forty_h = convert_backward_rate(0.00001 / 3600)
+    initial_kb0_fortytwo_h = convert_backward_rate(12.7e-3)
+    initial_kb1_fortytwo_h = convert_backward_rate(0.00001 / 3600)
+    initial_kf0_forty_h = convert_forward_rate(0.5 * 10**2)
+    initial_kf1_forty_h = convert_forward_rate(20.0)
+    initial_kf0_fortytwo_h = convert_forward_rate(9.9 * 10**2)
+    initial_kf1_fortytwo_h = convert_forward_rate(38.0)
+    initial_baseline_ab40_rate = 0.000005  # 5e-06 L/(nM·h)
+    initial_baseline_ab42_rate = 0.00005   # 5e-05 L/(nM·h)
+
+    # Calculate percent changes
+    def calculate_percent_change(initial, final):
+        return ((final - initial) / initial) * 100
+
+    # Create the data for the table
+    data = {
+        'Parameter': [
+            'kb0_40 (h⁻¹)',
+            'kb1_40 (h⁻¹)', 
+            'kb0_42 (h⁻¹)',
+            'kb1_42 (h⁻¹)',
+            'kf0_40 (nM⁻¹h⁻¹)',
+            'kf1_40 (nM⁻¹h⁻¹)',
+            'kf0_42 (nM⁻¹h⁻¹)',
+            'kf1_42 (nM⁻¹h⁻¹)',
+            'base_40 (L/(nM·h))',
+            'base_42 (L/(nM·h))'
+        ],
+        'Initial Value': [
+            f"{initial_kb0_forty_h:.4e}",
+            f"{initial_kb1_forty_h:.4e}",
+            f"{initial_kb0_fortytwo_h:.4e}",
+            f"{initial_kb1_fortytwo_h:.4e}",
+            f"{initial_kf0_forty_h:.4e}",
+            f"{initial_kf1_forty_h:.4e}",
+            f"{initial_kf0_fortytwo_h:.4e}",
+            f"{initial_kf1_fortytwo_h:.4e}",
+            f"{initial_baseline_ab40_rate:.4e}",
+            f"{initial_baseline_ab42_rate:.4e}"
+        ],
+        'Final Value': [
+            f"{kb0_forty_h:.4e}",
+            f"{kb1_forty_h:.4e}",
+            f"{kb0_fortytwo_h:.4e}",
+            f"{kb1_fortytwo_h:.4e}",
+            f"{kf0_forty_h:.4e}",
+            f"{kf1_forty_h:.4e}",
+            f"{kf0_fortytwo_h:.4e}",
+            f"{kf1_fortytwo_h:.4e}",
+            f"{baseline_ab40_rate:.4e}",
+            f"{baseline_ab42_rate:.4e}"
+        ],
+        'Percent Change (%)': [
+            f"{calculate_percent_change(initial_kb0_forty_h, kb0_forty_h):.1f}",
+            f"{calculate_percent_change(initial_kb1_forty_h, kb1_forty_h):.1f}",
+            f"{calculate_percent_change(initial_kb0_fortytwo_h, kb0_fortytwo_h):.1f}",
+            f"{calculate_percent_change(initial_kb1_fortytwo_h, kb1_fortytwo_h):.1f}",
+            f"{calculate_percent_change(initial_kf0_forty_h, kf0_forty_h):.1f}",
+            f"{calculate_percent_change(initial_kf1_forty_h, kf1_forty_h):.1f}",
+            f"{calculate_percent_change(initial_kf0_fortytwo_h, kf0_fortytwo_h):.1f}",
+            f"{calculate_percent_change(initial_kf1_fortytwo_h, kf1_fortytwo_h):.1f}",
+            f"{calculate_percent_change(initial_baseline_ab40_rate, baseline_ab40_rate):.1f}",
+            f"{calculate_percent_change(initial_baseline_ab42_rate, baseline_ab42_rate):.1f}"
+        ]
+    }
+
+    # Create DataFrame and display
+    df = pd.DataFrame(data)
+
+    print(f"\n" + "="*80)
+    print("PARAMETER OPTIMIZATION: PERCENT CHANGES")
+    print("="*80)
+    print(df.to_string(index=False))
+
+    # Calculate raw percent changes for analysis
+    percent_changes = [
+        calculate_percent_change(initial_kb0_forty_h, kb0_forty_h),
+        calculate_percent_change(initial_kb1_forty_h, kb1_forty_h),
+        calculate_percent_change(initial_kb0_fortytwo_h, kb0_fortytwo_h),
+        calculate_percent_change(initial_kb1_fortytwo_h, kb1_fortytwo_h),
+        calculate_percent_change(initial_kf0_forty_h, kf0_forty_h),
+        calculate_percent_change(initial_kf1_forty_h, kf1_forty_h),
+        calculate_percent_change(initial_kf0_fortytwo_h, kf0_fortytwo_h),
+        calculate_percent_change(initial_kf1_fortytwo_h, kf1_fortytwo_h),
+        calculate_percent_change(initial_baseline_ab40_rate, baseline_ab40_rate),
+        calculate_percent_change(initial_baseline_ab42_rate, baseline_ab42_rate)
+    ]
+
+    # Also create a summary
+    print("\n\nSUMMARY:")
+    print("="*40)
+
+    largest_increase = max([pc for pc in percent_changes if pc > 0]) if any(pc > 0 for pc in percent_changes) else 0
+    largest_decrease = min([pc for pc in percent_changes if pc < 0]) if any(pc < 0 for pc in percent_changes) else 0
+
+    print(f"Largest increase: {largest_increase:.1f}%")
+    print(f"Largest decrease: {largest_decrease:.1f}%")
+    print(f"Average absolute change: {np.mean([abs(pc) for pc in percent_changes]):.1f}%")
+
+    # Parameters that increased vs decreased
+    increased = [data['Parameter'][i] for i, pc in enumerate(percent_changes) if pc > 0]
+    decreased = [data['Parameter'][i] for i, pc in enumerate(percent_changes) if pc < 0]
+
+    if increased:
+        print(f"\nParameters that increased ({len(increased)}):")
+        for param in increased:
+            idx = data['Parameter'].index(param)
+            print(f"  - {param}: {percent_changes[idx]:.1f}%")
+
+    if decreased:
+        print(f"\nParameters that decreased ({len(decreased)}):")
+        for param in decreased:
+            idx = data['Parameter'].index(param)
+            print(f"  - {param}: {percent_changes[idx]:.1f}%")
+
 if __name__ == "__main__":
     # Run optimization
     optimal_params, final_error = optimize_parameters()
@@ -473,4 +598,7 @@ if __name__ == "__main__":
     final_exp_ratio = exp_ratios[-1]
     ratio = final_sim_ratio / final_exp_ratio if final_exp_ratio > 0 else float('inf')
     print(f"Final concentration ratio (sim/exp): {ratio:.2f}")
-    print(f"Target ratio should be close to 1.0 for good fit") 
+    print(f"Target ratio should be close to 1.0 for good fit")
+    
+    # Calculate and display percent changes
+    calculate_percent_change_table(optimal_params) 

@@ -33,13 +33,13 @@ if not args.plot_only:
 
     # Load the model
     rr = te.loadSBMLModel(sbml_str)
+    rr.reset()
     rr.setIntegrator('cvode')
-    rr.integrator.absolute_tolerance = 1e-10
-    rr.integrator.relative_tolerance = 1e-10
+    rr.integrator.absolute_tolerance = 1e-8
+    rr.integrator.relative_tolerance = 1e-8
     rr.integrator.setValue('stiff', True)
 
-    rr.CL_AB42_IDE = 50
-    rr.AB42_IDE_Kcat_exp = 50
+    
 
     # Get all floating species, global parameters, and reactions
     selections = ['time'] + rr.getFloatingSpeciesIds() + rr.getGlobalParameterIds() + rr.getReactionIds()
