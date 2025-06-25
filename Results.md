@@ -72,6 +72,8 @@ While the age 60 transition is now present, the model predicts much less plaque 
 
 ### SBML vs ODE Model Agreement
 
+**Note** These curves do not line up at the current moment, but only due to me having performed a test changing the SBML version 
+
 This analysis was performed to diagnose why we failed to reproduce the natural life cycle results. 
 
 Cross-validation between our modular SBML implementation and the direct ODE implementation shows excellent agreement, confirming the accuracy of our SBML-to-reactions translation.
