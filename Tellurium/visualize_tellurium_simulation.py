@@ -92,26 +92,30 @@ def create_plots(sol, model):
     
     y_indexes = model.y_indexes
     
+    # Volume scaling factor for ISF compartment
+    volume_scale_factor_isf = 0.2505   # Division by volume for ISF concentration units
+    
     try:
         years = sol.ts / (24 * 365)
         
         # 1. AB42/AB40 Ratios Plot
         fig1, ax1 = plt.subplots(figsize=(12, 8))
         
-        ab40_monomer = sol.ys[:, y_indexes['AB40_Monomer']]
-        ab42_monomer = sol.ys[:, y_indexes['AB42_Monomer']]
+        # For ratios, volume scaling cancels out, so we can use raw values
+        ab40_monomer = sol.ys[:, model.y_indexes['AB40_Monomer']]
+        ab42_monomer = sol.ys[:, model.y_indexes['AB42_Monomer']]
         monomer_ratio = ab42_monomer / ab40_monomer
         
-        ab40_oligomers = sum(sol.ys[:, y_indexes[f'AB40_Oligomer{i:02d}']] for i in range(2, 17) if f'AB40_Oligomer{i:02d}' in y_indexes)
-        ab42_oligomers = sum(sol.ys[:, y_indexes[f'AB42_Oligomer{i:02d}']] for i in range(2, 17) if f'AB42_Oligomer{i:02d}' in y_indexes)
+        ab40_oligomers = sum(sol.ys[:, model.y_indexes[f'AB40_Oligomer{i:02d}']] for i in range(2, 17) if f'AB40_Oligomer{i:02d}' in model.y_indexes)
+        ab42_oligomers = sum(sol.ys[:, model.y_indexes[f'AB42_Oligomer{i:02d}']] for i in range(2, 17) if f'AB42_Oligomer{i:02d}' in model.y_indexes)
         oligomer_ratio = ab42_oligomers / ab40_oligomers
         
-        ab40_fibrils = sum(sol.ys[:, y_indexes[f'AB40_Fibril{i:02d}']] for i in range(17, 24) if f'AB40_Fibril{i:02d}' in y_indexes)
-        ab42_fibrils = sum(sol.ys[:, y_indexes[f'AB42_Fibril{i:02d}']] for i in range(17, 24) if f'AB42_Fibril{i:02d}' in y_indexes)
+        ab40_fibrils = sum(sol.ys[:, model.y_indexes[f'AB40_Fibril{i:02d}']] for i in range(17, 24) if f'AB40_Fibril{i:02d}' in model.y_indexes)
+        ab42_fibrils = sum(sol.ys[:, model.y_indexes[f'AB42_Fibril{i:02d}']] for i in range(17, 24) if f'AB42_Fibril{i:02d}' in model.y_indexes)
         fibril_ratio = ab42_fibrils / ab40_fibrils
         
-        ab40_plaque = sol.ys[:, y_indexes['AB40_Plaque_unbound']]
-        ab42_plaque = sol.ys[:, y_indexes['AB42_Plaque_unbound']]
+        ab40_plaque = sol.ys[:, model.y_indexes['AB40_Plaque_unbound']]
+        ab42_plaque = sol.ys[:, model.y_indexes['AB42_Plaque_unbound']]
         plaque_ratio = ab42_plaque / ab40_plaque
         
         ax1.plot(years, monomer_ratio, label='Monomer Ratio', linewidth=2)
@@ -129,11 +133,14 @@ def create_plots(sol, model):
         fig1.savefig(figures_dir / 'ab42_ab40_ratios.png', dpi=300, bbox_inches='tight')
         plt.close(fig1)
         
-        # 2. Oligomer Loads
+        # 2. Oligomer Loads (apply volume scaling for proper concentration units)
         fig2, (ax2a, ax2b) = plt.subplots(1, 2, figsize=(16, 8))
         
-        ab40_oligomer_load = ab40_monomer + ab40_oligomers
-        ab42_oligomer_load = ab42_monomer + ab42_oligomers
+        
+        
+        # Apply volume scaling for proper concentration units
+        ab40_oligomer_load = ab40_oligomers / volume_scale_factor_isf
+        ab42_oligomer_load = ab42_oligomers / volume_scale_factor_isf
         
         ax2a.plot(years, ab40_oligomer_load, label='Oligomer Load', linewidth=2, color='C0')
         ax2a.set_xlabel('Time (years)', fontsize=12)
@@ -153,17 +160,21 @@ def create_plots(sol, model):
         fig2.savefig(figures_dir / 'oligomer_load.png', dpi=300, bbox_inches='tight')
         plt.close(fig2)
         
-        # 3. Protofibril Loads
+        # 3. Protofibril Loads (apply volume scaling for proper concentration units)
         fig3, (ax3a, ax3b) = plt.subplots(1, 2, figsize=(16, 8))
         
-        ax3a.plot(years, ab40_fibrils, label='Protofibril Load', linewidth=2, color='C1')
+        # Apply volume scaling for proper concentration units
+        ab40_fibrils_scaled = ab40_fibrils / volume_scale_factor_isf
+        ab42_fibrils_scaled = ab42_fibrils / volume_scale_factor_isf
+        
+        ax3a.plot(years, ab40_fibrils_scaled, label='Protofibril Load', linewidth=2, color='C1')
         ax3a.set_xlabel('Time (years)', fontsize=12)
         ax3a.set_ylabel('Load (nM)', fontsize=12)
         ax3a.set_title('AB40 Protofibril Load', fontsize=14)
         ax3a.legend(fontsize=10)
         ax3a.grid(True, alpha=0.3)
         
-        ax3b.plot(years, ab42_fibrils, label='Protofibril Load', linewidth=2, color='C1')
+        ax3b.plot(years, ab42_fibrils_scaled, label='Protofibril Load', linewidth=2, color='C1')
         ax3b.set_xlabel('Time (years)', fontsize=12)
         ax3b.set_ylabel('Load (nM)', fontsize=12)
         ax3b.set_title('AB42 Protofibril Load', fontsize=14)
@@ -174,13 +185,19 @@ def create_plots(sol, model):
         fig3.savefig(figures_dir / 'protofibril_load.png', dpi=300, bbox_inches='tight')
         plt.close(fig3)
         
-        # 4. Plaque Dynamics
+        # 4. Plaque Dynamics (apply volume scaling for proper concentration units)
         fig4, (ax4a, ax4b) = plt.subplots(1, 2, figsize=(16, 8))
         
-        ax4a.plot(years, sol.ys[:, y_indexes['AB40_Plaque_unbound']], 
+        # Apply volume scaling for proper concentration units
+        ab40_plaque_scaled = ab40_plaque / volume_scale_factor_isf
+        ab42_plaque_scaled = ab42_plaque / volume_scale_factor_isf
+        
+        ax4a.plot(years, ab40_plaque_scaled, 
                  label='Unbound', linewidth=2, color='C2')
-        if 'AB40_Plaque_Antibody_bound' in y_indexes:
-            ax4a.plot(years, sol.ys[:, y_indexes['AB40_Plaque_Antibody_bound']], 
+        if 'AB40_Plaque_Antibody_bound' in model.y_indexes:
+            ab40_plaque_bound_raw = sol.ys[:, model.y_indexes['AB40_Plaque_Antibody_bound']]
+            ab40_plaque_bound_scaled = ab40_plaque_bound_raw / volume_scale_factor_isf
+            ax4a.plot(years, ab40_plaque_bound_scaled, 
                      label='Antibody-bound', linewidth=2, color='C3')
         ax4a.set_xlabel('Time (years)', fontsize=12)
         ax4a.set_ylabel('Concentration (nM)', fontsize=12)
@@ -188,10 +205,12 @@ def create_plots(sol, model):
         ax4a.legend(fontsize=10)
         ax4a.grid(True, alpha=0.3)
         
-        ax4b.plot(years, sol.ys[:, y_indexes['AB42_Plaque_unbound']], 
+        ax4b.plot(years, ab42_plaque_scaled, 
                  label='Unbound', linewidth=2, color='C2')
-        if 'AB42_Plaque_Antibody_bound' in y_indexes:
-            ax4b.plot(years, sol.ys[:, y_indexes['AB42_Plaque_Antibody_bound']], 
+        if 'AB42_Plaque_Antibody_bound' in model.y_indexes:
+            ab42_plaque_bound_raw = sol.ys[:, model.y_indexes['AB42_Plaque_Antibody_bound']]
+            ab42_plaque_bound_scaled = ab42_plaque_bound_raw / volume_scale_factor_isf
+            ax4b.plot(years, ab42_plaque_bound_scaled, 
                      label='Antibody-bound', linewidth=2, color='C3')
         ax4b.set_xlabel('Time (years)', fontsize=12)
         ax4b.set_ylabel('Concentration (nM)', fontsize=12)
@@ -225,6 +244,10 @@ def plot_individual_oligomers(sol, model, drug_type="gantenerumab", plots_dir=No
     ab42_oligomers_bound = {}
     
     y_indexes = model.y_indexes
+    
+    # Volume scaling factor for ISF compartment
+    volume_scale_factor_isf = 0.2505   # Division by volume for ISF concentration units
+    
     for species_name in y_indexes.keys():
         for i in range(2, 17):
             if f'AB40_Oligomer{i:02d}' == species_name:
@@ -244,22 +267,34 @@ def plot_individual_oligomers(sol, model, drug_type="gantenerumab", plots_dir=No
     cmap_ab42 = plt.cm.plasma(np.linspace(0, 1, max(len(ab42_oligomers), 1)))
     
     for i, (size, species) in enumerate(sorted(ab40_oligomers.items())):
-        ax1.semilogy(x_values, sol.ys[:, y_indexes[species]], 
+        # Apply volume scaling for proper concentration units
+        raw_concentration = sol.ys[:, y_indexes[species]]
+        concentration_nM = raw_concentration / volume_scale_factor_isf
+        ax1.semilogy(x_values, concentration_nM, 
                     label=f'AB40 Oligomer {size}', 
                     color=cmap_ab40[i], linewidth=2)
     
     for i, (size, species) in enumerate(sorted(ab40_oligomers_bound.items())):
-        ax3.semilogy(x_values, sol.ys[:, y_indexes[species]], 
+        # Apply volume scaling for proper concentration units
+        raw_concentration = sol.ys[:, y_indexes[species]]
+        concentration_nM = raw_concentration / volume_scale_factor_isf
+        ax3.semilogy(x_values, concentration_nM, 
                     label=f'AB40 Oligomer {size} (Bound)', 
                     color=cmap_ab40[i], linewidth=2)
     
     for i, (size, species) in enumerate(sorted(ab42_oligomers.items())):
-        ax2.semilogy(x_values, sol.ys[:, y_indexes[species]], 
+        # Apply volume scaling for proper concentration units
+        raw_concentration = sol.ys[:, y_indexes[species]]
+        concentration_nM = raw_concentration / volume_scale_factor_isf
+        ax2.semilogy(x_values, concentration_nM, 
                     label=f'AB42 Oligomer {size}', 
                     color=cmap_ab42[i], linewidth=2)
     
     for i, (size, species) in enumerate(sorted(ab42_oligomers_bound.items())):
-        ax4.semilogy(x_values, sol.ys[:, y_indexes[species]], 
+        # Apply volume scaling for proper concentration units
+        raw_concentration = sol.ys[:, y_indexes[species]]
+        concentration_nM = raw_concentration / volume_scale_factor_isf
+        ax4.semilogy(x_values, concentration_nM, 
                     label=f'AB42 Oligomer {size} (Bound)', 
                     color=cmap_ab42[i], linewidth=2)
     
@@ -311,6 +346,11 @@ def plot_fibrils_and_plaques(sol, model, drug_type="gantenerumab", plots_dir=Non
     plaque_species = []
     
     y_indexes = model.y_indexes
+    
+    # Volume scaling factors
+    volume_scale_factor_isf = 0.2505   # Division by volume for ISF concentration units
+    volume_scale_factor_csf = 0.09875  # Division by volume for SAS concentration units
+    
     for species_name in y_indexes.keys():
         for i in range(17, 25):
             if f'AB40_Fibril{i:02d}' == species_name:
@@ -334,27 +374,43 @@ def plot_fibrils_and_plaques(sol, model, drug_type="gantenerumab", plots_dir=Non
     cmap_plaques = plt.cm.tab10(np.linspace(0, 1, max(len(plaque_species), 1)))
     
     for i, (size, species) in enumerate(sorted(ab40_fibrils.items())):
-        ax1.semilogy(x_values, sol.ys[:, y_indexes[species]], 
+        # Apply volume scaling for proper concentration units
+        raw_concentration = sol.ys[:, y_indexes[species]]
+        concentration_nM = raw_concentration / volume_scale_factor_isf
+        ax1.semilogy(x_values, concentration_nM, 
                     label=f'AB40 Fibril {size}', 
                     color=cmap_ab40[i], linewidth=2)
     
     for i, (size, species) in enumerate(sorted(ab40_fibrils_bound.items())):
-        ax3.semilogy(x_values, sol.ys[:, y_indexes[species]], 
+        # Apply volume scaling for proper concentration units
+        raw_concentration = sol.ys[:, y_indexes[species]]
+        concentration_nM = raw_concentration / volume_scale_factor_isf
+        ax3.semilogy(x_values, concentration_nM, 
                     label=f'AB40 Fibril {size} (Bound)', 
                     color=cmap_ab40[i], linewidth=2)
     
     for i, (size, species) in enumerate(sorted(ab42_fibrils.items())):
-        ax2.semilogy(x_values, sol.ys[:, y_indexes[species]], 
+        # Apply volume scaling for proper concentration units
+        raw_concentration = sol.ys[:, y_indexes[species]]
+        concentration_nM = raw_concentration / volume_scale_factor_isf
+        ax2.semilogy(x_values, concentration_nM, 
                     label=f'AB42 Fibril {size}', 
                     color=cmap_ab42[i], linewidth=2)
     
     for i, (size, species) in enumerate(sorted(ab42_fibrils_bound.items())):
-        ax4.semilogy(x_values, sol.ys[:, y_indexes[species]], 
+        # Apply volume scaling for proper concentration units
+        raw_concentration = sol.ys[:, y_indexes[species]]
+        concentration_nM = raw_concentration / volume_scale_factor_isf
+        ax4.semilogy(x_values, concentration_nM, 
                     label=f'AB42 Fibril {size} (Bound)', 
                     color=cmap_ab42[i], linewidth=2)
     
     for i, species in enumerate(sorted(plaque_species)):
-        ax_plaque.semilogy(x_values, sol.ys[:, y_indexes[species]], 
+        # Apply volume scaling for proper concentration units
+        raw_concentration = sol.ys[:, y_indexes[species]]
+        
+        concentration_nM = raw_concentration / volume_scale_factor_isf
+        ax_plaque.semilogy(x_values, concentration_nM, 
                          label=species, 
                          color=cmap_plaques[i % len(cmap_plaques)], linewidth=2)
     
@@ -474,6 +530,11 @@ def plot_ab42_ratios_and_concentrations(sol, model, drug_type="gantenerumab", pl
     y_indexes = model.y_indexes
     nM_to_pg = 4514.0
     
+    # Volume scaling factors (same as in multi_dataset_experimental_fit.py)
+    volume_scale_factor_csf = 0.09875  # Division by volume for SAS concentration units
+    volume_scale_factor_isf = 0.2505   # Division by volume for ISF concentration units
+    
+    # Brain plasma ratios (no volume scaling needed for ratios)
     ab42_brain_plasma = sol.ys[:, y_indexes['AB42Mu_Brain_Plasma']]
     ab40_brain_plasma = sol.ys[:, y_indexes['AB40Mu_Brain_Plasma']]
     brain_plasma_ratio = np.where(ab40_brain_plasma > 0, ab42_brain_plasma / ab40_brain_plasma, 0)
@@ -488,8 +549,10 @@ def plot_ab42_ratios_and_concentrations(sol, model, drug_type="gantenerumab", pl
     #ax1.set_ylim(0.06, 0.15)
     ax1.tick_params(axis='both', which='major', labelsize=22)
     
-    vis_brain = sol.ys[0, y_indexes['VIS_brain']]
-    ab42_isf = (sol.ys[:, y_indexes['AB42_Monomer']]) * nM_to_pg
+    # ISF AB42 (apply volume scaling)
+    ab42_isf_raw = sol.ys[:, y_indexes['AB42_Monomer']]
+    ab42_isf_nM = ab42_isf_raw / volume_scale_factor_isf
+    ab42_isf = ab42_isf_nM * nM_to_pg
     ab42_isf_filtered = ab42_isf[start_idx:]
     
     ax2.semilogy(x_filtered, ab42_isf_filtered, linewidth=2, color='blue', label='Total ISF AB42')
@@ -500,8 +563,10 @@ def plot_ab42_ratios_and_concentrations(sol, model, drug_type="gantenerumab", pl
     ax2.legend(fontsize=20)
     ax2.tick_params(axis='both', which='major', labelsize=22)
     
-    v_sas_brain = sol.ys[0, y_indexes['V_SAS_brain']]
-    ab42_sas = (sol.ys[:, y_indexes['AB42Mu_SAS']]) * nM_to_pg
+    # CSF SAS AB42 (apply volume scaling)
+    ab42_sas_raw = sol.ys[:, y_indexes['AB42Mu_SAS']]
+    ab42_sas_nM = ab42_sas_raw / volume_scale_factor_csf
+    ab42_sas = ab42_sas_nM * nM_to_pg
     ab42_sas_filtered = ab42_sas[start_idx:]
     
     ax3.plot(x_filtered, ab42_sas_filtered, linewidth=2, color='blue', label='CSF SAS AB42')
@@ -512,7 +577,10 @@ def plot_ab42_ratios_and_concentrations(sol, model, drug_type="gantenerumab", pl
     ax3.legend(fontsize=20)
     ax3.tick_params(axis='both', which='major', labelsize=22)
     
-    ab40_isf = (sol.ys[:, y_indexes['AB40_Monomer']]) * nM_to_pg
+    # ISF AB40 (apply volume scaling)
+    ab40_isf_raw = sol.ys[:, y_indexes['AB40_Monomer']]
+    ab40_isf_nM = ab40_isf_raw / volume_scale_factor_isf
+    ab40_isf = ab40_isf_nM * nM_to_pg
     ab40_isf_filtered = ab40_isf[start_idx:]
     
     ax4.semilogy(x_filtered, ab40_isf_filtered, linewidth=2, color='blue', label='Total ISF AB40')
@@ -523,7 +591,10 @@ def plot_ab42_ratios_and_concentrations(sol, model, drug_type="gantenerumab", pl
     ax4.legend(fontsize=20)
     ax4.tick_params(axis='both', which='major', labelsize=22)
     
-    ab40_sas = (sol.ys[:, y_indexes['AB40Mu_SAS']]) * nM_to_pg  
+    # CSF SAS AB40 (apply volume scaling)
+    ab40_sas_raw = sol.ys[:, y_indexes['AB40Mu_SAS']]
+    ab40_sas_nM = ab40_sas_raw / volume_scale_factor_csf
+    ab40_sas = ab40_sas_nM * nM_to_pg
     ab40_sas_filtered = ab40_sas[start_idx:]
     
     ax5.semilogy(x_filtered, ab40_sas_filtered, linewidth=2, color='blue', label='CSF SAS AB40')
@@ -596,17 +667,34 @@ def get_ab42_ratios_and_concentrations_final_values(sol, model):
     
     nM_to_pg = 4514.0
     
+    # Volume scaling factors (same as in multi_dataset_experimental_fit.py)
+    volume_scale_factor_csf = 0.09875  # Division by volume for SAS concentration units
+    volume_scale_factor_isf = 0.2505   # Division by volume for ISF concentration units
+    
+    # Brain plasma ratios (no volume scaling needed for ratios)
     ab42_brain_plasma = sol.ys[-1, y_indexes['AB42Mu_Brain_Plasma']]
     ab40_brain_plasma = sol.ys[-1, y_indexes['AB40Mu_Brain_Plasma']]
     brain_plasma_ratio = ab42_brain_plasma / ab40_brain_plasma if ab40_brain_plasma > 0 else 0
     
-    vis_brain = sol.ys[0, y_indexes['VIS_brain']]
-    v_sas_brain = sol.ys[0, y_indexes['V_SAS_brain']]
+    # ISF AB42 (apply volume scaling)
+    ab42_isf_raw = sol.ys[-1, y_indexes['AB42_Monomer']]
+    ab42_isf_nM = ab42_isf_raw / volume_scale_factor_isf
+    ab42_isf = ab42_isf_nM * nM_to_pg
     
-    ab42_isf = (sol.ys[-1, y_indexes['AB42_Monomer']]) * nM_to_pg   
-    ab42_sas = (sol.ys[-1, y_indexes['AB42Mu_SAS']]) * nM_to_pg
-    ab40_isf = (sol.ys[-1, y_indexes['AB40_Monomer']]) * nM_to_pg
-    ab40_sas = (sol.ys[-1, y_indexes['AB40Mu_SAS']]) * nM_to_pg
+    # CSF SAS AB42 (apply volume scaling)
+    ab42_sas_raw = sol.ys[-1, y_indexes['AB42Mu_SAS']]
+    ab42_sas_nM = ab42_sas_raw / volume_scale_factor_csf
+    ab42_sas = ab42_sas_nM * nM_to_pg
+    
+    # ISF AB40 (apply volume scaling)
+    ab40_isf_raw = sol.ys[-1, y_indexes['AB40_Monomer']]
+    ab40_isf_nM = ab40_isf_raw / volume_scale_factor_isf
+    ab40_isf = ab40_isf_nM * nM_to_pg
+    
+    # CSF SAS AB40 (apply volume scaling)
+    ab40_sas_raw = sol.ys[-1, y_indexes['AB40Mu_SAS']]
+    ab40_sas_nM = ab40_sas_raw / volume_scale_factor_csf
+    ab40_sas = ab40_sas_nM * nM_to_pg
     
     return {
         'brain_plasma_ratio': brain_plasma_ratio,

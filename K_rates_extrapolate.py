@@ -240,7 +240,7 @@ def calculate_k_rates(
     kb1_fortytwo = convert_backward_rate(original_kb1_fortytwo)
     
     # Create and print conversion table
-    print("\nRate Constant Unit Conversion:")
+    #print("\nRate Constant Unit Conversion:")
     table_data = [
         ["k+12 (Aβ40)", f"{original_kf0_forty:.1f} M⁻¹s⁻¹", f"{kf0_forty:.6f} nM⁻¹h⁻¹"],
         ["k-12 (Aβ40)", f"{original_kb0_forty:.3f} s⁻¹", f"{kb0_forty:.6f} h⁻¹"],
@@ -252,7 +252,7 @@ def calculate_k_rates(
         ["k-23 (Aβ42)", f"{original_kb1_fortytwo:.3f} s⁻¹", f"{kb1_fortytwo:.6f} h⁻¹"]
     ]
     headers = ["Rate Constant", "Original Value", "Converted Value"]
-    print(tabulate(table_data, headers, tablefmt="grid"))
+    #print(tabulate(table_data, headers, tablefmt="grid"))
     
     # Generate oligomer sizes from 4 to 24
     oligomer_sizes = list(range(4, 25))
@@ -317,10 +317,10 @@ def calculate_k_rates(
     
     # Print plaque rate information if forward rate multiplier is enabled
     if enable_plaque_forward_rate_multiplier:
-        print(f"\nPlaque formation rates with forward rate multiplier enabled:")
-        print(f"Baseline AB40 rate: {baseline_ab40_plaque_rate:.6f} L/(nM·h)")
-        print(f"Baseline AB42 rate: {baseline_ab42_plaque_rate:.6f} L/(nM·h)")
-        print("\nExample plaque rates (rate = baseline × forward_rate):")
+        #print(f"\nPlaque formation rates with forward rate multiplier enabled:")
+        #print(f"Baseline AB40 rate: {baseline_ab40_plaque_rate:.6f} L/(nM·h)")
+        #print(f"Baseline AB42 rate: {baseline_ab42_plaque_rate:.6f} L/(nM·h)")
+        #print("\nExample plaque rates (rate = baseline × forward_rate):")
         example_sizes = [13, 16, 17, 20]
         for size in example_sizes:
             if size < 17:
@@ -337,11 +337,11 @@ def calculate_k_rates(
             if key_40 in plaque_rates and key_42 in plaque_rates:
                 forward_rate_40 = forward_rates_forty.get(forward_key_40, 0)
                 forward_rate_42 = forward_rates_fortytwo.get(forward_key_42, 0)
-                print(f"  Size {size}: AB40 = {plaque_rates[key_40]:.6f} (forward_rate = {forward_rate_40:.6f}), AB42 = {plaque_rates[key_42]:.6f} (forward_rate = {forward_rate_42:.6f})")
-    else:
-        print(f"\nPlaque formation rates using baseline values (no forward rate multiplier):")
-        print(f"AB40 rate: {baseline_ab40_plaque_rate:.6f} L/(nM·h)")
-        print(f"AB42 rate: {baseline_ab42_plaque_rate:.6f} L/(nM·h)")
+                #print(f"  Size {size}: AB40 = {plaque_rates[key_40]:.6f} (forward_rate = {forward_rate_40:.6f}), AB42 = {plaque_rates[key_42]:.6f} (forward_rate = {forward_rate_42:.6f})")
+    #else:
+        #print(f"\nPlaque formation rates using baseline values (no forward rate multiplier):")
+        #print(f"AB40 rate: {baseline_ab40_plaque_rate:.6f} L/(nM·h)")
+        #print(f"AB42 rate: {baseline_ab42_plaque_rate:.6f} L/(nM·h)")
     
     return rates
 
@@ -382,33 +382,33 @@ if __name__ == "__main__":
     gain_factors = calculate_gain_factors(rates)
     
     # Print the calculated rates
-    print("\nCalculated rate constants:")
-    for size in range(4, 25):
-        print(f"\nFor size {size}:")
-        if size < 17:
+    #print("\nCalculated rate constants:")
+    #for size in range(4, 25):
+        #print(f"\nFor size {size}:")
+        #if size < 17:
             # Oligomer rates
-            print(f"AB40 forward (O{size-1}->O{size}): {rates[f'k_O{size-1}_O{size}_forty']:.3e} nM⁻¹h⁻¹")
-            print(f"AB40 backward (O{size}->O{size-1}): {rates[f'k_O{size}_O{size-1}_forty']:.3e} h⁻¹")
-            print(f"AB40 gain factor: {gain_factors[f'gain_O{size}_forty']:.3e}")
-            print(f"AB42 forward (O{size-1}->O{size}): {rates[f'k_O{size-1}_O{size}_fortytwo']:.3e} nM⁻¹h⁻¹")
-            print(f"AB42 backward (O{size}->O{size-1}): {rates[f'k_O{size}_O{size-1}_fortytwo']:.3e} h⁻¹")
-            print(f"AB42 gain factor: {gain_factors[f'gain_O{size}_fortytwo']:.3e}")
-        elif size == 17:
+            #print(f"AB40 forward (O{size-1}->O{size}): {rates[f'k_O{size-1}_O{size}_forty']:.3e} nM⁻¹h⁻¹")
+            #print(f"AB40 backward (O{size}->O{size-1}): {rates[f'k_O{size}_O{size-1}_forty']:.3e} h⁻¹")
+            #print(f"AB40 gain factor: {gain_factors[f'gain_O{size}_forty']:.3e}")
+            #print(f"AB42 forward (O{size-1}->O{size}): {rates[f'k_O{size-1}_O{size}_fortytwo']:.3e} nM⁻¹h⁻¹")
+            #print(f"AB42 backward (O{size}->O{size-1}): {rates[f'k_O{size}_O{size-1}_fortytwo']:.3e} h⁻¹")
+            #print(f"AB42 gain factor: {gain_factors[f'gain_O{size}_fortytwo']:.3e}")
+        #elif size == 17:
             # Transition between oligomer and fibril
-            print(f"AB40 forward (O{size-1}->F{size}): {rates[f'k_O{size-1}_F{size}_forty']:.3e} nM⁻¹h⁻¹")
-            print(f"AB40 backward (F{size}->O{size-1}): {rates[f'k_F{size}_O{size-1}_forty']:.3e} h⁻¹")
-            print(f"AB40 gain factor: {gain_factors[f'gain_F{size}_forty']:.3e}")
-            print(f"AB42 forward (O{size-1}->F{size}): {rates[f'k_O{size-1}_F{size}_fortytwo']:.3e} nM⁻¹h⁻¹")
-            print(f"AB42 backward (F{size}->O{size-1}): {rates[f'k_F{size}_O{size-1}_fortytwo']:.3e} h⁻¹")
-            print(f"AB42 gain factor: {gain_factors[f'gain_F{size}_fortytwo']:.3e}")
-        else:
+            #print(f"AB40 forward (O{size-1}->F{size}): {rates[f'k_O{size-1}_F{size}_forty']:.3e} nM⁻¹h⁻¹")
+            #print(f"AB40 backward (F{size}->O{size-1}): {rates[f'k_F{size}_O{size-1}_forty']:.3e} h⁻¹")
+            #print(f"AB40 gain factor: {gain_factors[f'gain_F{size}_forty']:.3e}")
+            #print(f"AB42 forward (O{size-1}->F{size}): {rates[f'k_O{size-1}_F{size}_fortytwo']:.3e} nM⁻¹h⁻¹")
+            #print(f"AB42 backward (F{size}->O{size-1}): {rates[f'k_F{size}_O{size-1}_fortytwo']:.3e} h⁻¹")
+            #print(f"AB42 gain factor: {gain_factors[f'gain_F{size}_fortytwo']:.3e}")
+        #else:
             # Fibril rates
-            print(f"AB40 forward (F{size-1}->F{size}): {rates[f'k_F{size-1}_F{size}_forty']:.3e} nM⁻¹h⁻¹")
-            print(f"AB40 backward (F{size}->F{size-1}): {rates[f'k_F{size}_F{size-1}_forty']:.3e} h⁻¹")
-            print(f"AB40 gain factor: {gain_factors[f'gain_F{size}_forty']:.3e}")
-            print(f"AB42 forward (F{size-1}->F{size}): {rates[f'k_F{size-1}_F{size}_fortytwo']:.3e} nM⁻¹h⁻¹")
-            print(f"AB42 backward (F{size}->F{size-1}): {rates[f'k_F{size}_F{size-1}_fortytwo']:.3e} h⁻¹")
-            print(f"AB42 gain factor: {gain_factors[f'gain_F{size}_fortytwo']:.3e}")
+            #print(f"AB40 forward (F{size-1}->F{size}): {rates[f'k_F{size-1}_F{size}_forty']:.3e} nM⁻¹h⁻¹")
+            #print(f"AB40 backward (F{size}->F{size-1}): {rates[f'k_F{size}_F{size-1}_forty']:.3e} h⁻¹")
+            #print(f"AB40 gain factor: {gain_factors[f'gain_F{size}_forty']:.3e}")
+            #print(f"AB42 forward (F{size-1}->F{size}): {rates[f'k_F{size-1}_F{size}_fortytwo']:.3e} nM⁻¹h⁻¹")
+            #print(f"AB42 backward (F{size}->F{size-1}): {rates[f'k_F{size}_F{size-1}_fortytwo']:.3e} h⁻¹")
+            #print(f"AB42 gain factor: {gain_factors[f'gain_F{size}_fortytwo']:.3e}")
         
     
     # Optional: Plot the rates to visualize the extrapolation

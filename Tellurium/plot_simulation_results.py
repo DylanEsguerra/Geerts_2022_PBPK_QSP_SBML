@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import argparse
 
-def load_solution(csv_path, scale=1.0):
+def load_solution(csv_path, scale=1.0, csf_scale=None):
     df = pd.read_csv(csv_path)
     # Detect time column
     if 'time' in df.columns:
@@ -16,10 +16,31 @@ def load_solution(csv_path, scale=1.0):
         df = df.drop(columns=['time_years'])
     else:
         raise ValueError("No recognized time column in CSV")
-    if scale != 1.0:
-        df = df / scale
+    
+    # Apply different scaling factors for CSF vs ISF species
+    if scale != 1.0 or csf_scale is not None:
+        # CSF species (use csf_scale if provided, otherwise use scale)
+        csf_species = [col for col in df.columns if 'SAS' in col or 'CSF' in col]
+        other_species = [col for col in df.columns if col not in csf_species]
+        
+        if csf_scale is not None:
+            for species in csf_species:
+                if species in df.columns:
+                    df[species] = df[species] / csf_scale
+        else:
+            for species in csf_species:
+                if species in df.columns:
+                    df[species] = df[species] / scale
+        
+        # Apply regular scaling to non-CSF species
+        if scale != 1.0:
+            for species in other_species:
+                if species in df.columns:
+                    df[species] = df[species] / scale
+    
     species_data = df.values
     y_indexes = {name: idx for idx, name in enumerate(df.columns)}
+    
     class Model:
         def __init__(self, y_indexes):
             self.y_indexes = y_indexes
@@ -200,8 +221,35 @@ def plot_single_model_analysis(sol, model, label, outdir):
         plt.savefig(Path(outdir) / 'microglia_hi_fract.png', dpi=300)
         plt.close()
 
+    # --- CSF Concentrations ---
+    nM_to_pg = 4514.0  # Conversion factor from nM to pg/mL
+    plt.figure(figsize=(12, 8))
+    # Try both CSF variable naming conventions
+    ab40_csf = safe_get(ys, yidx, 'AB40Mu_SAS')  # Tellurium
+    if np.all(np.isnan(ab40_csf)):
+        ab40_csf = safe_get(ys, yidx, 'AB40Mu_CSF_SAS')  # ODE
+        
+    ab42_csf = safe_get(ys, yidx, 'AB42Mu_SAS')  # Tellurium
+    if np.all(np.isnan(ab42_csf)):
+        ab42_csf = safe_get(ys, yidx, 'AB42Mu_CSF_SAS')  # ODE
+    
+    if not np.all(np.isnan(ab40_csf)):
+        plt.plot(years, ab40_csf * nM_to_pg, label='CSF AB40', color='C0', linewidth=3)
+    if not np.all(np.isnan(ab42_csf)):
+        plt.plot(years, ab42_csf * nM_to_pg, label='CSF AB42', color='C1', linewidth=3)
+    
+    plt.xlabel('Time (years)')
+    plt.ylabel('Concentration (pg/mL)')
+    plt.title('CSF AB40 and AB42 Concentrations Over Time')
+    plt.legend()
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(Path(outdir) / 'csf_concentrations.png', dpi=300)
+    plt.close()
+
     # --- Save final values for total oligomer, fibril, monomer, and plaque concentrations ---
     def get_final_values(ys, yidx):
+        nM_to_pg = 4514.0
         ab40_monomer = safe_get(ys, yidx, 'AB40_Monomer')
         ab42_monomer = safe_get(ys, yidx, 'AB42_Monomer')
         ab40_oligomers = np.sum([safe_get(ys, yidx, f'AB40_Oligomer{str(i).zfill(2)}') for i in range(2, 17)], axis=0)
@@ -210,6 +258,16 @@ def plot_single_model_analysis(sol, model, label, outdir):
         ab42_fibrils = np.sum([safe_get(ys, yidx, f'AB42_Fibril{str(i).zfill(2)}') for i in range(17, 24)], axis=0)
         ab40_plaque = safe_get(ys, yidx, 'AB40_Plaque_unbound')
         ab42_plaque = safe_get(ys, yidx, 'AB42_Plaque_unbound')
+        
+        # Try both CSF variable naming conventions
+        ab40_csf = safe_get(ys, yidx, 'AB40Mu_SAS')  # Tellurium
+        if np.all(np.isnan(ab40_csf)):
+            ab40_csf = safe_get(ys, yidx, 'AB40Mu_CSF_SAS')  # ODE
+            
+        ab42_csf = safe_get(ys, yidx, 'AB42Mu_SAS')  # Tellurium
+        if np.all(np.isnan(ab42_csf)):
+            ab42_csf = safe_get(ys, yidx, 'AB42Mu_CSF_SAS')  # ODE
+            
         return {
             'AB40_Monomer': ab40_monomer[-1] if not np.all(np.isnan(ab40_monomer)) else np.nan,
             'AB42_Monomer': ab42_monomer[-1] if not np.all(np.isnan(ab42_monomer)) else np.nan,
@@ -219,6 +277,8 @@ def plot_single_model_analysis(sol, model, label, outdir):
             'AB42_Fibril': ab42_fibrils[-1] if not np.all(np.isnan(ab42_fibrils)) else np.nan,
             'AB40_Plaque': ab40_plaque[-1] if not np.all(np.isnan(ab40_plaque)) else np.nan,
             'AB42_Plaque': ab42_plaque[-1] if not np.all(np.isnan(ab42_plaque)) else np.nan,
+            'AB40_CSF_pg_mL': (ab40_csf[-1] * nM_to_pg) if not np.all(np.isnan(ab40_csf)) else np.nan,
+            'AB42_CSF_pg_mL': (ab42_csf[-1] * nM_to_pg) if not np.all(np.isnan(ab42_csf)) else np.nan,
         }
     
     final_values = get_final_values(ys, yidx)
@@ -435,8 +495,44 @@ def plot_comparison_analysis(sol1, model1, sol2, model2, label1, label2, outdir)
     plt.savefig(Path(outdir) / 'compare_microglia_hi_fract.png', dpi=300)
     plt.close()
 
+    # --- CSF Concentrations Comparison ---
+    nM_to_pg = 4514.0  # Conversion factor from nM to pg/mL
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 8), sharex=True)
+    
+    # Handle different CSF variable names between datasets
+    # Tellurium uses: AB40Mu_SAS, AB42Mu_SAS
+    # ODE uses: AB40Mu_CSF_SAS, AB42Mu_CSF_SAS
+    ab40_csf_1 = safe_get(ys1, y1, 'AB40Mu_SAS')
+    ab40_csf_2 = safe_get(ys2, y2, 'AB40Mu_CSF_SAS')
+    ab42_csf_1 = safe_get(ys1, y1, 'AB42Mu_SAS')
+    ab42_csf_2 = safe_get(ys2, y2, 'AB42Mu_CSF_SAS')
+    
+    if not np.all(np.isnan(ab40_csf_1)):
+        ax1.plot(years1, ab40_csf_1 * nM_to_pg, label=f'CSF AB40 ({label1})', color='C0', linewidth=3)
+    if not np.all(np.isnan(ab40_csf_2)):
+        ax1.plot(years2, ab40_csf_2 * nM_to_pg, label=f'CSF AB40 ({label2})', color='C1', linewidth=3)
+    if not np.all(np.isnan(ab42_csf_1)):
+        ax2.plot(years1, ab42_csf_1 * nM_to_pg, label=f'CSF AB42 ({label1})', color='C0', linewidth=3)
+    if not np.all(np.isnan(ab42_csf_2)):
+        ax2.plot(years2, ab42_csf_2 * nM_to_pg, label=f'CSF AB42 ({label2})', color='C1', linewidth=3)
+    
+    ax1.set_xlabel('Time (years)', fontsize=20)
+    ax1.set_ylabel('Concentration (pg/mL)', fontsize=20)
+    ax1.set_title('CSF AB40 Concentrations - Comparison', fontsize=22)
+    ax1.legend()
+    ax1.grid(True, alpha=0.3)
+    ax2.set_xlabel('Time (years)', fontsize=20)
+    ax2.set_ylabel('Concentration (pg/mL)', fontsize=20)
+    ax2.set_title('CSF AB42 Concentrations - Comparison', fontsize=22)
+    ax2.legend()
+    ax2.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(Path(outdir) / 'compare_csf_concentrations.png', dpi=300)
+    plt.close()
+
     # --- Save final values comparison ---
     def get_final_values(ys, yidx):
+        nM_to_pg = 4514.0
         ab40_monomer = safe_get(ys, yidx, 'AB40_Monomer')
         ab42_monomer = safe_get(ys, yidx, 'AB42_Monomer')
         ab40_oligomers = np.sum([safe_get(ys, yidx, f'AB40_Oligomer{str(i).zfill(2)}') for i in range(2, 17)], axis=0)
@@ -445,6 +541,14 @@ def plot_comparison_analysis(sol1, model1, sol2, model2, label1, label2, outdir)
         ab42_fibrils = np.sum([safe_get(ys, yidx, f'AB42_Fibril{str(i).zfill(2)}') for i in range(17, 24)], axis=0)
         ab40_plaque = safe_get(ys, yidx, 'AB40_Plaque_unbound')
         ab42_plaque = safe_get(ys, yidx, 'AB42_Plaque_unbound')
+        # Try both CSF variable naming conventions
+        ab40_csf = safe_get(ys, yidx, 'AB40Mu_SAS')  # Tellurium
+        if np.all(np.isnan(ab40_csf)):
+            ab40_csf = safe_get(ys, yidx, 'AB40Mu_CSF_SAS')  # ODE
+            
+        ab42_csf = safe_get(ys, yidx, 'AB42Mu_SAS')  # Tellurium
+        if np.all(np.isnan(ab42_csf)):
+            ab42_csf = safe_get(ys, yidx, 'AB42Mu_CSF_SAS')  # ODE
         return {
             'AB40_Monomer': ab40_monomer[-1] if not np.all(np.isnan(ab40_monomer)) else np.nan,
             'AB42_Monomer': ab42_monomer[-1] if not np.all(np.isnan(ab42_monomer)) else np.nan,
@@ -454,6 +558,8 @@ def plot_comparison_analysis(sol1, model1, sol2, model2, label1, label2, outdir)
             'AB42_Fibril': ab42_fibrils[-1] if not np.all(np.isnan(ab42_fibrils)) else np.nan,
             'AB40_Plaque': ab40_plaque[-1] if not np.all(np.isnan(ab40_plaque)) else np.nan,
             'AB42_Plaque': ab42_plaque[-1] if not np.all(np.isnan(ab42_plaque)) else np.nan,
+            'AB40_CSF_pg_mL': (ab40_csf[-1] * nM_to_pg) if not np.all(np.isnan(ab40_csf)) else np.nan,
+            'AB42_CSF_pg_mL': (ab42_csf[-1] * nM_to_pg) if not np.all(np.isnan(ab42_csf)) else np.nan,
         }
     
     final1 = get_final_values(ys1, y1)
@@ -480,7 +586,12 @@ if __name__ == '__main__':
     Path(outdir).mkdir(parents=True, exist_ok=True)
     
     # Load both solutions
-    sol1, model1 = load_solution(csv1, scale=0.2505) # Division by volume if isf is applied for this comparison
+    # Use different scaling factors for CSF vs ISF compartments
+    # ISF scaling: 0.2505 (VIS_brain volume), CSF scaling: different factor (V_SAS_brain volume)
+    # The CSF scale factor should be adjusted based on your V_SAS_brain volume
+    # Typical values: V_SAS_brain ~ 0.09875 L, VIS_brain ~ 0.2505 L
+    csf_scale_factor = 0.09875  # Adjust this based on your V_SAS_brain volume
+    sol1, model1 = load_solution(csv1, scale=0.2505, csf_scale=csf_scale_factor) # Division by volume applied for compartment-specific comparison
     sol2, model2 = load_solution(csv2, scale=1.0)
     
     # Create comparison plots

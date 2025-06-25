@@ -6,7 +6,7 @@ This repository contains an open-sourced implementation of the Geerts et al. 202
 
 We have chosen to use open-sourced tools for all aspects of the model development process and are emphasizing a modular design process. We are using the Systems Biology Markup Language to save the model in XML format with the hope that other researchers can use it with the software of their choice. Our model is written in python with libsbml and solved using JAX diffrax library as well as Tellurium. 
 
-## Citation
+## Original Model Citation
 
 Geerts H, Walker M, Rose R, et al. A combined physiologically-based pharmacokinetic and quantitative systems pharmacology model for modeling amyloid aggregation in Alzheimer's disease. CPT Pharmacometrics Syst Pharmacol. 2023; 12: 444-461. doi:10.1002/psp4.12912
 

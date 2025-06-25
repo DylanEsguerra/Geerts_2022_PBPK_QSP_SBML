@@ -39,6 +39,35 @@ However, running our model for the natural life cycle of amyloid aggregation sho
 ❌ Aβ42 monomer concentrations in CSF are ~10-fold higher than experimental values
 ❌ Aβ42/40 ratio exhibits correct temporal dynamics but incorrect absolut
 
+### Amyloid Species Composition: Model Evolution and Rate Law Insights
+
+A key challenge in reproducing the published natural life cycle of amyloid aggregation was the inability to capture the characteristic "age 60 transition" in species composition, as seen in the original publication (see Figure 3 above). Below, we show the evolution of our model's predictions for AB40 and AB42 species composition as we refined our approach to the oligomer-to-plaque rate law.
+
+#### 1. **Original Model (Old Rate Law): No Age 60 Transition, Plaque Dominates**
+
+![AB Species Composition (Old Rate Law)](ODE_version/results/no_dose/Gantenerumab_no_dose_100.0yr_species_composition_old.png)
+
+*AB40 and AB42 species composition using the original rate law (prior to discovering the new relationship between forward rates and oligomer-to-plaque rates explained in Model_Details). The model fails to reproduce the age 60 transition: plaque dominates the total amyloid burden for both AB40 and AB42, and there is little evidence of the expected shift in species composition with age.*
+
+#### 2. **New Rate Law (Garai Value for Trimer-to-Dimer Backward Rate): Oligomers and Fibrils Increase, Plaque Drops**
+
+![AB Species Composition (Garai New)](ODE_version/results/no_dose/Gantenerumab_no_dose_100.0yr_species_composition_new_garai.png)
+
+*Species composition after implementing the new rule relating forward rates to oligomer-to-plaque rates, but with the trimer-to-dimer backward rate (kb1) set to the Garai 2013 value (1.08 h⁻¹). This change increases the abundance of oligomers and fibrils for Abeta40 and plaque levels drop dramatically for both species. However the age 60 transition is still not observed and Abeta42 is dominated by a constant population of Monomers.*
+
+#### 3. **New Rate Law + Sensitivity Analysis (Low Trimer-to-Dimer Backward Rate): Age 60 Transition Emerges**
+
+![AB Species Composition (Low kb1)](ODE_version/results/no_dose/Gantenerumab_no_dose_100.0yr_species_composition.png)
+
+*Species composition using the new rate law and, based on sensitivity analysis, setting the trimer-to-dimer backward rate (kb1) to the lower cutoff (1e-5 h⁻¹). This adjustment enables the model to reproduce the steep age 60 transition in AB42 species composition, with a marked increase in oligomers and fibrils at the expense of plaque.*
+
+#### **Discussion and Remaining Issues**
+
+These results demonstrate that the relationship between forward rates and oligomer-to-plaque rates is critical for capturing the age-dependent transition in amyloid species composition. By lowering the trimer-to-dimer backward rate (kb1), we are able to reproduce the steep transition around age 60, a hallmark of the published data. Notably, this adjustment leads to a much higher abundance of oligomers and fibrils, and a reduction in plaque compared to both our earlier model and the published results.
+
+**However, a key discrepancy remains:**  
+While the age 60 transition is now present, the model predicts much less plaque and more monomers than reported in the literature. The reason for this imbalance is not yet fully understood and is the subject of ongoing investigation. Potential factors include the precise values and scaling of aggregation rates, the role of IDE clearance, and other parameter uncertainties highlighted in our sensitivity analysis.
+
 ## Implementation Comparisons
 
 ### SBML vs ODE Model Agreement
