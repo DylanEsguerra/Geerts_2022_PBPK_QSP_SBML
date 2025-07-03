@@ -12,7 +12,9 @@ from visualize_tellurium_simulation import (
     plot_individual_oligomers,
     plot_fibrils_and_plaques,
     plot_ab42_ratios_and_concentrations,
-    get_ab42_ratios_and_concentrations_final_values
+    plot_suvr,
+    get_ab42_ratios_and_concentrations_final_values,
+    get_suvr_final_value
 )
 
 # Parse command line arguments
@@ -80,11 +82,16 @@ try:
         print(f"Total ISF AB40: {final_values['ab40_isf_pg_ml']:.2f} pg/mL")
         print(f"CSF SAS AB40: {final_values['ab40_sas_pg_ml']:.2f} pg/mL")
     
+    # Calculate and display final SUVR value
+    final_suvr = get_suvr_final_value(sol, model)
+    print(f"Final SUVR: {final_suvr:.4f}")
+    
     # Generate all plots
     create_plots(sol, model)
     plot_individual_oligomers(sol, model, drug_type=args.drug, plots_dir=plots_dir)
     plot_fibrils_and_plaques(sol, model, drug_type=args.drug, plots_dir=plots_dir)
     plot_ab42_ratios_and_concentrations(sol, model, drug_type=args.drug, plots_dir=plots_dir)
+    plot_suvr(sol, model, drug_type=args.drug, plots_dir=plots_dir)
     
     print(f"\nPlots saved to {plots_dir}")
     print("All plots generated successfully!")

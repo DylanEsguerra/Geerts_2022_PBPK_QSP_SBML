@@ -18,10 +18,10 @@ import re
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-def calculate_suvr(states, state_names, c1=2.52, c2=400000, c3=1.3, c4=3.5):
+def calculate_suvr(states, state_names, c1=2.52, c2=1.3, c3=3.5, c4=400000):
     """
     Calculate SUVR using the weighted sum formula:
-    SUVR_w = 1 + (C₁(Ab42ᵒˡⁱᵍᵒ + Ab42ᵖʳᵒᵗᵒ + C₂*Ab42ᵖˡᵃᑫᵘᵉ))^C₃ / [(Ab42ᵒˡⁱᵍᵒ + Ab42ᵖʳᵒᵗᵒ + C₂*Ab42ᵖˡᵃᑫᵘᵉ)^C₃ + C₄^C₃]
+    SUVR_w = 1 + (C₁(Ab42ᵒˡⁱᵍᵒ + Ab42ᵖʳᵒᵗᵒ + C₂*Ab42ᵖˡ))^C₃ / [(Ab42ᵒˡⁱᵍᵒ + Ab42ᵖʳᵒᵗᵒ + C₂*Ab42ᵖˡ)^C₃ + C₄^C₃]
     
     Args:
         states: List of state dictionaries
@@ -332,7 +332,7 @@ def create_plots(solution, antibody_type, simulation_years, save_path, state_nam
     results['SUVR_calculated'] = calculate_suvr(states, state_names)
     
     # Keep the original SUVR from the model for comparison
-    results['SUVR'] = jnp.array([state['SUVR'] for state in states])
+    #results['SUVR'] = jnp.array([state['SUVR'] for state in states])
     
     # Identify and sum oligomers
     ab40_oligomer_names = [name for name in state_names if re.match(r'AB40_Oligomer\d+$', name)]
@@ -444,7 +444,7 @@ def create_plots(solution, antibody_type, simulation_years, save_path, state_nam
         fig4, ax4 = plt.subplots(figsize=(12, 8))
         # Plot both the calculated SUVR and the model's SUVR
         ax4.plot(years, results['SUVR_calculated'], label='SUVR (Calculated)', linewidth=3, color='blue')
-        ax4.plot(years, results['SUVR'], label='SUVR (Model)', linewidth=3, color='red', linestyle='--')
+        #ax4.plot(years, results['SUVR'], label='SUVR (Model)', linewidth=3, color='red', linestyle='--')
         ax4.set_xlabel('Time (years)', fontsize=20)
         ax4.set_ylabel('SUVR', fontsize=20)
         ax4.set_title('SUVR Progression Over Time', fontsize=22)

@@ -9,6 +9,7 @@ import sys
 import argparse
 import matplotlib.pyplot as plt
 import traceback
+import re
 
 # Set global matplotlib parameters for better readability
 plt.rcParams.update({
@@ -31,6 +32,66 @@ plt.rcParams.update({
 })
 
 script_dir = Path(__file__).resolve().parent
+
+def calculate_suvr(sol, model, c1=2.52, c2=1.3, c3=3.5, c4=400000):
+    """
+    Calculate SUVR using the weighted sum formula:
+    SUVR_w = 1 + (C₁(Ab42ᵒˡⁱᵍᵒ + Ab42ᵖʳᵒᵗᵒ + C₂*Ab42ᵖˡ))^C₃ / [(Ab42ᵒˡⁱᵍᵒ + Ab42ᵖʳᵒᵗᵒ + C₂*Ab42ᵖˡ)^C₃ + C₄^C₃]
+    
+    Args:
+        sol: Solution object with ts and ys attributes
+        model: Model object with y_indexes attribute
+        c1, c2, c3, c4: Parameters from PK_Geerts.csv
+        
+    Returns:
+        SUVR array
+    """
+    y_indexes = model.y_indexes
+    n_timepoints = len(sol.ts)
+    suvr = np.zeros(n_timepoints)
+    
+    # Get AB42 oligomer pattern
+    ab42_oligomer_pattern = re.compile(r'AB42_Oligomer\d+$')
+    
+    # Get AB42 protofibril pattern (fibrils 17-23)
+    ab42_protofibril_pattern = re.compile(r'AB42_Fibril(1[7-9]|2[0-3])$')
+    
+    for t in range(n_timepoints):
+        # Calculate AB42 oligomer sum (weighted by size)
+        ab42_oligo = 0.0
+        for name, idx in y_indexes.items():
+            if ab42_oligomer_pattern.match(name):
+                # Extract oligomer size from name - handling zero-padded numbers
+                size_str = name.split('Oligomer')[1]
+                size = int(size_str)
+                # Weight by size
+                ab42_oligo += size * sol.ys[t, idx]
+        
+        # Calculate AB42 protofibril sum (fibrils 17-23)
+        ab42_proto = 0.0
+        for name, idx in y_indexes.items():
+            if ab42_protofibril_pattern.match(name):
+                # Extract fibril size
+                size = int(name.split('Fibril')[1])
+                ab42_proto += size * sol.ys[t, idx]
+        
+        # Get AB42 plaque
+        ab42_plaque = sol.ys[t, y_indexes.get('AB42_Plaque_unbound', 0)]
+        
+        # Calculate the weighted sum
+        weighted_sum = ab42_oligo + ab42_proto + c2 * ab42_plaque
+        
+        # Calculate the numerator and denominator for SUVR
+        numerator = c1 * (weighted_sum ** c3)
+        denominator = (weighted_sum ** c3) + (c4 ** c3)
+        
+        # Calculate SUVR
+        if denominator > 0:
+            suvr[t] = 1.0 + (numerator / denominator)
+        else:
+            suvr[t] = 1.0  # Default value if denominator is zero
+    
+    return suvr
 
 def load_tellurium_data(years=100.0):
     """Load Tellurium simulation data from the saved CSV file.
@@ -661,6 +722,68 @@ def plot_microglia_dynamics(sol, model, plots_dir=None):
     fig.savefig(plots_dir / 'microglia_dynamics.png', dpi=300, bbox_inches='tight')
     plt.close()
 
+def plot_suvr(sol, model, drug_type="gantenerumab", plots_dir=None):
+    """Plot SUVR progression over time"""
+    if plots_dir is None:
+        plots_dir = script_dir / "simulation_plots/tellurium_steady_state"
+    plots_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Calculate SUVR
+    suvr = calculate_suvr(sol, model)
+    
+    # Convert time to years
+    years = sol.ts / (24 * 365)
+    
+    # Create the plot
+    fig, ax = plt.subplots(figsize=(12, 8))
+    
+    ax.plot(years, suvr, linewidth=3, color='black', label='SUVR')
+    ax.set_xlabel('Time (years)', fontsize=20)
+    ax.set_ylabel('SUVR', fontsize=20)
+    ax.set_title(f'{drug_type.capitalize()} SUVR Progression Over Time', fontsize=22)
+    ax.grid(True, alpha=0.3)
+    ax.legend(fontsize=16)
+    ax.tick_params(axis='both', which='major', labelsize=16)
+    
+    plt.tight_layout()
+    
+    fig.savefig(plots_dir / f'{drug_type.lower()}_suvr.png', dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    # Also create a combined plot with plaque dynamics
+    fig_combined, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 12), sharex=True)
+    
+    # Plot plaque dynamics
+    y_indexes = model.y_indexes
+    volume_scale_factor_isf = 0.2505   # Division by volume for ISF concentration units
+    
+    ab40_plaque = sol.ys[:, y_indexes['AB40_Plaque_unbound']] / volume_scale_factor_isf
+    ab42_plaque = sol.ys[:, y_indexes['AB42_Plaque_unbound']] / volume_scale_factor_isf
+    
+    ax1.plot(years, ab40_plaque, label='AB40 Plaque', linewidth=2, color='blue')
+    ax1.plot(years, ab42_plaque, label='AB42 Plaque', linewidth=2, color='red')
+    ax1.set_ylabel('Concentration (nM)', fontsize=16)
+    ax1.set_title('Plaque Dynamics', fontsize=18)
+    ax1.legend(fontsize=14)
+    ax1.grid(True, alpha=0.3)
+    ax1.tick_params(axis='both', which='major', labelsize=14)
+    
+    # Plot SUVR
+    ax2.plot(years, suvr, label='SUVR', linewidth=3, color='black')
+    ax2.set_xlabel('Time (years)', fontsize=16)
+    ax2.set_ylabel('SUVR', fontsize=16)
+    ax2.set_title('SUVR Progression', fontsize=18)
+    ax2.legend(fontsize=14)
+    ax2.grid(True, alpha=0.3)
+    ax2.tick_params(axis='both', which='major', labelsize=14)
+    
+    plt.tight_layout()
+    
+    fig_combined.savefig(plots_dir / f'{drug_type.lower()}_plaque_and_suvr.png', dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    return suvr
+
 def get_ab42_ratios_and_concentrations_final_values(sol, model):
     """Get the final values of AB42/AB40 ratios and concentrations."""
     y_indexes = model.y_indexes
@@ -704,6 +827,11 @@ def get_ab42_ratios_and_concentrations_final_values(sol, model):
         'ab40_sas_pg_ml': ab40_sas
     }
 
+def get_suvr_final_value(sol, model):
+    """Get the final SUVR value."""
+    suvr = calculate_suvr(sol, model)
+    return suvr[-1]
+
 def main():
     """Main function to visualize Tellurium simulation data"""
     parser = argparse.ArgumentParser(description="Visualize Tellurium simulation data")
@@ -738,11 +866,16 @@ def main():
             print(f"Total ISF AB40: {final_values['ab40_isf_pg_ml']:.2f} pg/mL")
             print(f"CSF SAS AB40: {final_values['ab40_sas_pg_ml']:.2f} pg/mL")
         
+        # Calculate and display final SUVR value
+        final_suvr = get_suvr_final_value(sol, model)
+        print(f"Final SUVR: {final_suvr:.4f}")
+        
         print("\nGenerating plots...")
         create_plots(sol, model)
         plot_individual_oligomers(sol, model, drug_type=args.drug, plots_dir=plots_dir)
         plot_fibrils_and_plaques(sol, model, drug_type=args.drug, plots_dir=plots_dir)
         plot_ab42_ratios_and_concentrations(sol, model, drug_type=args.drug, plots_dir=plots_dir)
+        plot_suvr(sol, model, drug_type=args.drug, plots_dir=plots_dir)
         
         print(f"\nPlots saved to {plots_dir}")
         

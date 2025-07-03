@@ -749,14 +749,14 @@
       <parameter id="sigma_ISF_ABeta42_oligomer15" value="0.99" units="dimensionless" constant="true"/>
       <parameter id="sigma_ISF_ABeta40_oligomer16" value="0.99" units="dimensionless" constant="true"/>
       <parameter id="sigma_ISF_ABeta42_oligomer16" value="0.99" units="dimensionless" constant="true"/>
-      <parameter id="k_O13_Plaque_forty" value="1.43235247836349e-09" units="per_hour" constant="true"/>
-      <parameter id="k_O13_Plaque_fortytwo" value="1.77824735219699e-07" units="per_hour" constant="true"/>
-      <parameter id="k_O14_Plaque_forty" value="1.53833729216152e-09" units="per_hour" constant="true"/>
-      <parameter id="k_O14_Plaque_fortytwo" value="1.91506838765193e-07" units="per_hour" constant="true"/>
-      <parameter id="k_O15_Plaque_forty" value="1.64458900059137e-09" units="per_hour" constant="true"/>
-      <parameter id="k_O15_Plaque_fortytwo" value="2.0518853558884e-07" units="per_hour" constant="true"/>
-      <parameter id="k_O16_Plaque_forty" value="1.75105796724721e-09" units="per_hour" constant="true"/>
-      <parameter id="k_O16_Plaque_fortytwo" value="2.18869924184807e-07" units="per_hour" constant="true"/>
+      <parameter id="k_O13_Plaque_forty" value="1.10180959874115e-10" units="per_hour" constant="true"/>
+      <parameter id="k_O13_Plaque_fortytwo" value="1.36788257861307e-08" units="per_hour" constant="true"/>
+      <parameter id="k_O14_Plaque_forty" value="1.09881235154394e-10" units="per_hour" constant="true"/>
+      <parameter id="k_O14_Plaque_fortytwo" value="1.36790599117995e-08" units="per_hour" constant="true"/>
+      <parameter id="k_O15_Plaque_forty" value="1.09639266706091e-10" units="per_hour" constant="true"/>
+      <parameter id="k_O15_Plaque_fortytwo" value="1.36792357059226e-08" units="per_hour" constant="true"/>
+      <parameter id="k_O16_Plaque_forty" value="1.0944112295295e-10" units="per_hour" constant="true"/>
+      <parameter id="k_O16_Plaque_fortytwo" value="1.36793702615504e-08" units="per_hour" constant="true"/>
       <parameter id="k_O13_O14_forty" value="2.19762470308789e-05" units="per_nanomole_per_hour" constant="true"/>
       <parameter id="k_O13_O14_fortytwo" value="0.00027358119823599" units="per_nanomole_per_hour" constant="true"/>
       <parameter id="k_O14_O13_forty" value="1e-05" units="per_hour" constant="true"/>

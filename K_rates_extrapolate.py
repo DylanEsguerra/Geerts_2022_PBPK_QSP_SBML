@@ -124,8 +124,8 @@ def calculate_plaque_rates(baseline_ab40_rate, baseline_ab42_rate, forward_rates
             
             if forward_rate_key_40 in forward_rates_forty and forward_rate_key_42 in forward_rates_fortytwo:
                 # Multiply baseline by forward rate
-                plaque_rates[f'k_F{size}_Plaque_forty'] = baseline_ab40_rate * forward_rates_forty[forward_rate_key_40]
-                plaque_rates[f'k_F{size}_Plaque_fortytwo'] = baseline_ab42_rate * forward_rates_fortytwo[forward_rate_key_42]
+                plaque_rates[f'k_F{size}_Plaque_forty'] = size * baseline_ab40_rate * forward_rates_forty[forward_rate_key_40]
+                plaque_rates[f'k_F{size}_Plaque_fortytwo'] = size * baseline_ab42_rate * forward_rates_fortytwo[forward_rate_key_42]
             else:
                 # Fallback to baseline rates if forward rates not found
                 print(f"Warning: Forward rates not found for fibril size {size}, using baseline rates")
