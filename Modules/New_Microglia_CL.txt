@@ -1,0 +1,8 @@
+f"{current_oligomer} * Microglia_cell_count * (Microglia_Hi_Fract * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {current_oligomer})) + (1 - Microglia_Hi_Fract) * ((Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {current_oligomer}))/Microglia_Hi_Lo_ratio)) * VIS_brain"
+f"{fibril17} * Microglia_cell_count * (Microglia_Hi_Fract * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {fibril17})) + (1 - Microglia_Hi_Fract) * ((Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {fibril17}))/Microglia_Hi_Lo_ratio)) * VIS_brain"
+f"{fibril18} * Microglia_cell_count * (Microglia_Hi_Fract * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {fibril18})) + (1 - Microglia_Hi_Fract) * ((Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {fibril18}))/Microglia_Hi_Lo_ratio)) * VIS_brain"
+f"{current_fibril} * Microglia_cell_count * (Microglia_Hi_Fract * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {current_fibril})) + (1 - Microglia_Hi_Fract) * ((Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {current_fibril}))/Microglia_Hi_Lo_ratio)) * VIS_brain"
+f"{fibril24} * Microglia_cell_count * (Microglia_Hi_Fract * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {fibril24})) + (1 - Microglia_Hi_Fract) * ((Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {fibril24}))/Microglia_Hi_Lo_ratio)) * VIS_brain"
+f"0.5 * {plaque_unbound} * Microglia_cell_count * (Microglia_Hi_Fract * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {plaque_unbound})) + (1 - Microglia_Hi_Fract) * ((Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {plaque_unbound}))/Microglia_Hi_Lo_ratio)) * VIS_brain"
+
+ 

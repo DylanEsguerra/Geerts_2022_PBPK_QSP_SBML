@@ -273,13 +273,16 @@ def create_oligomer_13_16_model(params, params_with_units):
         # Antibody binding parameters
         ("fta1", params["fta1"]),  # Antibody binding to oligomer
         
-        # Microglia parameters
+        # Microglia parameters - updated to use Vmax/EC50 approach
+        ("Microglia_Vmax_forty", params["Microglia_Vmax_forty"]),
+        ("Microglia_Vmax_fortytwo", params["Microglia_Vmax_fortytwo"]),
+        ("Microglia_EC50_forty", params["Microglia_EC50_forty"]),
+        ("Microglia_EC50_fortytwo", params["Microglia_EC50_fortytwo"]),
+        ("Microglia_Hi_Lo_ratio", params["Microglia_Hi_Lo_ratio"]),
         ("Microglia_CL_high_AB40", params["Microglia_CL_high_AB40"]),
         ("Microglia_CL_low_AB40", params["Microglia_CL_low_AB40"]),
         ("Microglia_CL_high_AB42", params["Microglia_CL_high_AB42"]),
         ("Microglia_CL_low_AB42", params["Microglia_CL_low_AB42"]),
-        ("Microglia_Vmax_forty", params["Microglia_Vmax_forty"]),
-        ("Microglia_Vmax_fortytwo", params["Microglia_Vmax_fortytwo"]),
         
         # Other parameters needed for reactions
         ("VIS_brain", params["VIS_brain"]),  # ISF volume
@@ -732,9 +735,10 @@ product.setSpecies(sinks["{current_oligomer}"])
 product.setConstant(True)
 product.setStoichiometry(1.0)
 
-# Kinetic law: Update to include VIS_brain in formula
+# Kinetic law: Updated to use Vmax/EC50 approach with hi/lo ratio
 klaw_microglia_clearance = reaction_microglia_clearance.createKineticLaw()
-math_ast = libsbml.parseL3Formula(f"Microglia_Vmax_{suffix} * {current_oligomer} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_CL_high_AB{ab_type} + (1 - Microglia_Hi_Fract) * Microglia_CL_low_AB{ab_type}) * VIS_brain")
+#math_ast = libsbml.parseL3Formula(f"{current_oligomer} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_CL_high_AB{ab_type} + (1 - Microglia_Hi_Fract) * Microglia_CL_low_AB{ab_type}) * VIS_brain")
+math_ast = libsbml.parseL3Formula(f"{current_oligomer} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_Hi_Lo_ratio * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {current_oligomer})) + (1 - Microglia_Hi_Fract) * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {current_oligomer}))) * VIS_brain")
 klaw_microglia_clearance.setMath(math_ast)
             '''
             clearance_reactions.append(microglia_clearance)

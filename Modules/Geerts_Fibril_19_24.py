@@ -379,6 +379,9 @@ def create_fibril_19_24_model(params, params_with_units):
         ("Microglia_CL_low_AB42", params["Microglia_CL_low_AB42"]),
         ("Microglia_Vmax_forty", params["Microglia_Vmax_forty"]),
         ("Microglia_Vmax_fortytwo", params["Microglia_Vmax_fortytwo"]),
+        ("Microglia_EC50_forty", params["Microglia_EC50_forty"]),
+        ("Microglia_EC50_fortytwo", params["Microglia_EC50_fortytwo"]),
+        ("Microglia_Hi_Lo_ratio", params["Microglia_Hi_Lo_ratio"]),
         # Other parameters needed for reactions
         ("VIS_brain", params["VIS_brain"]),  # ISF volume
     ])
@@ -671,9 +674,11 @@ product.setSpecies(sink_id)
 product.setStoichiometry(1.0)
 product.setConstant(True)
 
-# Kinetic law: Update to include VIS_brain in formula
+# Kinetic law: Baseline clearance only (old form)
 klaw_microglia_clearance = reaction_microglia_clearance.createKineticLaw()
-math_ast = libsbml.parseL3Formula(f"Microglia_Vmax_{suffix} * {current_fibril} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_CL_high_AB{ab_type} + (1 - Microglia_Hi_Fract) * Microglia_CL_low_AB{ab_type}) * VIS_brain")
+# math_ast = libsbml.parseL3Formula(f"{current_fibril} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_CL_high_AB{ab_type} + (1 - Microglia_Hi_Fract) * Microglia_CL_low_AB{ab_type}) * VIS_brain")
+# Kinetic law: Saturable clearance (Vmax/EC50, current form)
+math_ast = libsbml.parseL3Formula(f"{current_fibril} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_Hi_Lo_ratio * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {current_fibril})) + (1 - Microglia_Hi_Fract) * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {current_fibril}))) * VIS_brain")
 klaw_microglia_clearance.setMath(math_ast)
 '''
         fibril_reaction_blocks.append(microglia_clearance)
@@ -886,9 +891,11 @@ product.setSpecies(sink_id)
 product.setStoichiometry(1.0)
 product.setConstant(True)
 
-# Kinetic law: Update to include VIS_brain in formula
+# Kinetic law: Baseline clearance only (old form)
 klaw_microglia_clearance = reaction_microglia_clearance.createKineticLaw()
-math_ast = libsbml.parseL3Formula(f"Microglia_Vmax_{suffix} * {fibril24} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_CL_high_AB{ab_type} + (1 - Microglia_Hi_Fract) * Microglia_CL_low_AB{ab_type}) * VIS_brain")
+# math_ast = libsbml.parseL3Formula(f"{fibril24} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_CL_high_AB{ab_type} + (1 - Microglia_Hi_Fract) * Microglia_CL_low_AB{ab_type}) * VIS_brain")
+# Kinetic law: Saturable clearance (Vmax/EC50, current form)
+math_ast = libsbml.parseL3Formula(f"{fibril24} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_Hi_Lo_ratio * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {fibril24})) + (1 - Microglia_Hi_Fract) * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {fibril24}))) * VIS_brain")
 klaw_microglia_clearance.setMath(math_ast)
 '''
     fibril24_reaction_blocks.append(microglia_clearance)
@@ -1006,9 +1013,11 @@ product.setSpecies(sink_id)
 product.setStoichiometry(1.0)
 product.setConstant(True)
 
-# Kinetic law: Update to include VIS_brain in formula
+# Kinetic law: Baseline clearance only (old form)
 klaw_microglia_clearance = reaction_microglia_clearance.createKineticLaw()
-math_ast = libsbml.parseL3Formula(f"0.5 * Microglia_Vmax_{suffix} * {plaque_unbound} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_CL_high_AB{ab_type} + (1 - Microglia_Hi_Fract) * Microglia_CL_low_AB{ab_type}) * VIS_brain")
+math_ast = libsbml.parseL3Formula(f"0.5 * {plaque_unbound} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_CL_high_AB{ab_type} + (1 - Microglia_Hi_Fract) * Microglia_CL_low_AB{ab_type}) * VIS_brain")
+# Kinetic law: Saturable clearance (Vmax/EC50, current form)
+#math_ast = libsbml.parseL3Formula(f"0.5 * {plaque_unbound} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_Hi_Lo_ratio * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {plaque_unbound})) + (1 - Microglia_Hi_Fract) * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {plaque_unbound}))) * VIS_brain")
 klaw_microglia_clearance.setMath(math_ast)
 '''
     plaque_reaction_blocks.append(microglia_clearance)

@@ -456,9 +456,11 @@ product.setSpecies(sink_id)
 product.setStoichiometry(1.0)
 product.setConstant(True)
 
-# Kinetic law: Microglia_Vmax_{suffix} * {fibril17} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_CL_high_AB{ab_type} + (1 - Microglia_Hi_Fract) * Microglia_CL_low_AB{ab_type}) * VIS_brain
+# Kinetic law: Baseline clearance only (old form)
 klaw = reaction.createKineticLaw()
-math_ast = libsbml.parseL3Formula(f"Microglia_Vmax_{suffix} * {fibril17} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_CL_high_AB{ab_type} + (1 - Microglia_Hi_Fract) * Microglia_CL_low_AB{ab_type}) * VIS_brain")
+# math_ast = libsbml.parseL3Formula(f"{fibril17} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_CL_high_AB{ab_type} + (1 - Microglia_Hi_Fract) * Microglia_CL_low_AB{ab_type}) * VIS_brain")
+# Kinetic law: Saturable clearance (Vmax/EC50, current form)
+math_ast = libsbml.parseL3Formula(f"{fibril17} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_Hi_Lo_ratio * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {fibril17})) + (1 - Microglia_Hi_Fract) * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {fibril17}))) * VIS_brain")
 klaw.setMath(math_ast)
 '''
         
@@ -644,9 +646,11 @@ product.setSpecies(sink_id)
 product.setStoichiometry(1.0)
 product.setConstant(True)
 
-# Kinetic law: Microglia_Vmax_{suffix} * {fibril18} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_CL_high_AB{ab_type} + (1 - Microglia_Hi_Fract) * Microglia_CL_low_AB{ab_type}) * VIS_brain
+# Kinetic law: Baseline clearance only (old form)
 klaw = reaction.createKineticLaw()
-math_ast = libsbml.parseL3Formula(f"Microglia_Vmax_{suffix} * {fibril18} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_CL_high_AB{ab_type} + (1 - Microglia_Hi_Fract) * Microglia_CL_low_AB{ab_type}) * VIS_brain")
+# math_ast = libsbml.parseL3Formula(f"{fibril18} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_CL_high_AB{ab_type} + (1 - Microglia_Hi_Fract) * Microglia_CL_low_AB{ab_type}) * VIS_brain")
+# Kinetic law: Saturable clearance (Vmax/EC50, current form)
+math_ast = libsbml.parseL3Formula(f"{fibril18} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_Hi_Lo_ratio * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {fibril18})) + (1 - Microglia_Hi_Fract) * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {fibril18}))) * VIS_brain")
 klaw.setMath(math_ast)
 '''
         
@@ -836,13 +840,18 @@ klaw.setMath(math_ast)
         ("fta2", params["fta2"]),  # Antibody binding to larger fibrils
         ("fta3", params["fta3"]),  # Antibody binding to plaque
         
-        # Microglia parameters
+        # Microglia parameters - updated to use Vmax/EC50 approach
+        ("Microglia_Vmax_forty", params["Microglia_Vmax_forty"]),
+        ("Microglia_Vmax_fortytwo", params["Microglia_Vmax_fortytwo"]),
+        ("Microglia_EC50_forty", params["Microglia_EC50_forty"]),
+        ("Microglia_EC50_fortytwo", params["Microglia_EC50_fortytwo"]),
+        ("Microglia_Hi_Lo_ratio", params["Microglia_Hi_Lo_ratio"]),
+        # Microglia CL parameters for baseline clearance
         ("Microglia_CL_high_AB40", params["Microglia_CL_high_AB40"]),
         ("Microglia_CL_low_AB40", params["Microglia_CL_low_AB40"]),
         ("Microglia_CL_high_AB42", params["Microglia_CL_high_AB42"]),
         ("Microglia_CL_low_AB42", params["Microglia_CL_low_AB42"]),
-        ("Microglia_Vmax_forty", params["Microglia_Vmax_forty"]),
-        ("Microglia_Vmax_fortytwo", params["Microglia_Vmax_fortytwo"]),
+        
         
         # Other parameters needed for reactions
         ("VIS_brain", params["VIS_brain"]),  # ISF volume

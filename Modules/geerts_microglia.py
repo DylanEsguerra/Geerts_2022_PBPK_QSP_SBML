@@ -210,7 +210,7 @@ def create_microglia_model(params, params_with_units):
         # Create kinetic law
         kinetic_law = reaction.createKineticLaw()
         math_ast = libsbml.parseL3Formula(
-            f"Microglia_Vmax_{suffix} * {species_id} * Microglia_cell_count * "
+            f"{species_id} * Microglia_cell_count * "
             f"(Microglia_Hi_Fract * Microglia_CL_high_mAb + "
             f"(1 - Microglia_Hi_Fract) * Microglia_CL_low_mAb) * VIS_brain"
         )
@@ -237,8 +237,6 @@ def create_microglia_model(params, params_with_units):
         ("EC50_Up", params["EC50_Up"]),
         ("SmaxPro", params["SmaxPro"]),
         ("EC50_pro", params["EC50_pro"]),
-        ("Microglia_Vmax_forty", params["Microglia_Vmax_forty"]),
-        ("Microglia_Vmax_fortytwo", params["Microglia_Vmax_fortytwo"]),
     ]
     
     for param_id, value in microglia_params:

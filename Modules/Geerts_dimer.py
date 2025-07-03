@@ -194,13 +194,6 @@ def create_dimer_model(params, params_with_units):
         ("sigma_ISF_AB42_oligomer02", params["sigma_ISF_ABeta42_oligomer02"]),  # Reflection coefficient for AB42 dimer
         ("VIS_brain", params["VIS_brain"]),  # ISF volume
         
-        # Microglia-related parameters
-        ("Microglia_CL_high_AB40", params["Microglia_CL_high_AB40"]),
-        ("Microglia_CL_low_AB40", params["Microglia_CL_low_AB40"]),
-        ("Microglia_CL_high_AB42", params["Microglia_CL_high_AB42"]),
-        ("Microglia_CL_low_AB42", params["Microglia_CL_low_AB42"]),
-        ("Microglia_Vmax_forty", params["Microglia_Vmax_forty"]),
-        ("Microglia_Vmax_fortytwo", params["Microglia_Vmax_fortytwo"]),
     ]
 
     # Add the parameters to the model
@@ -238,7 +231,6 @@ def create_dimer_model(params, params_with_units):
     # Create common compartments
     compartments = {
         "comp_ISF_brain": params["VIS_brain"],
-        "comp_microglia": params["V_microglia"],  # Add microglia compartment
     }
 
     for comp_id, size in compartments.items():
@@ -274,10 +266,7 @@ def create_dimer_model(params, params_with_units):
         # Bound species
         ("AB40_Oligomer02_Antibody_bound", "comp_ISF_brain", 0.0),
         ("AB42_Oligomer02_Antibody_bound", "comp_ISF_brain", 0.0),
-        
-        # Microglia species
-        ("Microglia_Hi_Fract", "comp_microglia", params["Microglia_Hi_Fract_0"]),
-        ("Microglia_cell_count", "comp_microglia", params["Microglia_cell_count_0"]),
+    
     ]
     
 

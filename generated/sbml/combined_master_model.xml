@@ -126,8 +126,6 @@
       <species id="Ab_t" compartment="comp_ISF_brain" initialConcentration="0" substanceUnits="nanomole_per_litre" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="AB40_Oligomer02_Antibody_bound" compartment="comp_ISF_brain" initialConcentration="0" substanceUnits="nanomole_per_litre" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="AB42_Oligomer02_Antibody_bound" compartment="comp_ISF_brain" initialConcentration="0" substanceUnits="nanomole_per_litre" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="Microglia_Hi_Fract" compartment="comp_microglia" initialConcentration="0" substanceUnits="nanomole_per_litre" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="Microglia_cell_count" compartment="comp_microglia" initialConcentration="1" substanceUnits="nanomole_per_litre" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="Sink_AB40_Oligomer02" compartment="comp_ISF_brain" initialConcentration="0" substanceUnits="nanomole_per_litre" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="true"/>
       <species id="Sink_AB40_Oligomer02_Antibody_bound" compartment="comp_ISF_brain" initialConcentration="0" substanceUnits="nanomole_per_litre" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="true"/>
       <species id="Sink_AB40_Oligomer03" compartment="comp_ISF_brain" initialConcentration="0" substanceUnits="nanomole_per_litre" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="true"/>
@@ -220,6 +218,8 @@
       <species id="AB42_Oligomer13_Antibody_bound" compartment="comp_ISF_brain" initialConcentration="0" substanceUnits="nanomole_per_litre" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="AB40_Fibril24" compartment="comp_ISF_brain" initialConcentration="0" substanceUnits="nanomole_per_litre" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="AB42_Fibril24" compartment="comp_ISF_brain" initialConcentration="0" substanceUnits="nanomole_per_litre" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Microglia_Hi_Fract" compartment="comp_microglia" initialConcentration="0" substanceUnits="nanomole_per_litre" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Microglia_cell_count" compartment="comp_microglia" initialConcentration="1" substanceUnits="nanomole_per_litre" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="Sink_AB40_Oligomer14" compartment="comp_ISF_brain" initialConcentration="0" substanceUnits="nanomole_per_litre" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="true"/>
       <species id="Sink_AB40_Oligomer15" compartment="comp_ISF_brain" initialConcentration="0" substanceUnits="nanomole_per_litre" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="true"/>
       <species id="Sink_AB40_Oligomer16" compartment="comp_ISF_brain" initialConcentration="0" substanceUnits="nanomole_per_litre" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="true"/>
@@ -635,16 +635,19 @@
       <parameter id="fta1" value="0.0003257329" units="per_nanomole_per_hour" constant="true"/>
       <parameter id="sigma_ISF_AB40_oligomer02" value="0.9" units="dimensionless" constant="true"/>
       <parameter id="sigma_ISF_AB42_oligomer02" value="0.9" units="dimensionless" constant="true"/>
-      <parameter id="Microglia_CL_high_AB40" value="1.6e-05" units="dimensionless" constant="true"/>
-      <parameter id="Microglia_CL_low_AB40" value="8e-06" units="dimensionless" constant="true"/>
-      <parameter id="Microglia_CL_high_AB42" value="2.22e-06" units="dimensionless" constant="true"/>
-      <parameter id="Microglia_CL_low_AB42" value="1.11e-06" units="dimensionless" constant="true"/>
-      <parameter id="Microglia_Vmax_forty" value="1" units="dimensionless" constant="true"/>
-      <parameter id="Microglia_Vmax_fortytwo" value="1" units="dimensionless" constant="true"/>
       <parameter id="k_O3_O4_AB40" value="2.60890688259109e-05" units="per_nanomole_per_hour" constant="true"/>
       <parameter id="k_O3_O4_AB42" value="0.00027278613554061" units="per_nanomole_per_hour" constant="true"/>
       <parameter id="k_O4_O3_AB40" value="1e-05" units="per_nanomole_per_hour" constant="true"/>
       <parameter id="k_O4_O3_AB42" value="1.98437500336414e-05" units="per_nanomole_per_hour" constant="true"/>
+      <parameter id="Microglia_Vmax_forty" value="0.00015" units="dimensionless" constant="true"/>
+      <parameter id="Microglia_Vmax_fortytwo" value="0.00015" units="dimensionless" constant="true"/>
+      <parameter id="Microglia_EC50_forty" value="8" units="dimensionless" constant="true"/>
+      <parameter id="Microglia_EC50_fortytwo" value="120" units="dimensionless" constant="true"/>
+      <parameter id="Microglia_Hi_Lo_ratio" value="10" units="dimensionless" constant="true"/>
+      <parameter id="Microglia_CL_high_AB40" value="1.6e-05" units="dimensionless" constant="true"/>
+      <parameter id="Microglia_CL_low_AB40" value="8e-06" units="dimensionless" constant="true"/>
+      <parameter id="Microglia_CL_high_AB42" value="2.22e-06" units="dimensionless" constant="true"/>
+      <parameter id="Microglia_CL_low_AB42" value="1.11e-06" units="dimensionless" constant="true"/>
       <parameter id="k_O4_O5_AB40" value="2.45026178010471e-05" units="per_nanomole_per_hour" constant="true"/>
       <parameter id="k_O4_O5_AB42" value="0.000273185290628707" units="per_nanomole_per_hour" constant="true"/>
       <parameter id="k_O5_O4_AB40" value="1e-05" units="per_nanomole_per_hour" constant="true"/>
@@ -1703,7 +1706,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer03 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -1711,7 +1713,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer03 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -1720,7 +1731,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer03 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -1835,7 +1854,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer04 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -1843,7 +1861,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer04 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -1852,7 +1879,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer04 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -1967,7 +2002,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer05 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -1975,7 +2009,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer05 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -1984,7 +2027,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer05 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -2099,7 +2150,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer06 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -2107,7 +2157,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer06 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -2116,7 +2175,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer06 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -2231,7 +2298,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer07 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -2239,7 +2305,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer07 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -2248,7 +2323,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer07 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -2363,7 +2446,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer08 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -2371,7 +2453,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer08 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -2380,7 +2471,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer08 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -2495,7 +2594,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer09 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -2503,7 +2601,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer09 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -2512,7 +2619,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer09 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -2627,7 +2742,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer10 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -2635,7 +2749,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer10 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -2644,7 +2767,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer10 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -2759,7 +2890,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer11 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -2767,7 +2897,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer11 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -2776,7 +2915,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer11 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -2891,7 +3038,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer12 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -2899,7 +3045,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer12 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -2908,7 +3063,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer12 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -3023,7 +3186,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer03 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -3031,7 +3193,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer03 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -3040,7 +3211,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer03 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -3155,7 +3334,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer04 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -3163,7 +3341,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer04 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -3172,7 +3359,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer04 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -3287,7 +3482,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer05 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -3295,7 +3489,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer05 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -3304,7 +3507,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer05 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -3419,7 +3630,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer06 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -3427,7 +3637,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer06 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -3436,7 +3655,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer06 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -3551,7 +3778,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer07 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -3559,7 +3785,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer07 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -3568,7 +3803,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer07 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -3683,7 +3926,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer08 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -3691,7 +3933,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer08 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -3700,7 +3951,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer08 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -3815,7 +4074,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer09 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -3823,7 +4081,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer09 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -3832,7 +4099,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer09 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -3947,7 +4222,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer10 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -3955,7 +4229,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer10 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -3964,7 +4247,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer10 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -4079,7 +4370,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer11 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -4087,7 +4377,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer11 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -4096,7 +4395,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer11 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -4211,7 +4518,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer12 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -4219,7 +4525,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer12 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -4228,7 +4543,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer12 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -4363,7 +4686,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer13 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -4371,7 +4693,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer13 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -4380,7 +4711,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer13 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -4515,7 +4854,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer14 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -4523,7 +4861,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer14 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -4532,7 +4879,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer14 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -4667,7 +5022,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer15 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -4675,7 +5029,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer15 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -4684,7 +5047,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer15 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -4819,7 +5190,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer16 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -4827,7 +5197,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer16 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -4836,7 +5215,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Oligomer16 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -4971,7 +5358,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer13 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -4979,7 +5365,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer13 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -4988,7 +5383,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer13 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -5123,7 +5526,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer14 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -5131,7 +5533,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer14 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -5140,7 +5551,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer14 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -5275,7 +5694,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer15 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -5283,7 +5701,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer15 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -5292,7 +5719,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer15 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -5427,7 +5862,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer16 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -5435,7 +5869,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer16 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -5444,7 +5887,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Oligomer16 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -5579,7 +6030,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Fibril17 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -5587,7 +6037,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Fibril17 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -5596,7 +6055,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Fibril17 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -5698,7 +6165,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Fibril18 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -5706,7 +6172,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Fibril18 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -5715,7 +6190,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Fibril18 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -5850,7 +6333,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Fibril17 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -5858,7 +6340,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Fibril17 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -5867,7 +6358,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Fibril17 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -5969,7 +6468,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Fibril18 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -5977,7 +6475,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Fibril18 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -5986,7 +6493,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Fibril18 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -6068,7 +6583,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Fibril19 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -6076,7 +6590,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Fibril19 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -6085,7 +6608,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Fibril19 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -6167,7 +6698,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Fibril20 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -6175,7 +6705,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Fibril20 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -6184,7 +6723,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Fibril20 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -6266,7 +6813,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Fibril21 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -6274,7 +6820,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Fibril21 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -6283,7 +6838,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Fibril21 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -6365,7 +6928,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Fibril22 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -6373,7 +6935,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Fibril22 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -6382,7 +6953,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Fibril22 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -6464,7 +7043,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Fibril23 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -6472,7 +7050,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Fibril23 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -6481,7 +7068,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Fibril23 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -6582,7 +7177,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Fibril24 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -6590,7 +7184,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB40 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Fibril24 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -6599,7 +7202,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB40 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_forty </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_forty </ci>
+                      <ci> AB40_Fibril24 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -6643,7 +7254,6 @@
             <apply>
               <times/>
               <cn> 0.5 </cn>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Plaque_unbound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -6742,7 +7352,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Fibril19 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -6750,7 +7359,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Fibril19 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -6759,7 +7377,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Fibril19 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -6841,7 +7467,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Fibril20 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -6849,7 +7474,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Fibril20 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -6858,7 +7492,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Fibril20 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -6940,7 +7582,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Fibril21 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -6948,7 +7589,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Fibril21 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -6957,7 +7607,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Fibril21 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -7039,7 +7697,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Fibril22 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -7047,7 +7704,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Fibril22 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -7056,7 +7722,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Fibril22 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -7138,7 +7812,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Fibril23 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -7146,7 +7819,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Fibril23 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -7155,7 +7837,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Fibril23 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -7256,7 +7946,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Fibril24 </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -7264,7 +7953,16 @@
                 <apply>
                   <times/>
                   <ci> Microglia_Hi_Fract </ci>
-                  <ci> Microglia_CL_high_AB42 </ci>
+                  <ci> Microglia_Hi_Lo_ratio </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Fibril24 </ci>
+                    </apply>
+                  </apply>
                 </apply>
                 <apply>
                   <times/>
@@ -7273,7 +7971,15 @@
                     <cn type="integer"> 1 </cn>
                     <ci> Microglia_Hi_Fract </ci>
                   </apply>
-                  <ci> Microglia_CL_low_AB42 </ci>
+                  <apply>
+                    <divide/>
+                    <ci> Microglia_Vmax_fortytwo </ci>
+                    <apply>
+                      <plus/>
+                      <ci> Microglia_EC50_fortytwo </ci>
+                      <ci> AB42_Fibril24 </ci>
+                    </apply>
+                  </apply>
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
@@ -7317,7 +8023,6 @@
             <apply>
               <times/>
               <cn> 0.5 </cn>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Plaque_unbound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -10881,7 +11586,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer02_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -10921,7 +11625,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer02_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -10961,7 +11664,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer03_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11001,7 +11703,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer03_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11041,7 +11742,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer04_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11081,7 +11781,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer04_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11121,7 +11820,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer05_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11161,7 +11859,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer05_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11201,7 +11898,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer06_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11241,7 +11937,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer06_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11281,7 +11976,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer07_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11321,7 +12015,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer07_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11361,7 +12054,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer08_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11401,7 +12093,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer08_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11441,7 +12132,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer09_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11481,7 +12171,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer09_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11521,7 +12210,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer10_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11561,7 +12249,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer10_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11601,7 +12288,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer11_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11641,7 +12327,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer11_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11681,7 +12366,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer12_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11721,7 +12405,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer12_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11761,7 +12444,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer13_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11801,7 +12483,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer13_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11841,7 +12522,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer14_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11881,7 +12561,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer14_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11921,7 +12600,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer15_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -11961,7 +12639,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer15_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12001,7 +12678,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Oligomer16_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12041,7 +12717,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Oligomer16_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12081,7 +12756,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Fibril17_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12121,7 +12795,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Fibril17_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12161,7 +12834,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Fibril18_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12201,7 +12873,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Fibril18_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12241,7 +12912,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Fibril19_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12281,7 +12951,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Fibril19_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12321,7 +12990,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Fibril20_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12361,7 +13029,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Fibril20_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12401,7 +13068,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Fibril21_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12441,7 +13107,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Fibril21_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12481,7 +13146,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Fibril22_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12521,7 +13185,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Fibril22_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12561,7 +13224,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Fibril23_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12601,7 +13263,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Fibril23_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12641,7 +13302,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Fibril24_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12681,7 +13341,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Fibril24_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12721,7 +13380,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_forty </ci>
               <ci> AB40_Plaque_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>
@@ -12761,7 +13419,6 @@
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
-              <ci> Microglia_Vmax_fortytwo </ci>
               <ci> AB42_Plaque_Antibody_bound </ci>
               <ci> Microglia_cell_count </ci>
               <apply>

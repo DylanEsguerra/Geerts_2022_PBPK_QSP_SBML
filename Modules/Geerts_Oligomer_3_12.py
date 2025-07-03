@@ -272,25 +272,29 @@ def create_oligomer_3_12_model(params, params_with_units):
             (f"k_O{i+1}_O{i}_AB42", params[f"k_O{i+1}_O{i}_fortytwo"]),  # AB42 backward
         ])
     
-    # Add other non-oligomerization parameters
-    oligomer_params.extend([
-        # Plaque-induced oligomerization parameters
-        ("AB40_Plaque_Vmax", params["AB40_Plaque_Driven_Monomer_Addition_Vmax"]),
-        ("AB42_Plaque_Vmax", params["AB42_Plaque_Driven_Monomer_Addition_Vmax"]),
-        ("AB40_Plaque_EC50", params["AB40_Plaque_Driven_Monomer_Addition_EC50"]),
-        ("AB42_Plaque_EC50", params["AB42_Plaque_Driven_Monomer_Addition_EC50"]),
-        # Antibody binding parameters
-        ("fta1", params["fta1"]),
-        # Transport and clearance parameters
-        ("VIS_brain", params["VIS_brain"]),
-        # Microglia-related parameters
-        ("Microglia_CL_high_AB40", params["Microglia_CL_high_AB40"]),
-        ("Microglia_CL_low_AB40", params["Microglia_CL_low_AB40"]),
-        ("Microglia_CL_high_AB42", params["Microglia_CL_high_AB42"]),
-        ("Microglia_CL_low_AB42", params["Microglia_CL_low_AB42"]),
-        ("Microglia_Vmax_forty", params["Microglia_Vmax_forty"]),
-        ("Microglia_Vmax_fortytwo", params["Microglia_Vmax_fortytwo"]),
-    ])
+            # Add other non-oligomerization parameters
+        oligomer_params.extend([
+            # Plaque-induced oligomerization parameters
+            ("AB40_Plaque_Vmax", params["AB40_Plaque_Driven_Monomer_Addition_Vmax"]),
+            ("AB42_Plaque_Vmax", params["AB42_Plaque_Driven_Monomer_Addition_Vmax"]),
+            ("AB40_Plaque_EC50", params["AB40_Plaque_Driven_Monomer_Addition_EC50"]),
+            ("AB42_Plaque_EC50", params["AB42_Plaque_Driven_Monomer_Addition_EC50"]),
+            # Antibody binding parameters
+            ("fta1", params["fta1"]),
+            # Transport and clearance parameters
+            ("VIS_brain", params["VIS_brain"]),
+            # Microglia-related parameters - updated to use Vmax/EC50 approach
+            ("Microglia_Vmax_forty", params["Microglia_Vmax_forty"]),
+            ("Microglia_Vmax_fortytwo", params["Microglia_Vmax_fortytwo"]),
+            ("Microglia_EC50_forty", params["Microglia_EC50_forty"]),
+            ("Microglia_EC50_fortytwo", params["Microglia_EC50_fortytwo"]),
+            ("Microglia_Hi_Lo_ratio", params["Microglia_Hi_Lo_ratio"]),
+            # Microglia CL parameters for baseline clearance
+            ("Microglia_CL_high_AB40", params["Microglia_CL_high_AB40"]),
+            ("Microglia_CL_low_AB40", params["Microglia_CL_low_AB40"]),
+            ("Microglia_CL_high_AB42", params["Microglia_CL_high_AB42"]),
+            ("Microglia_CL_low_AB42", params["Microglia_CL_low_AB42"]),
+        ])
 
     # Add reflection coefficients for oligomers 3-12
     for ab_type in ["40", "42"]:
@@ -773,9 +777,10 @@ product.setSpecies(sinks[f"{current_oligomer}"])
 product.setConstant(True)
 product.setStoichiometry(1.0)
 
-# Kinetic law: Update to include VIS_brain in formula
+# Kinetic law: Combined baseline and saturable clearance
 klaw_microglia_clearance = reaction_microglia_clearance.createKineticLaw()
-math_ast = libsbml.parseL3Formula(f"Microglia_Vmax_{suffix} * {current_oligomer} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_CL_high_AB{ab_type} + (1 - Microglia_Hi_Fract) * Microglia_CL_low_AB{ab_type}) * VIS_brain")
+#math_ast = libsbml.parseL3Formula(f"{current_oligomer} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_CL_high_AB{ab_type} + (1 - Microglia_Hi_Fract) * Microglia_CL_low_AB{ab_type}) * VIS_brain")
+math_ast = libsbml.parseL3Formula(f"{current_oligomer} * Microglia_cell_count * (Microglia_Hi_Fract * Microglia_Hi_Lo_ratio * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {current_oligomer})) + (1 - Microglia_Hi_Fract) * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {current_oligomer}))) * VIS_brain")
 klaw_microglia_clearance.setMath(math_ast)
                 '''
             ]
