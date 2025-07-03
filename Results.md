@@ -24,7 +24,7 @@ However, running our model for the natural life cycle of amyloid aggregation sho
 
 ![Natural Life Cycle](Tellurium/simulation_plots/tellurium_steady_state/gantenerumab_ab42_ratios_and_concentrations.png)
 
-*Replication of Figure 3: Simulation of the natural life cycle (from 20–100 years) of amyloid aggregation for an individual virtual Alzheimer's disease patient as in an observational study. Age-related pathology is implemented as an exponential decrease in monomer degradation. The publication used linear decline, but stated that both provide similar results and only the exponential parameters were made available. This decline resulted in an increased amount of monomers being pushed into the aggregation pathway. We are able to reproduce the steep transition around the age of 60 years followed by a slow saturation at higher ages for the ABeta42/40 ratio, ISF or CSF ABeta 42 concentration. However futher improvement is required to fully match published results*
+*Replication of Figure 3: Simulation of the natural life cycle (from 20–100 years) of amyloid aggregation for an individual virtual Alzheimer's disease patient as in an observational study. Age-related pathology is implemented as an exponential decrease in monomer degradation. The publication used linear decline, but stated that both provide similar results and only the exponential parameters were made available. This decline resulted in an increased amount of monomers being pushed into the aggregation pathway. The 2x2 layout displays: SUVR progression (top left), brain plasma AB42/AB40 ratio (top right), ISF AB42 concentration (bottom left), and CSF AB42 concentration (bottom right).*
 
 ![Figure 3 Geerts](generated/figures/Figure3.png)
 *Published Fig 3*
@@ -32,12 +32,30 @@ However, running our model for the natural life cycle of amyloid aggregation sho
 **Matches Published Curves**:
 
 ✅ Steep transition around age 60 observed in all curves
+✅ **SUVR Age 60 Transition**: Similar to the publication, our model shows a distinct spike in SUVR around age 60, corresponding to the transition from monomer-dominated to oligomer/fibril-dominated amyloid burden.
 
 **Requires Further Calibration**:
 
 ❌ Aβ42 monomer concentrations in ISF are ~10-fold higher than experimental values
 ❌ Aβ42 monomer concentrations in CSF are ~10-fold higher than experimental values
-❌ Aβ42/40 ratio exhibits correct temporal dynamics but incorrect absolut
+❌ Aβ42/40 ratio exhibits correct temporal dynamics but incorrect absolute values
+❌ **SUVR Magnitude Discrepancy**: While the temporal dynamics match the published data, our SUVR spike is much lower in magnitude compared to the literature values.
+❌ **SUVR Detection Threshold**: The total weighted concentration of Aβ42 (oligomers + protofibrils + plaque) must significantly exceed 400,000 nM before a detectable SUVR signal (>1.0) becomes visible. This suggests our model may be underestimating the amyloid burden or the SUVR calculation parameters need adjustment.
+
+**SUVR Calculation Details:**
+The SUVR formula used in our model is:
+```
+SUVR = 1 + (C₁(Ab42ᵒˡⁱᵍᵒ + Ab42ᵖʳᵒᵗᵒ + C₂*Ab42ᵖˡ))^C₃ / [(Ab42ᵒˡⁱᵍᵒ + Ab42ᵖʳᵒᵗᵒ + C₂*Ab42ᵖˡ)^C₃ + C₄^C₃]
+```
+Where C₁=2.52, C₂=1.3, C₃=3.5, and C₄=400,000 nM.
+
+**Note** There were misspecified parameter names in the model supplement for this calculation. A sum of oligomers / fibrils weighted by size was used to define total loads as described in the supplement. 
+
+**Implications:**
+The requirement for such high amyloid concentrations before SUVR detection suggests either:
+1. Our model underestimates amyloid accumulation rates
+2. The SUVR calculation parameters need recalibration
+3. Additional amyloid species not captured in our model contribute significantly to PET signal
 
 ### Amyloid Species Composition: Model Evolution and Rate Law Insights
 
@@ -72,7 +90,6 @@ While the age 60 transition is now present, the model predicts much less plaque 
 
 ### SBML vs ODE Model Agreement
 
-**Note** These curves do not line up at the current moment, but only due to me having performed a test changing the SBML version 
 
 This analysis was performed to diagnose why we failed to reproduce the natural life cycle results. 
 

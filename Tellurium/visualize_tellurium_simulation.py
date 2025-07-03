@@ -576,13 +576,13 @@ def _setup_year_axis(ax, x_data):
     ax.grid(True, which='major', alpha=0.3)
 
 def plot_ab42_ratios_and_concentrations(sol, model, drug_type="gantenerumab", plots_dir=None):
-    """Plot AB42/AB40 ratios and concentrations in different compartments."""
+    """Plot AB42/AB40 ratios and concentrations in different compartments with SUVR."""
     if plots_dir is None:
         plots_dir = script_dir / "simulation_plots/tellurium_steady_state"
     plots_dir.mkdir(parents=True, exist_ok=True)
     
-    fig_ab42, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 6))
-    fig_ab40, (ax4, ax5) = plt.subplots(1, 2, figsize=(14, 6))
+    # Create 2x2 subplot layout: SUVR, ratio, ISF, CSF
+    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(20, 16))
     
     x_values = sol.ts / 24.0 / 365.0
     start_idx = np.where(x_values >= (max(x_values) - 80))[0][0]
@@ -595,48 +595,68 @@ def plot_ab42_ratios_and_concentrations(sol, model, drug_type="gantenerumab", pl
     volume_scale_factor_csf = 0.09875  # Division by volume for SAS concentration units
     volume_scale_factor_isf = 0.2505   # Division by volume for ISF concentration units
     
-    # Brain plasma ratios (no volume scaling needed for ratios)
+    # 1. SUVR Plot (top left)
+    suvr = calculate_suvr(sol, model)
+    suvr_filtered = suvr[start_idx:]
+    
+    ax1.plot(x_filtered, suvr_filtered, linewidth=3, color='blue', label='SUVR')
+    ax1.set_ylabel('SUVR', fontsize=26)
+    ax1.set_xlabel('Time (years)', fontsize=26)
+    ax1.set_title(f'SUVR Progression', fontsize=30)
+    ax1.grid(True, alpha=0.3)
+    ax1.legend(fontsize=20)
+    ax1.tick_params(axis='both', which='major', labelsize=22)
+    
+    # 2. Brain plasma ratios (top right)
     ab42_brain_plasma = sol.ys[:, y_indexes['AB42Mu_Brain_Plasma']]
     ab40_brain_plasma = sol.ys[:, y_indexes['AB40Mu_Brain_Plasma']]
     brain_plasma_ratio = np.where(ab40_brain_plasma > 0, ab42_brain_plasma / ab40_brain_plasma, 0)
     brain_plasma_ratio_filtered = brain_plasma_ratio[start_idx:]
     
-    ax1.plot(x_filtered, brain_plasma_ratio_filtered, linewidth=2, color='blue', label='AB42/AB40 Ratio')
-    ax1.set_ylabel('Ratio', fontsize=26)
-    ax1.set_xlabel('Time (years)', fontsize=26)
-    ax1.set_title('Brain Plasma AB42/AB40 Ratio', fontsize=30)
-    ax1.grid(True, alpha=0.3)
-    ax1.legend(fontsize=20)
-    #ax1.set_ylim(0.06, 0.15)
-    ax1.tick_params(axis='both', which='major', labelsize=22)
+    ax2.plot(x_filtered, brain_plasma_ratio_filtered, linewidth=2, color='blue', label='AB42/AB40 Ratio')
+    ax2.set_ylabel('Ratio', fontsize=26)
+    ax2.set_xlabel('Time (years)', fontsize=26)
+    ax2.set_title('Brain Plasma AB42/AB40 Ratio', fontsize=30)
+    ax2.grid(True, alpha=0.3)
+    ax2.legend(fontsize=20)
+    ax2.tick_params(axis='both', which='major', labelsize=22)
     
-    # ISF AB42 (apply volume scaling)
+    # 3. ISF AB42 (bottom left)
     ab42_isf_raw = sol.ys[:, y_indexes['AB42_Monomer']]
     ab42_isf_nM = ab42_isf_raw / volume_scale_factor_isf
     ab42_isf = ab42_isf_nM * nM_to_pg
     ab42_isf_filtered = ab42_isf[start_idx:]
     
-    ax2.semilogy(x_filtered, ab42_isf_filtered, linewidth=2, color='blue', label='Total ISF AB42')
-    ax2.set_ylabel('Concentration (pg/mL)', fontsize=26)
-    ax2.set_xlabel('Time (years)', fontsize=26)
-    ax2.set_title('Total ISF AB42', fontsize=30)
-    ax2.grid(True, alpha=0.3)
-    ax2.legend(fontsize=20)
-    ax2.tick_params(axis='both', which='major', labelsize=22)
+    ax3.semilogy(x_filtered, ab42_isf_filtered, linewidth=2, color='blue', label='Total ISF AB42')
+    ax3.set_ylabel('Concentration (pg/mL)', fontsize=26)
+    ax3.set_xlabel('Time (years)', fontsize=26)
+    ax3.set_title('Total ISF AB42', fontsize=30)
+    ax3.grid(True, alpha=0.3)
+    ax3.legend(fontsize=20)
+    ax3.tick_params(axis='both', which='major', labelsize=22)
     
-    # CSF SAS AB42 (apply volume scaling)
+    # 4. CSF SAS AB42 (bottom right)
     ab42_sas_raw = sol.ys[:, y_indexes['AB42Mu_SAS']]
     ab42_sas_nM = ab42_sas_raw / volume_scale_factor_csf
     ab42_sas = ab42_sas_nM * nM_to_pg
     ab42_sas_filtered = ab42_sas[start_idx:]
     
-    ax3.plot(x_filtered, ab42_sas_filtered, linewidth=2, color='blue', label='CSF SAS AB42')
-    ax3.set_ylabel('Concentration (pg/mL)', fontsize=26)
-    ax3.set_xlabel('Time (years)', fontsize=26)
-    ax3.set_title('CSF SAS AB42', fontsize=30)
-    ax3.grid(True, alpha=0.3)
-    ax3.legend(fontsize=20)
-    ax3.tick_params(axis='both', which='major', labelsize=22)
+    ax4.plot(x_filtered, ab42_sas_filtered, linewidth=2, color='blue', label='CSF SAS AB42')
+    ax4.set_ylabel('Concentration (pg/mL)', fontsize=26)
+    ax4.set_xlabel('Time (years)', fontsize=26)
+    ax4.set_title('CSF SAS AB42', fontsize=30)
+    ax4.grid(True, alpha=0.3)
+    ax4.legend(fontsize=20)
+    ax4.tick_params(axis='both', which='major', labelsize=22)
+    
+    plt.tight_layout()
+    
+    fig.savefig(plots_dir / f'{drug_type.lower()}_ab42_ratios_and_concentrations.png', 
+                dpi=300, bbox_inches='tight')
+    plt.close(fig)
+    
+    # Also create separate AB40 plots
+    fig_ab40, (ax5, ax6) = plt.subplots(1, 2, figsize=(14, 6))
     
     # ISF AB40 (apply volume scaling)
     ab40_isf_raw = sol.ys[:, y_indexes['AB40_Monomer']]
@@ -644,13 +664,13 @@ def plot_ab42_ratios_and_concentrations(sol, model, drug_type="gantenerumab", pl
     ab40_isf = ab40_isf_nM * nM_to_pg
     ab40_isf_filtered = ab40_isf[start_idx:]
     
-    ax4.semilogy(x_filtered, ab40_isf_filtered, linewidth=2, color='blue', label='Total ISF AB40')
-    ax4.set_ylabel('Concentration (pg/mL)', fontsize=26)
-    ax4.set_xlabel('Time (years)', fontsize=26)
-    ax4.set_title('Total ISF AB40', fontsize=30)
-    ax4.grid(True, alpha=0.3)
-    ax4.legend(fontsize=20)
-    ax4.tick_params(axis='both', which='major', labelsize=22)
+    ax5.semilogy(x_filtered, ab40_isf_filtered, linewidth=2, color='blue', label='Total ISF AB40')
+    ax5.set_ylabel('Concentration (pg/mL)', fontsize=26)
+    ax5.set_xlabel('Time (years)', fontsize=26)
+    ax5.set_title('Total ISF AB40', fontsize=30)
+    ax5.grid(True, alpha=0.3)
+    ax5.legend(fontsize=20)
+    ax5.tick_params(axis='both', which='major', labelsize=22)
     
     # CSF SAS AB40 (apply volume scaling)
     ab40_sas_raw = sol.ys[:, y_indexes['AB40Mu_SAS']]
@@ -658,25 +678,18 @@ def plot_ab42_ratios_and_concentrations(sol, model, drug_type="gantenerumab", pl
     ab40_sas = ab40_sas_nM * nM_to_pg
     ab40_sas_filtered = ab40_sas[start_idx:]
     
-    ax5.semilogy(x_filtered, ab40_sas_filtered, linewidth=2, color='blue', label='CSF SAS AB40')
-    ax5.set_ylabel('Concentration (pg/mL)', fontsize=26)
-    ax5.set_xlabel('Time (years)', fontsize=26)
-    ax5.set_title('CSF SAS AB40', fontsize=30)
-    ax5.grid(True, alpha=0.3)
-    ax5.legend(fontsize=20)
-    ax5.tick_params(axis='both', which='major', labelsize=22)
+    ax6.semilogy(x_filtered, ab40_sas_filtered, linewidth=2, color='blue', label='CSF SAS AB40')
+    ax6.set_ylabel('Concentration (pg/mL)', fontsize=26)
+    ax6.set_xlabel('Time (years)', fontsize=26)
+    ax6.set_title('CSF SAS AB40', fontsize=30)
+    ax6.grid(True, alpha=0.3)
+    ax6.legend(fontsize=20)
+    ax6.tick_params(axis='both', which='major', labelsize=22)
     
-    plt.figure(fig_ab42.number)
-    plt.tight_layout()
-    plt.figure(fig_ab40.number)
     plt.tight_layout()
     
-    fig_ab42.savefig(plots_dir / f'{drug_type.lower()}_ab42_ratios_and_concentrations.png', 
-                     dpi=300, bbox_inches='tight')
-    plt.show()
     fig_ab40.savefig(plots_dir / f'{drug_type.lower()}_ab40_concentrations.png', 
                      dpi=300, bbox_inches='tight')
-    plt.close(fig_ab42)
     plt.close(fig_ab40)
 
 def plot_microglia_dynamics(sol, model, plots_dir=None):
