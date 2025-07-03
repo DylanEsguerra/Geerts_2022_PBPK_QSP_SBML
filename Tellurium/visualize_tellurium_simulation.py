@@ -33,7 +33,7 @@ plt.rcParams.update({
 
 script_dir = Path(__file__).resolve().parent
 
-def calculate_suvr(sol, model, c1=2.52, c2=1.3, c3=3.5, c4=400000):
+def calculate_suvr(sol, model, c1=2.52, c2=1.3, c3=3.5, c4=400000, volume_scale_factor_isf=0.2505):
     """
     Calculate SUVR using the weighted sum formula:
     SUVR_w = 1 + (C₁(Ab42ᵒˡⁱᵍᵒ + Ab42ᵖʳᵒᵗᵒ + C₂*Ab42ᵖˡ))^C₃ / [(Ab42ᵒˡⁱᵍᵒ + Ab42ᵖʳᵒᵗᵒ + C₂*Ab42ᵖˡ)^C₃ + C₄^C₃]
@@ -79,7 +79,7 @@ def calculate_suvr(sol, model, c1=2.52, c2=1.3, c3=3.5, c4=400000):
         ab42_plaque = sol.ys[t, y_indexes.get('AB42_Plaque_unbound', 0)]
         
         # Calculate the weighted sum
-        weighted_sum = ab42_oligo + ab42_proto + c2 * ab42_plaque
+        weighted_sum = (ab42_oligo + ab42_proto + c2 * ab42_plaque)/volume_scale_factor_isf
         
         # Calculate the numerator and denominator for SUVR
         numerator = c1 * (weighted_sum ** c3)
