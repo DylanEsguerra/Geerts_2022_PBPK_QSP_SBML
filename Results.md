@@ -32,24 +32,44 @@ However, running our model for the natural life cycle of amyloid aggregation sho
 **Matches Published Curves**:
 
 ✅ Steep transition around age 60 observed in all curves
-✅ **SUVR Age 60 Transition**: Similar to the publication, our model shows a distinct spike in SUVR around age 60, corresponding to the transition from monomer-dominated to oligomer/fibril-dominated amyloid burden.
+
+✅ **SUVR Age 60 Transition**: Similar to the publication, our model shows a distinct spike in SUVR around age 60, corresponding to the transition from monomer-dominated to oligomer/fibril/plaque-dominated amyloid burden.
 
 **Requires Further Calibration**:
 
 ❌ Aβ42 monomer concentrations in ISF are ~10-fold higher than experimental values
+
 ❌ Aβ42 monomer concentrations in CSF are ~10-fold higher than experimental values
+
 ❌ Aβ42/40 ratio exhibits correct temporal dynamics but incorrect absolute values
+
 ❌ **SUVR Magnitude Discrepancy**: While the temporal dynamics match the published data, our SUVR spike is much lower in magnitude compared to the literature values.
-❌ **SUVR Detection Threshold**: The total weighted concentration of Aβ42 (oligomers + protofibrils + plaque) must significantly exceed 400,000 nM before a detectable SUVR signal (>1.0) becomes visible. This suggests our model may be underestimating the amyloid burden or the SUVR calculation parameters need adjustment.
+
 
 **SUVR Calculation Details:**
-The SUVR formula used in our model is:
-```
-SUVR = 1 + (C₁(Ab42ᵒˡⁱᵍᵒ + Ab42ᵖʳᵒᵗᵒ + C₂*Ab42ᵖˡ))^C₃ / [(Ab42ᵒˡⁱᵍᵒ + Ab42ᵖʳᵒᵗᵒ + C₂*Ab42ᵖˡ)^C₃ + C₄^C₃]
-```
-Where C₁=2.52, C₂=1.3, C₃=3.5, and C₄=400,000 nM.
 
-**Note** There were misspecified parameter names in the model supplement for this calculation. A sum of oligomers / fibrils weighted by size was used to define total loads as described in the supplement. 
+The SUVR formula used in our model implements a Hill function to relate amyloid burden to PET imaging signal:
+
+```
+SUVR = C0 + C1*(Ab42_oligo + Ab42_proto + C3*Ab42_plaque)^Hill/((Ab42_oligo + Ab42_proto + C3*Ab42_plaque)^Hill + C2^Hill)
+```
+
+**Note**: There were misspecified parameter names in the model supplement for this calculation. A sum of oligomers/fibrils weighted by size was used to define total loads as described in the supplement.
+
+![Published SUVR Equation](generated/figures/SUVR_eqn.png)
+*Published SUVR equation from the model supplement*
+
+**SUVR Parameters:**
+
+| Parameter | Value | Units | Source | Description |
+|-----------|-------|-------|--------|-------------|
+| SUVR_C0 | 1.0 | DIMENSIONLESS | Exp data | Baseline value in SUVR calculation (fixed at 1) |
+| SUVR_C1 | 2.5 | DIMENSIONLESS | Fitted from interventional studies | Constant for multiplication of numerator |
+| SUVR_C2 | 400,000 | nM | Fitted from interventional studies | EC50 value in SUVR calculation with concentration units |
+| SUVR_C3 | 1.3 | DIMENSIONLESS | Fitted from interventional studies | Dimensionless weight factor for plaques in SUVR calculation |
+| SUVR_Hill | 3.5 | DIMENSIONLESS | Fitted from interventional studies | Hill coefficient for SUVR calculation |
+
+**SUVR Detection Threshold**: The total weighted concentration of Aβ42 (oligomers + protofibrils + plaque) must significantly exceed 400,000 nM before a detectable SUVR signal (>1.0) becomes visible. This suggests our model may be underestimating the amyloid burden or the SUVR calculation parameters need adjustment.
 
 **Implications:**
 The requirement for such high amyloid concentrations before SUVR detection suggests either:
