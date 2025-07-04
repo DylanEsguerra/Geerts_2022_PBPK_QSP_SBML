@@ -22,9 +22,9 @@ The figure below demonstrates that our model accurately reproduces the published
 
 However, running our model for the natural life cycle of amyloid aggregation shows significant differences from the published material.
 
-![Natural Life Cycle](Tellurium/simulation_plots/tellurium_steady_state/gantenerumab_ab42_ratios_and_concentrations.png)
+![Natural Life Cycle](Tellurium/simulation_plots/tellurium_steady_state_apoe_compare/gantenerumab_ab42_ratios_and_concentrations_apoe_compare.png)
 
-*Replication of Figure 3: Simulation of the natural life cycle (from 20–100 years) of amyloid aggregation for an individual virtual Alzheimer's disease patient as in an observational study. Age-related pathology is implemented as an exponential decrease in monomer degradation. The publication used linear decline, but stated that both provide similar results and only the exponential parameters were made available. This decline resulted in an increased amount of monomers being pushed into the aggregation pathway. The 2x2 layout displays: SUVR progression (top left), brain plasma AB42/AB40 ratio (top right), ISF AB42 concentration (bottom left), and CSF AB42 concentration (bottom right).*
+*NOTE This branch contains the updated formulas for Microglia dependent clearance of Oligomers and Fibrils using Vmax, EC50, and Hi_Lo_Ratio rather than the CL_High and CL_Low values. Replication of Figure 3: Simulation of the natural life cycle (from 20–100 years) of amyloid aggregation for an individual virtual Alzheimer's disease patient as in an observational study. Age-related pathology is implemented as an exponential decrease in monomer degradation. The publication used linear decline, but stated that both provide similar results and only the exponential parameters were made available. This decline resulted in an increased amount of monomers being pushed into the aggregation pathway. The 2x2 layout displays: SUVR progression (top left), brain plasma AB42/AB40 ratio (top right), ISF AB42 concentration (bottom left), and CSF AB42 concentration (bottom right).*
 
 ![Figure 3 Geerts](generated/figures/Figure3.png)
 *Published Fig 3*
@@ -117,9 +117,9 @@ Cross-validation between our modular SBML implementation and the direct ODE impl
 
 These results confirm that we have accurately translated the ODE system to a reaction network in SBML and that the issue lies in the published material itself.
 
-![ODE and SBML brain plasma comparison](Tellurium/simulation_plots/tellurium_steady_state_apoe_compare/gantenerumab_ab42_ratios_and_concentrations_apoe_compare.png)
+![ODE and SBML brain plasma comparison](Tellurium/simulation_plots/compare_ab42_ab40_monomer_ratio.png)
 
-*NOTE This branch contains the updated formulas for Microglia dependent clearance of Oligomers and Fibrils using Vmax, EC50, and Hi_Lo_Ratio rather than the CL_High and CL_Low values. Comparison of SBML-based and direct ODE implementations for AB42/AB40 monomer ratios in brain plasma. The excellent agreement validates our translation from ODEs to reaction-based SBML format. This comparison can be made as well with the diffrax and SBML-to-ODE-jax implementation with the use of compare_no_dose_models.py*
+*Comparison of SBML-based and direct ODE implementations for AB42/AB40 monomer ratios in brain plasma. The excellent agreement validates our translation from ODEs to reaction-based SBML format. This comparison can be made as well with the diffrax and SBML-to-ODE-jax implementation with the use of compare_no_dose_models.py*
 
 **Validation Results:**
 - ✅ Brain plasma AB42/AB40 ratios
