@@ -119,7 +119,7 @@ These results confirm that we have accurately translated the ODE system to a rea
 
 ![ODE and SBML brain plasma comparison](Tellurium/simulation_plots/tellurium_steady_state_apoe_compare/gantenerumab_ab42_ratios_and_concentrations_apoe_compare.png)
 
-*Comparison of SBML-based and direct ODE implementations for AB42/AB40 monomer ratios in brain plasma. The excellent agreement validates our translation from ODEs to reaction-based SBML format. This comparison can be made as well with the diffrax and SBML-to-ODE-jax implementation with the use of compare_no_dose_models.py*
+*NOTE This branch contains the updated formulas for Microglia dependent clearance of Oligomers and Fibrils using Vmax, EC50, and Hi_Lo_Ratio rather than the CL_High and CL_Low values. Comparison of SBML-based and direct ODE implementations for AB42/AB40 monomer ratios in brain plasma. The excellent agreement validates our translation from ODEs to reaction-based SBML format. This comparison can be made as well with the diffrax and SBML-to-ODE-jax implementation with the use of compare_no_dose_models.py*
 
 **Validation Results:**
 - ✅ Brain plasma AB42/AB40 ratios
