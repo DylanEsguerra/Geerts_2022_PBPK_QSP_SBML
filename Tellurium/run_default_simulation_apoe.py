@@ -5,16 +5,7 @@ import argparse
 from pathlib import Path
 import matplotlib.pyplot as plt
 from visualize_tellurium_simulation import (
-    load_tellurium_data, 
-    create_solution_object, 
-    create_plots,
-    plot_individual_oligomers,
-    plot_fibrils_and_plaques,
-    plot_ab42_ratios_and_concentrations,
-    plot_suvr,
-    get_ab42_ratios_and_concentrations_final_values,
-    get_suvr_final_value,
-    calculate_suvr
+    create_solution_object
 )
 
 def run_simulation(rr, years, output_file):
@@ -122,6 +113,7 @@ def plot_ab42_ratios_and_concentrations_overlay(
 
     plt.tight_layout()
     fig.savefig(plots_dir / f'{drug_type.lower()}_ab42_ratios_and_concentrations_apoe_compare.png', dpi=300, bbox_inches='tight')
+    plt.show()
     plt.close(fig)
 
 if __name__ == "__main__":

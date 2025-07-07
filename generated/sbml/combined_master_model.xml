@@ -776,10 +776,10 @@
       <parameter id="sigma_ISF_ABeta42_oligomer17" value="0.999" units="dimensionless" constant="true"/>
       <parameter id="sigma_ISF_ABeta40_oligomer18" value="0.999" units="dimensionless" constant="true"/>
       <parameter id="sigma_ISF_ABeta42_oligomer18" value="0.999" units="dimensionless" constant="true"/>
-      <parameter id="k_F17_Plaque_forty" value="1.85770612620912e-09" units="per_hour" constant="true"/>
-      <parameter id="k_F17_Plaque_fortytwo" value="2.32551074936177e-07" units="per_hour" constant="true"/>
-      <parameter id="k_F18_Plaque_forty" value="1.96450380110951e-09" units="per_hour" constant="true"/>
-      <parameter id="k_F18_Plaque_fortytwo" value="2.46232039222521e-07" units="per_hour" constant="true"/>
+      <parameter id="k_F17_Plaque_forty" value="1.09276830953478e-10" units="per_hour" constant="true"/>
+      <parameter id="k_F17_Plaque_fortytwo" value="1.36794749962457e-08" units="per_hour" constant="true"/>
+      <parameter id="k_F18_Plaque_forty" value="1.0913910006164e-10" units="per_hour" constant="true"/>
+      <parameter id="k_F18_Plaque_fortytwo" value="1.36795577345845e-08" units="per_hour" constant="true"/>
       <parameter id="k_F17_F18_forty" value="2.18278200123279e-05" units="per_nanomole_per_hour" constant="true"/>
       <parameter id="k_F17_F18_fortytwo" value="0.000273591154691691" units="per_nanomole_per_hour" constant="true"/>
       <parameter id="k_F18_F17_forty" value="1e-05" units="per_nanomole_per_hour" constant="true"/>

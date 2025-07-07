@@ -54,7 +54,7 @@ def calculate_suvr(sol, model, c1=2.52, c2=1.3, c3=3.5, c4=400000, volume_scale_
     ab42_oligomer_pattern = re.compile(r'AB42_Oligomer\d+$')
     
     # Get AB42 protofibril pattern (fibrils 17-23)
-    ab42_protofibril_pattern = re.compile(r'AB42_Fibril(1[7-9]|2[0-3])$')
+    ab42_protofibril_pattern = re.compile(r'AB42_Fibril\d+$')
     
     for t in range(n_timepoints):
         # Calculate AB42 oligomer sum (weighted by size)
@@ -78,6 +78,10 @@ def calculate_suvr(sol, model, c1=2.52, c2=1.3, c3=3.5, c4=400000, volume_scale_
         # Get AB42 plaque
         ab42_plaque = sol.ys[t, y_indexes.get('AB42_Plaque_unbound', 0)]
         
+        print("Oligomer load: ", ab42_oligo/volume_scale_factor_isf)
+        print("Protofibril load: ", ab42_proto/volume_scale_factor_isf)
+        print("Plaque load: ", ab42_plaque/volume_scale_factor_isf)
+
         # Calculate the weighted sum
         weighted_sum = (ab42_oligo + ab42_proto + c2 * ab42_plaque)/volume_scale_factor_isf
         

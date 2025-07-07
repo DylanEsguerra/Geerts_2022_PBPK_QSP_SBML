@@ -14,17 +14,22 @@ from K_rates_extrapolate import calculate_k_rates, convert_backward_rate, conver
 # Define parent directory for file paths
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Load the experimental data for plasma ratio
-data = pd.read_csv('Plasma_Ratio_Geerts.csv')
-exp_years = np.array(data['Year'])
-exp_ratios = np.array(data['Plasma_Ratio'])
+# Load the experimental data for ISF and CSF concentrations
+isf_data = pd.read_csv('ISF_Monomers_pg_ml.csv')
+csf_data = pd.read_csv('CSF_pg_ml.csv')
+
+isf_years = np.array(isf_data['Year'])
+isf_concentrations = np.array(isf_data['ISF_Monomers_pg_ml'])
+
+csf_years = np.array(csf_data['Year'])
+csf_concentrations = np.array(csf_data['CSF_pg_ml'])
 
 # Create a list to store loss values and parameter history
 loss_history = []
 param_history = []
 
-# Define simulation selections for Aβ42/Aβ40 ratio in plasma
-simulation_selections = ['time', '[AB42Mu_Brain_Plasma]', '[AB40Mu_Brain_Plasma]']
+# Define simulation selections for ISF and CSF monomer concentrations
+simulation_selections = ['time', '[AB42_Monomer]', '[AB42Mu_SAS]']
 
 # Load the SBML model
 xml_path = os.path.join(parent_dir, 'generated', 'sbml', 'combined_master_model_garai.xml')
@@ -40,24 +45,62 @@ def setup_integrator():
     rr.integrator.relative_tolerance = 1e-10
     rr.integrator.setValue('stiff', True)
 
+def transform_simulation_results(sim_result):
+    """
+    Transform simulation results to match the experimental data format.
+    Convert to pg/mL units using the same scaling as in visualize_tellurium_simulation.py
+    """
+    # Volume scaling factors (same as in visualize_tellurium_simulation.py)
+    volume_scale_factor_csf = 0.09875  # Division by volume for SAS concentration units
+    volume_scale_factor_isf = 0.2505   # Division by volume for ISF concentration units
+    
+    # Conversion factor from nM to pg/mL
+    nM_to_pg = 4514.0
+    
+    # Extract time and concentrations
+    sim_years = sim_result[:, 0] / 365 / 24  # Convert hours to years
+    
+    # Transform ISF AB42 monomer (index 1)
+    ab42_isf_raw = sim_result[:, 1]
+    ab42_isf_nM = ab42_isf_raw / volume_scale_factor_isf
+    ab42_isf_pg_ml = ab42_isf_nM * nM_to_pg
+    
+    # Transform CSF SAS AB42 monomer (index 2)
+    ab42_sas_raw = sim_result[:, 2]
+    ab42_sas_nM = ab42_sas_raw / volume_scale_factor_csf
+    ab42_sas_pg_ml = ab42_sas_nM * nM_to_pg
+    
+    return sim_years, ab42_isf_pg_ml, ab42_sas_pg_ml
+
 def objective_function(log_params):
     """
-    Objective function: sum of squared differences from experimental Aβ42/Aβ40 ratio
+    Objective function: sum of squared differences from experimental ISF and CSF concentrations
     
-    log_params: [log(kb0_forty), log(kb1_forty), log(kb0_fortytwo), log(kb1_fortytwo), log(kf0_forty), log(kf1_forty), log(kf0_fortytwo), log(kf1_fortytwo), log(baseline_ab40_rate), log(baseline_ab42_rate)]
-    All parameters are log-transformed to ensure positivity
+    log_params: [log(kb0_fortytwo), log(kb1_fortytwo), log(kf0_fortytwo), log(kf1_fortytwo), 
+                asymp_fortytwo, forHill42, BackHill42]
+    All rate parameters are log-transformed to ensure positivity
+    Hill and Asymp parameters are kept in linear space
     """
-    # Transform back from log space
-    kb0_forty_h = np.exp(log_params[0])
-    kb1_forty_h = np.exp(log_params[1])
-    kb0_fortytwo_h = np.exp(log_params[2])
-    kb1_fortytwo_h = np.exp(log_params[3])
-    kf0_forty_h = np.exp(log_params[4])
-    kf1_forty_h = np.exp(log_params[5])
-    kf0_fortytwo_h = np.exp(log_params[6])
-    kf1_fortytwo_h = np.exp(log_params[7])
-    baseline_ab40_rate = np.exp(log_params[8])
-    baseline_ab42_rate = np.exp(log_params[9])
+    # Transform back from log space for rate parameters
+    kb0_fortytwo_h = np.exp(log_params[0])
+    kb1_fortytwo_h = np.exp(log_params[1])
+    kf0_fortytwo_h = np.exp(log_params[2])
+    kf1_fortytwo_h = np.exp(log_params[3])
+    
+    # Hill and Asymp parameters are in linear space
+    asymp_fortytwo = log_params[4]  # Used for both forward and backward
+    forHill42 = log_params[5]
+    BackHill42 = log_params[6]
+
+    # Use fixed values for AB40 parameters (from K_rates_extrapolate.py)
+    kb0_forty_h = convert_backward_rate(2.7e-3)
+    kb1_forty_h = convert_backward_rate(0.00001 / 3600)
+    kf0_forty_h = convert_forward_rate(0.5 * 10**2)
+    kf1_forty_h = convert_forward_rate(20.0)
+    forAsymp40 = 0.3
+    backAsymp40 = 0.3
+    forHill40 = 2.0
+    BackHill40 = 2.5
 
     try:
         # Convert backward rates from h⁻¹ to s⁻¹ for calculate_k_rates
@@ -82,8 +125,14 @@ def objective_function(log_params):
             original_kf1_forty=kf1_forty_M_s,
             original_kf0_fortytwo=kf0_fortytwo_M_s,
             original_kf1_fortytwo=kf1_fortytwo_M_s,
-            baseline_ab40_plaque_rate=baseline_ab40_rate,
-            baseline_ab42_plaque_rate=baseline_ab42_rate
+            forAsymp40=forAsymp40,
+            forAsymp42=asymp_fortytwo,  # Use asymp_fortytwo for both forward and backward
+            backAsymp40=backAsymp40,
+            backAsymp42=asymp_fortytwo,  # Use asymp_fortytwo for both forward and backward
+            forHill40=forHill40,
+            forHill42=forHill42,
+            BackHill40=BackHill40,
+            BackHill42=BackHill42
         )
         
         # Run simulation
@@ -116,36 +165,46 @@ def objective_function(log_params):
         if np.any(np.isnan(sim_result)) or np.any(np.isinf(sim_result)):
             return 1e10  # Large penalty for failed simulations
         
-        # Convert time to years and calculate the ratio
-        sim_years = sim_result[:, 0] / 365 / 24
-        sim_ratio = sim_result[:, 1] / sim_result[:, 2] # AB42/AB40
+        # Transform simulation results to match experimental data format
+        sim_years, ab42_isf_pg_ml, ab42_sas_pg_ml = transform_simulation_results(sim_result)
         
         # Interpolate simulation results to match experimental time points
-        f = interp1d(sim_years, sim_ratio, bounds_error=False, fill_value="extrapolate")
-        sim_ratio_interp = f(exp_years)
+        f_isf = interp1d(sim_years, ab42_isf_pg_ml, bounds_error=False, fill_value="extrapolate")
+        f_csf = interp1d(sim_years, ab42_sas_pg_ml, bounds_error=False, fill_value="extrapolate")
         
-        # Simple objective: sum of squared residuals
-        residuals = exp_ratios - sim_ratio_interp
-        error = np.sum(residuals**2)
+        sim_isf_interp = f_isf(isf_years)
+        sim_csf_interp = f_csf(csf_years)
+        
+        # Calculate residuals for both ISF and CSF data
+        isf_residuals = isf_concentrations - sim_isf_interp
+        csf_residuals = csf_concentrations - sim_csf_interp
+        
+        # Combine errors (weighted equally for now)
+        isf_error = np.sum(isf_residuals**2)
+        csf_error = np.sum(csf_residuals**2)
+        total_error = isf_error + csf_error
         
         # Store the error and parameters in history
-        loss_history.append(error)
+        loss_history.append(total_error)
         param_history.append([
-            kb0_forty_h, kb1_forty_h, kb0_fortytwo_h, kb1_fortytwo_h,
-            kf0_forty_h, kf1_forty_h, kf0_fortytwo_h, kf1_fortytwo_h,
-            baseline_ab40_rate, baseline_ab42_rate
+            kb0_fortytwo_h, kb1_fortytwo_h, kf0_fortytwo_h, kf1_fortytwo_h,
+            asymp_fortytwo, forHill42, BackHill42
         ])
         
         # Print progress
-        final_ratio = sim_ratio_interp[-1] if len(sim_ratio_interp) > 0 else 0
-        exp_final_ratio = exp_ratios[-1]
-        ratio_of_ratios = final_ratio / exp_final_ratio if exp_final_ratio > 0 else float('inf')
-        print(f"kb0_40={kb0_forty_h:.2e}, kb1_40={kb1_forty_h:.2e}, kb0_42={kb0_fortytwo_h:.2e}, kb1_42={kb1_fortytwo_h:.2e}, "
-              f"kf0_40={kf0_forty_h:.2e}, kf1_40={kf1_forty_h:.2e}, kf0_42={kf0_fortytwo_h:.2e}, kf1_42={kf1_fortytwo_h:.2e}, "
-              f"base_40={baseline_ab40_rate:.2e}, base_42={baseline_ab42_rate:.2e}, "
-              f"sim/exp ratio={ratio_of_ratios:.2f}, error={error:.2e}")
+        final_isf = sim_isf_interp[-1] if len(sim_isf_interp) > 0 else 0
+        final_csf = sim_csf_interp[-1] if len(sim_csf_interp) > 0 else 0
+        exp_final_isf = isf_concentrations[-1]
+        exp_final_csf = csf_concentrations[-1]
+        isf_ratio = final_isf / exp_final_isf if exp_final_isf > 0 else float('inf')
+        csf_ratio = final_csf / exp_final_csf if exp_final_csf > 0 else float('inf')
+        
+        print(f"kb0_42={kb0_fortytwo_h:.2e}, kb1_42={kb1_fortytwo_h:.2e}, "
+              f"kf0_42={kf0_fortytwo_h:.2e}, kf1_42={kf1_fortytwo_h:.2e}, "
+              f"asymp_42={asymp_fortytwo:.3f}, forHill42={forHill42:.3f}, BackHill42={BackHill42:.3f}, "
+              f"ISF sim/exp={isf_ratio:.2f}, CSF sim/exp={csf_ratio:.2f}, error={total_error:.2e}")
             
-        return error
+        return total_error
         
     except Exception as e:
         print(f"Simulation failed: {e}")
@@ -154,63 +213,61 @@ def objective_function(log_params):
 def optimize_parameters():
     """Simple parameter optimization with early stopping and parameter bounds"""
     
-    print("Starting parameter optimization for Aβ42/Aβ40 plasma ratio...")
+    print("Starting parameter optimization for ISF and CSF Aβ42 monomer concentrations...")
     print("Using current PK_Geerts values as initial conditions")
-    print(f"Experimental data: {exp_ratios[0]:.3f} to {exp_ratios[-1]:.3f} ratio")
-    print(f"Time range: {exp_years[0]:.1f} to {exp_years[-1]:.1f} years")
+    print(f"Experimental ISF data: {isf_concentrations[0]:.1f} to {isf_concentrations[-1]:.1f} pg/mL")
+    print(f"Experimental CSF data: {csf_concentrations[0]:.1f} to {csf_concentrations[-1]:.1f} pg/mL")
+    print(f"Time range: {isf_years[0]:.1f} to {isf_years[-1]:.1f} years")
     
     # Current values from PK_Geerts.csv and K_rates_extrapolate.py, converted to h⁻¹ or nM⁻¹h⁻¹
-    current_kb0_forty_h = convert_backward_rate(2.7e-3)
-    current_kb1_forty_h = convert_backward_rate(0.00001 / 3600)
     current_kb0_fortytwo_h = convert_backward_rate(12.7e-3)
     current_kb1_fortytwo_h = convert_backward_rate(0.00001 / 3600)
-    current_kf0_forty_h = convert_forward_rate(0.5 * 10**2)
-    current_kf1_forty_h = convert_forward_rate(20.0)
     current_kf0_fortytwo_h = convert_forward_rate(9.9 * 10**2)
     current_kf1_fortytwo_h = convert_forward_rate(38.0)
-    # Baseline plaque formation rates (these are the minimum values)
-    current_baseline_ab40_rate = 0.000005  # 5e-06 L/(nM·h)
-    current_baseline_ab42_rate = 0.00005   # 5e-05 L/(nM·h)
+    current_asymp_fortytwo = 2.0 # This is the forward and backward asymptotic value
+    current_forHill42 = 3.0
+    current_BackHill42 = 3.0
 
-    print(f"\nCurrent initial values (h⁻¹ or nM⁻¹h⁻¹):")
-    print(f"  kb0_40 = {current_kb0_forty_h:.4e}")
-    print(f"  kb1_40 = {current_kb1_forty_h:.4e}")
+    print(f"\nCurrent initial values:")
+    print(f"Rate parameters (h⁻¹ or nM⁻¹h⁻¹):")
     print(f"  kb0_42 = {current_kb0_fortytwo_h:.4e}")
     print(f"  kb1_42 = {current_kb1_fortytwo_h:.4e}")
-    print(f"  kf0_40 = {current_kf0_forty_h:.4e}")
-    print(f"  kf1_40 = {current_kf1_forty_h:.4e}")
     print(f"  kf0_42 = {current_kf0_fortytwo_h:.4e}")
     print(f"  kf1_42 = {current_kf1_fortytwo_h:.4e}")
-    print(f"  base_40 = {current_baseline_ab40_rate:.4e}")
-    print(f"  base_42 = {current_baseline_ab42_rate:.4e}")
+    print(f"Hill and Asymp parameters:")
+    print(f"  asymp_42 = {current_asymp_fortytwo:.3f}")
+    print(f"  forHill42 = {current_forHill42:.3f}")
+    print(f"  BackHill42 = {current_BackHill42:.3f}")
 
-    # Define reasonable parameter bounds (in log space)
-    # Note: baseline rates have minimum at current values since they are baseline
-    # Backward rates have minimum of 1e-05 h⁻¹
-    bounds = [
-        (np.log(max(1e-05, current_kb0_forty_h * 0.001)), np.log(current_kb0_forty_h * 100)),
-        (np.log(max(1e-05, current_kb1_forty_h * 0.001)), np.log(current_kb1_forty_h * 100)),
+    # Define reasonable parameter bounds
+    # Rate parameters: log-transformed with bounds
+    rate_bounds = [
         (np.log(max(1e-05, current_kb0_fortytwo_h * 0.001)), np.log(current_kb0_fortytwo_h * 100)),
         (np.log(max(1e-05, current_kb1_fortytwo_h * 0.001)), np.log(current_kb1_fortytwo_h * 100)),
-        (np.log(current_kf0_forty_h * 0.001), np.log(current_kf0_forty_h * 100)),
-        (np.log(current_kf1_forty_h * 0.001), np.log(current_kf1_forty_h * 100)),
-        (np.log(current_kf0_fortytwo_h * 0.001), np.log(current_kf0_fortytwo_h * 100)),
-        (np.log(current_kf1_fortytwo_h * 0.001), np.log(current_kf1_fortytwo_h * 100)),
-        (np.log(current_baseline_ab40_rate), np.log(current_baseline_ab40_rate * 100)),  # Min at current (baseline)
-        (np.log(current_baseline_ab42_rate), np.log(current_baseline_ab42_rate * 100)),  # Min at current (baseline)
+        (np.log(max(1e-05, current_kf0_fortytwo_h * 0.001)), np.log(current_kf0_fortytwo_h * 100)),
+        (np.log(max(1e-05, current_kf1_fortytwo_h * 0.001)), np.log(current_kf1_fortytwo_h * 100)),
     ]
     
-    print(f"\nParameter bounds (h⁻¹ or nM⁻¹h⁻¹):")
-    print(f"  kb0_40: {np.exp(bounds[0][0]):.1e} to {np.exp(bounds[0][1]):.1e}")
-    print(f"  kb1_40: {np.exp(bounds[1][0]):.1e} to {np.exp(bounds[1][1]):.1e}")
-    print(f"  kb0_42: {np.exp(bounds[2][0]):.1e} to {np.exp(bounds[2][1]):.1e}")
-    print(f"  kb1_42: {np.exp(bounds[3][0]):.1e} to {np.exp(bounds[3][1]):.1e}")
-    print(f"  kf0_40: {np.exp(bounds[4][0]):.1e} to {np.exp(bounds[4][1]):.1e}")
-    print(f"  kf1_40: {np.exp(bounds[5][0]):.1e} to {np.exp(bounds[5][1]):.1e}")
-    print(f"  kf0_42: {np.exp(bounds[6][0]):.1e} to {np.exp(bounds[6][1]):.1e}")
-    print(f"  kf1_42: {np.exp(bounds[7][0]):.1e} to {np.exp(bounds[7][1]):.1e}")
-    print(f"  base_40: {np.exp(bounds[8][0]):.1e} to {np.exp(bounds[8][1]):.1e}")
-    print(f"  base_42: {np.exp(bounds[9][0]):.1e} to {np.exp(bounds[9][1]):.1e}")
+    # Hill and Asymp parameters: linear space with reasonable bounds
+    hill_asymp_bounds = [
+        (0.1, 5.0),    # asymp_fortytwo
+        (0.5, 8.0),    # forHill42
+        (0.5, 5.0),    # BackHill42
+    ]
+    
+    # Combine all bounds
+    bounds = rate_bounds + hill_asymp_bounds
+    
+    print(f"\nParameter bounds:")
+    print(f"Rate parameters (h⁻¹ or nM⁻¹h⁻¹):")
+    print(f"  kb0_42: {np.exp(bounds[0][0]):.1e} to {np.exp(bounds[0][1]):.1e}")
+    print(f"  kb1_42: {np.exp(bounds[1][0]):.1e} to {np.exp(bounds[1][1]):.1e}")
+    print(f"  kf0_42: {np.exp(bounds[2][0]):.1e} to {np.exp(bounds[2][1]):.1e}")
+    print(f"  kf1_42: {np.exp(bounds[3][0]):.1e} to {np.exp(bounds[3][1]):.1e}")
+    print(f"Hill and Asymp parameters:")
+    print(f"  asymp_42: {bounds[4][0]:.1f} to {bounds[4][1]:.1f}")
+    print(f"  forHill42: {bounds[5][0]:.1f} to {bounds[5][1]:.1f}")
+    print(f"  BackHill42: {bounds[6][0]:.1f} to {bounds[6][1]:.1f}")
     
     # Early stopping variables
     best_error = float('inf')
@@ -247,16 +304,13 @@ def optimize_parameters():
     
     # Starting point using current values
     starting_point_log = [
-        np.log(current_kb0_forty_h),
-        np.log(current_kb1_forty_h),
         np.log(current_kb0_fortytwo_h),
         np.log(current_kb1_fortytwo_h),
-        np.log(current_kf0_forty_h),
-        np.log(current_kf1_forty_h),
         np.log(current_kf0_fortytwo_h),
         np.log(current_kf1_fortytwo_h),
-        np.log(current_baseline_ab40_rate),
-        np.log(current_baseline_ab42_rate),
+        current_asymp_fortytwo,
+        current_forHill42,
+        current_BackHill42,
     ]
     
     print(f"\nStarting optimization with bounds and early stopping...")
@@ -286,11 +340,16 @@ def optimize_parameters():
             final_error = result.fun
         
         # Convert optimized parameters back to real space
-        opt_real = [np.exp(x) for x in final_params]
+        opt_real = []
+        for i in range(4):  # First 4 are log-transformed rate parameters
+            opt_real.append(np.exp(final_params[i]))
+        for i in range(4, 7):  # Last 3 are linear Hill/Asymp parameters
+            opt_real.append(final_params[i])
+        
         print(f"\nOptimization complete!")
-        print(f"Result: kb0_40={opt_real[0]:.2e}, kb1_40={opt_real[1]:.2e}, kb0_42={opt_real[2]:.2e}, kb1_42={opt_real[3]:.2e}, "
-              f"kf0_40={opt_real[4]:.2e}, kf1_40={opt_real[5]:.2e}, kf0_42={opt_real[6]:.2e}, kf1_42={opt_real[7]:.2e}, "
-              f"base_40={opt_real[8]:.2e}, base_42={opt_real[9]:.2e}")
+        print(f"Result: kb0_42={opt_real[0]:.2e}, kb1_42={opt_real[1]:.2e}, ")
+        print(f"        kf0_42={opt_real[2]:.2e}, kf1_42={opt_real[3]:.2e}, ")
+        print(f"        asymp_42={opt_real[4]:.3f}, forHill42={opt_real[5]:.3f}, BackHill42={opt_real[6]:.3f}")
         print(f"Error: {final_error:.2e}, Success: {result.success}")
         
         if not result.success:
@@ -304,9 +363,8 @@ def optimize_parameters():
 
 def analyze_optimized_parameters(optimal_params):
     """Analyze the optimized parameters and plot results"""
-    kb0_forty_h, kb1_forty_h, kb0_fortytwo_h, kb1_fortytwo_h, \
-    kf0_forty_h, kf1_forty_h, kf0_fortytwo_h, kf1_fortytwo_h, \
-    baseline_ab40_rate, baseline_ab42_rate = optimal_params
+    kb0_fortytwo_h, kb1_fortytwo_h, kf0_fortytwo_h, kf1_fortytwo_h, \
+    asymp_fortytwo, forHill42, BackHill42 = optimal_params
     
     print(f"\n" + "="*60)
     print(f"ANALYZING OPTIMIZED PARAMETERS")
@@ -314,28 +372,34 @@ def analyze_optimized_parameters(optimal_params):
     
     # Calculate rates with optimized parameters
     rates = calculate_k_rates(
-        original_kb0_forty=kb0_forty_h / 3600,
-        original_kb1_forty=kb1_forty_h / 3600,
+        original_kb0_forty=convert_backward_rate(2.7e-3) / 3600,
+        original_kb1_forty=convert_backward_rate(0.00001 / 3600) / 3600,
         original_kb0_fortytwo=kb0_fortytwo_h / 3600,
         original_kb1_fortytwo=kb1_fortytwo_h / 3600,
-        original_kf0_forty=kf0_forty_h / 3.6e-6,
-        original_kf1_forty=kf1_forty_h / 3.6e-6,
+        original_kf0_forty=convert_forward_rate(0.5 * 10**2) / 3.6e-6,
+        original_kf1_forty=convert_forward_rate(20.0) / 3.6e-6,
         original_kf0_fortytwo=kf0_fortytwo_h / 3.6e-6,
         original_kf1_fortytwo=kf1_fortytwo_h / 3.6e-6,
-        baseline_ab40_plaque_rate=baseline_ab40_rate,
-        baseline_ab42_plaque_rate=baseline_ab42_rate
+        forAsymp40=0.3,
+        forAsymp42=asymp_fortytwo,
+        backAsymp40=0.3,
+        backAsymp42=asymp_fortytwo,
+        forHill40=2.0,
+        forHill42=forHill42,
+        BackHill40=2.5,
+        BackHill42=BackHill42
     )
     
     # Run simulation with optimized parameters
     rr.reset()
     setup_integrator()
     
-    rr.k_O2_M_forty = kb0_forty_h
-    rr.k_O3_O2_forty = kb1_forty_h
+    rr.k_O2_M_forty = convert_backward_rate(2.7e-3)
+    rr.k_O3_O2_forty = convert_backward_rate(0.00001 / 3600)
     rr.k_O2_M_fortytwo = kb0_fortytwo_h
     rr.k_O3_O2_fortytwo = kb1_fortytwo_h
-    rr.k_M_O2_forty = kf0_forty_h
-    rr.k_O2_O3_forty = kf1_forty_h
+    rr.k_M_O2_forty = convert_forward_rate(0.5 * 10**2)
+    rr.k_O2_O3_forty = convert_forward_rate(20.0)
     rr.k_M_O2_fortytwo = kf0_fortytwo_h
     rr.k_O2_O3_fortytwo = kf1_fortytwo_h
     
@@ -349,43 +413,62 @@ def analyze_optimized_parameters(optimal_params):
     t_sim = 100*365*24
     sim_result = rr.simulate(0, t_sim, 300, selections=simulation_selections)
     
-    # Convert simulation results
-    sim_years = sim_result[:, 0] / 365 / 24
-    sim_ratios = sim_result[:, 1] / sim_result[:, 2]
+    # Transform simulation results
+    sim_years, ab42_isf_pg_ml, ab42_sas_pg_ml = transform_simulation_results(sim_result)
     
     # Interpolate to experimental time points for error calculation
-    f = interp1d(sim_years, sim_ratios, bounds_error=False, fill_value="extrapolate")
-    sim_ratios_interp = f(exp_years)
+    f_isf = interp1d(sim_years, ab42_isf_pg_ml, bounds_error=False, fill_value="extrapolate")
+    f_csf = interp1d(sim_years, ab42_sas_pg_ml, bounds_error=False, fill_value="extrapolate")
+
+    sim_isf_interp = f_isf(isf_years)
+    sim_csf_interp = f_csf(csf_years)
     
     # Calculate final error metrics
-    residuals = exp_ratios - sim_ratios_interp
-    final_error = np.sum(residuals**2)
-    rms_error = np.sqrt(np.mean(residuals**2))
+    isf_residuals = isf_concentrations - sim_isf_interp
+    csf_residuals = csf_concentrations - sim_csf_interp
+    final_error = np.sum(isf_residuals**2) + np.sum(csf_residuals**2)
+    rms_error = np.sqrt(np.mean(isf_residuals**2)) # RMS error for ISF
     
     # Print analysis
     print(f"Final sum of squared residuals: {final_error:.2e}")
-    print(f"RMS error: {rms_error:.4f} (ratio units)")
-    print(f"Mean experimental ratio: {np.mean(exp_ratios):.3f}")
-    print(f"Mean simulated ratio: {np.mean(sim_ratios_interp):.3f}")
+    print(f"RMS error (ISF): {rms_error:.4f} (pg/mL)")
+    print(f"Mean experimental ISF: {np.mean(isf_concentrations):.3f}")
+    print(f"Mean simulated ISF: {np.mean(sim_isf_interp):.3f}")
+    print(f"RMS error (CSF): {np.sqrt(np.mean(csf_residuals**2)):.4f} (pg/mL)")
+    print(f"Mean experimental CSF: {np.mean(csf_concentrations):.3f}")
+    print(f"Mean simulated CSF: {np.mean(sim_csf_interp):.3f}")
     
     # Create comprehensive results plot
-    fig = plt.figure(figsize=(14, 12))
+    fig = plt.figure(figsize=(16, 12))
     
-    # Plot 1: Experimental data vs model fit
-    ax1 = plt.subplot(2, 2, 1)
-    plt.scatter(exp_years, exp_ratios, color='red', label='Experimental data', s=80, zorder=3, alpha=0.8)
-    plt.plot(sim_years, sim_ratios, 'b-', linewidth=3, label='Optimized model', alpha=0.8)
-    plt.scatter(exp_years, sim_ratios_interp, color='blue', marker='x', s=60, 
-                label='Model at exp. points', zorder=3, linewidth=3)
+    # Plot 1: Experimental ISF data vs model fit
+    ax1 = plt.subplot(2, 3, 1)
+    plt.scatter(isf_years, isf_concentrations, color='red', label='Experimental ISF', s=80, zorder=3, alpha=0.8)
+    plt.plot(sim_years, ab42_isf_pg_ml, 'b-', linewidth=3, label='Optimized ISF', alpha=0.8)
+    plt.scatter(isf_years, sim_isf_interp, color='blue', marker='x', s=60, 
+                label='Model at exp. ISF points', zorder=3, linewidth=3)
     plt.xlabel('Time (years)', fontsize=12, fontweight='bold')
-    plt.ylabel('Aβ42/Aβ40 Plasma Ratio', fontsize=12, fontweight='bold')
-    plt.title('Experimental Ratio vs Optimized Model', fontsize=14, fontweight='bold')
+    plt.ylabel('Aβ42 Monomer (pg/mL)', fontsize=12, fontweight='bold')
+    plt.title('Experimental ISF vs Optimized Model', fontsize=14, fontweight='bold')
     plt.legend(fontsize=10)
     plt.grid(True, alpha=0.3)
     plt.xlim(20, 100)
     
-    # Plot 2: Loss history during optimization
-    ax2 = plt.subplot(2, 2, 2)
+    # Plot 2: Experimental CSF data vs model fit
+    ax2 = plt.subplot(2, 3, 2)
+    plt.scatter(csf_years, csf_concentrations, color='red', label='Experimental CSF', s=80, zorder=3, alpha=0.8)
+    plt.plot(sim_years, ab42_sas_pg_ml, 'b-', linewidth=3, label='Optimized CSF', alpha=0.8)
+    plt.scatter(csf_years, sim_csf_interp, color='blue', marker='x', s=60, 
+                label='Model at exp. CSF points', zorder=3, linewidth=3)
+    plt.xlabel('Time (years)', fontsize=12, fontweight='bold')
+    plt.ylabel('Aβ42 Monomer (pg/mL)', fontsize=12, fontweight='bold')
+    plt.title('Experimental CSF vs Optimized Model', fontsize=14, fontweight='bold')
+    plt.legend(fontsize=10)
+    plt.grid(True, alpha=0.3)
+    plt.xlim(20, 100)
+    
+    # Plot 3: Loss history during optimization
+    ax3 = plt.subplot(2, 3, 3)
     iterations = np.arange(1, len(loss_history) + 1)
     plt.semilogy(iterations, loss_history, 'r-', linewidth=2)
     plt.xlabel('Function Evaluations', fontsize=12, fontweight='bold')
@@ -393,80 +476,88 @@ def analyze_optimized_parameters(optimal_params):
     plt.title('Optimization Loss History', fontsize=14, fontweight='bold')
     plt.grid(True, alpha=0.3)
     
-    # Plot 3: Parameter evolution during optimization
-    ax3 = plt.subplot(2, 2, 3)
+    # Plot 4: Parameter evolution during optimization
+    ax4 = plt.subplot(2, 3, 4)
     param_array = np.array(param_history)
     if len(param_array) > 0:
         iterations = np.arange(1, len(param_array) + 1)
-        plt.plot(iterations, param_array[:, 0], 'r-', linewidth=2, label='kb0_40', alpha=0.7)
-        plt.plot(iterations, param_array[:, 1], 'g-', linewidth=2, label='kb1_40', alpha=0.7)
-        plt.plot(iterations, param_array[:, 2], 'b-', linewidth=2, label='kb0_42', alpha=0.7)
-        plt.plot(iterations, param_array[:, 3], 'c-', linewidth=2, label='kb1_42', alpha=0.7)
-        plt.plot(iterations, param_array[:, 4], 'm-', linewidth=2, label='kf0_40', alpha=0.7)
-        plt.plot(iterations, param_array[:, 5], 'y-', linewidth=2, label='kf1_40', alpha=0.7)
-        plt.plot(iterations, param_array[:, 6], 'k-', linewidth=2, label='kf0_42', alpha=0.7)
-        plt.plot(iterations, param_array[:, 7], 'orange', linestyle='-', linewidth=2, label='kf1_42', alpha=0.7)
-        plt.plot(iterations, param_array[:, 8], 'brown', linestyle='-', linewidth=2, label='base_40', alpha=0.7)
-        plt.plot(iterations, param_array[:, 9], 'pink', linestyle='-', linewidth=2, label='base_42', alpha=0.7)
+        # Plot rate parameters (log scale)
+        plt.plot(iterations, param_array[:, 0], 'r-', linewidth=2, label='kb0_42', alpha=0.7)
+        plt.plot(iterations, param_array[:, 1], 'g-', linewidth=2, label='kb1_42', alpha=0.7)
+        plt.plot(iterations, param_array[:, 2], 'b-', linewidth=2, label='kf0_42', alpha=0.7)
+        plt.plot(iterations, param_array[:, 3], 'c-', linewidth=2, label='kf1_42', alpha=0.7)
         plt.xlabel('Function Evaluations', fontsize=12, fontweight='bold')
-        plt.ylabel('Parameter Values (h⁻¹ or nM⁻¹h⁻¹)', fontsize=12, fontweight='bold')
-        plt.title('Parameter Evolution During Optimization', fontsize=14, fontweight='bold')
-        plt.legend(fontsize=9, ncol=2)  # Use smaller font and 2 columns for 10 parameters
+        plt.ylabel('Rate Parameter Values (h⁻¹ or nM⁻¹h⁻¹)', fontsize=12, fontweight='bold')
+        plt.title('Rate Parameter Evolution During Optimization', fontsize=14, fontweight='bold')
+        plt.legend(fontsize=9, ncol=2)
         plt.grid(True, alpha=0.3)
         plt.yscale('log')
     
-    # Plot 4: Residuals analysis
-    ax4 = plt.subplot(2, 2, 4)
-    plt.plot(exp_years, residuals, 'ko-', linewidth=2, markersize=6)
+    # Plot 5: Residuals analysis
+    ax5 = plt.subplot(2, 3, 5)
+    plt.plot(isf_years, isf_residuals, 'ro-', linewidth=2, markersize=6, label='ISF Residuals')
+    plt.plot(csf_years, csf_residuals, 'bo-', linewidth=2, markersize=6, label='CSF Residuals')
     plt.axhline(y=0, color='red', linestyle='--', alpha=0.8, linewidth=2)
     plt.xlabel('Time (years)', fontsize=12, fontweight='bold')
     plt.ylabel('Residuals (exp - sim)', fontsize=12, fontweight='bold')
     plt.title('Model Residuals vs Time', fontsize=14, fontweight='bold')
     plt.grid(True, alpha=0.3)
+    plt.legend()
+    
+    # Plot 6: Hill and Asymp parameters evolution
+    ax6 = plt.subplot(2, 3, 6)
+    if len(param_array) > 0:
+        plt.plot(iterations, param_array[:, 4], 'm-', linewidth=2, label='asymp_42', alpha=0.7)
+        plt.plot(iterations, param_array[:, 5], 'y-', linewidth=2, label='forHill42', alpha=0.7)
+        plt.plot(iterations, param_array[:, 6], 'k-', linewidth=2, label='BackHill42', alpha=0.7)
+        plt.xlabel('Function Evaluations', fontsize=12, fontweight='bold')
+        plt.ylabel('Parameter Values', fontsize=12, fontweight='bold')
+        plt.title('Hill and Asymp Parameter Evolution', fontsize=14, fontweight='bold')
+        plt.legend(fontsize=9)
+        plt.grid(True, alpha=0.3)
     
     # Add text box with optimized parameters
     param_text = (
-        f"Optimized Parameters (h⁻¹ or nM⁻¹h⁻¹):\n"
-        f"kb0_40 = {kb0_forty_h:.2e}, kf0_40 = {kf0_forty_h:.2e}\n"
-        f"kb1_40 = {kb1_forty_h:.2e}, kf1_40 = {kf1_forty_h:.2e}\n"
+        f"Optimized Parameters:\n"
+        f"Rate parameters (h⁻¹ or nM⁻¹h⁻¹):\n"
         f"kb0_42 = {kb0_fortytwo_h:.2e}, kf0_42 = {kf0_fortytwo_h:.2e}\n"
         f"kb1_42 = {kb1_fortytwo_h:.2e}, kf1_42 = {kf1_fortytwo_h:.2e}\n"
-        f"base_40 = {baseline_ab40_rate:.2e}, base_42 = {baseline_ab42_rate:.2e}\n"
-        f"RMS error = {rms_error:.4f}\n"
+        f"Hill and Asymp parameters:\n"
+        f"asymp_42 = {asymp_fortytwo:.3f}, forHill42 = {forHill42:.3f}\n"
+        f"BackHill42 = {BackHill42:.3f}\n"
+        f"RMS error (ISF) = {rms_error:.4f}\n"
+        f"RMS error (CSF) = {np.sqrt(np.mean(csf_residuals**2)):.4f}\n"
         f"Sum squared residuals = {final_error:.2e}\n"
         f"Function evaluations = {len(loss_history)}\n"
-        f"Sim/Exp final ratio = {sim_ratios_interp[-1]/exp_ratios[-1]:.2f}"
+        f"ISF final ratio = {sim_isf_interp[-1]/isf_concentrations[-1]:.2f}\n"
+        f"CSF final ratio = {sim_csf_interp[-1]/csf_concentrations[-1]:.2f}"
     )
     plt.figtext(0.5, 0.02, param_text, ha="center", fontsize=11, 
                 bbox={"facecolor":"lightgray", "alpha":0.8, "pad":8})
     
-    plt.suptitle('Parameter Optimization Results: Fitting Plasma Aβ42/Aβ40 Ratio', 
+    plt.suptitle('Parameter Optimization Results: Fitting ISF and CSF Aβ42 Monomer Concentrations', 
                  fontsize=16, fontweight='bold', y=0.98)
     plt.tight_layout(rect=[0, 0.12, 1, 0.96])  # Make room for parameter text
     plt.savefig('simulation_plots/agg_rate_experimental_fit_results.png', dpi=300, bbox_inches='tight')
     plt.show()
     
-    return sim_ratios_interp, sim_result
+    return sim_isf_interp, sim_csf_interp, sim_result
 
 def calculate_percent_change_table(optimal_params):
     """Calculate and display percent changes in optimized parameters"""
     import pandas as pd
     
-    kb0_forty_h, kb1_forty_h, kb0_fortytwo_h, kb1_fortytwo_h, \
-    kf0_forty_h, kf1_forty_h, kf0_fortytwo_h, kf1_fortytwo_h, \
-    baseline_ab40_rate, baseline_ab42_rate = optimal_params
+    kb0_fortytwo_h, kb1_fortytwo_h, kf0_fortytwo_h, kf1_fortytwo_h, \
+    asymp_fortytwo, forHill42, BackHill42 = optimal_params
     
     # Initial parameter values (from optimization code)
-    initial_kb0_forty_h = convert_backward_rate(2.7e-3)
-    initial_kb1_forty_h = convert_backward_rate(0.00001 / 3600)
     initial_kb0_fortytwo_h = convert_backward_rate(12.7e-3)
     initial_kb1_fortytwo_h = convert_backward_rate(0.00001 / 3600)
-    initial_kf0_forty_h = convert_forward_rate(0.5 * 10**2)
-    initial_kf1_forty_h = convert_forward_rate(20.0)
     initial_kf0_fortytwo_h = convert_forward_rate(9.9 * 10**2)
     initial_kf1_fortytwo_h = convert_forward_rate(38.0)
-    initial_baseline_ab40_rate = 0.000005  # 5e-06 L/(nM·h)
-    initial_baseline_ab42_rate = 0.00005   # 5e-05 L/(nM·h)
+    initial_asymp_fortytwo = 2.0
+    initial_forHill42 = 3.0
+    initial_BackHill42 = 3.0
 
     # Calculate percent changes
     def calculate_percent_change(initial, final):
@@ -475,52 +566,40 @@ def calculate_percent_change_table(optimal_params):
     # Create the data for the table
     data = {
         'Parameter': [
-            'kb0_40 (h⁻¹)',
-            'kb1_40 (h⁻¹)', 
             'kb0_42 (h⁻¹)',
-            'kb1_42 (h⁻¹)',
-            'kf0_40 (nM⁻¹h⁻¹)',
-            'kf1_40 (nM⁻¹h⁻¹)',
+            'kb1_42 (h⁻¹)', 
             'kf0_42 (nM⁻¹h⁻¹)',
             'kf1_42 (nM⁻¹h⁻¹)',
-            'base_40 (L/(nM·h))',
-            'base_42 (L/(nM·h))'
+            'asymp_42',
+            'forHill42',
+            'BackHill42'
         ],
         'Initial Value': [
-            f"{initial_kb0_forty_h:.4e}",
-            f"{initial_kb1_forty_h:.4e}",
             f"{initial_kb0_fortytwo_h:.4e}",
             f"{initial_kb1_fortytwo_h:.4e}",
-            f"{initial_kf0_forty_h:.4e}",
-            f"{initial_kf1_forty_h:.4e}",
             f"{initial_kf0_fortytwo_h:.4e}",
             f"{initial_kf1_fortytwo_h:.4e}",
-            f"{initial_baseline_ab40_rate:.4e}",
-            f"{initial_baseline_ab42_rate:.4e}"
+            f"{initial_asymp_fortytwo:.3f}",
+            f"{initial_forHill42:.3f}",
+            f"{initial_BackHill42:.3f}"
         ],
         'Final Value': [
-            f"{kb0_forty_h:.4e}",
-            f"{kb1_forty_h:.4e}",
             f"{kb0_fortytwo_h:.4e}",
             f"{kb1_fortytwo_h:.4e}",
-            f"{kf0_forty_h:.4e}",
-            f"{kf1_forty_h:.4e}",
             f"{kf0_fortytwo_h:.4e}",
             f"{kf1_fortytwo_h:.4e}",
-            f"{baseline_ab40_rate:.4e}",
-            f"{baseline_ab42_rate:.4e}"
+            f"{asymp_fortytwo:.3f}",
+            f"{forHill42:.3f}",
+            f"{BackHill42:.3f}"
         ],
         'Percent Change (%)': [
-            f"{calculate_percent_change(initial_kb0_forty_h, kb0_forty_h):.1f}",
-            f"{calculate_percent_change(initial_kb1_forty_h, kb1_forty_h):.1f}",
             f"{calculate_percent_change(initial_kb0_fortytwo_h, kb0_fortytwo_h):.1f}",
             f"{calculate_percent_change(initial_kb1_fortytwo_h, kb1_fortytwo_h):.1f}",
-            f"{calculate_percent_change(initial_kf0_forty_h, kf0_forty_h):.1f}",
-            f"{calculate_percent_change(initial_kf1_forty_h, kf1_forty_h):.1f}",
             f"{calculate_percent_change(initial_kf0_fortytwo_h, kf0_fortytwo_h):.1f}",
             f"{calculate_percent_change(initial_kf1_fortytwo_h, kf1_fortytwo_h):.1f}",
-            f"{calculate_percent_change(initial_baseline_ab40_rate, baseline_ab40_rate):.1f}",
-            f"{calculate_percent_change(initial_baseline_ab42_rate, baseline_ab42_rate):.1f}"
+            f"{calculate_percent_change(initial_asymp_fortytwo, asymp_fortytwo):.1f}",
+            f"{calculate_percent_change(initial_forHill42, forHill42):.1f}",
+            f"{calculate_percent_change(initial_BackHill42, BackHill42):.1f}"
         ]
     }
 
@@ -534,16 +613,13 @@ def calculate_percent_change_table(optimal_params):
 
     # Calculate raw percent changes for analysis
     percent_changes = [
-        calculate_percent_change(initial_kb0_forty_h, kb0_forty_h),
-        calculate_percent_change(initial_kb1_forty_h, kb1_forty_h),
         calculate_percent_change(initial_kb0_fortytwo_h, kb0_fortytwo_h),
         calculate_percent_change(initial_kb1_fortytwo_h, kb1_fortytwo_h),
-        calculate_percent_change(initial_kf0_forty_h, kf0_forty_h),
-        calculate_percent_change(initial_kf1_forty_h, kf1_forty_h),
         calculate_percent_change(initial_kf0_fortytwo_h, kf0_fortytwo_h),
         calculate_percent_change(initial_kf1_fortytwo_h, kf1_fortytwo_h),
-        calculate_percent_change(initial_baseline_ab40_rate, baseline_ab40_rate),
-        calculate_percent_change(initial_baseline_ab42_rate, baseline_ab42_rate)
+        calculate_percent_change(initial_asymp_fortytwo, asymp_fortytwo),
+        calculate_percent_change(initial_forHill42, forHill42),
+        calculate_percent_change(initial_BackHill42, BackHill42)
     ]
 
     # Also create a summary
@@ -578,27 +654,31 @@ if __name__ == "__main__":
     optimal_params, final_error = optimize_parameters()
     
     # Analyze results
-    sim_ratios, simulation_result = analyze_optimized_parameters(optimal_params)
+    sim_isf_interp, sim_csf_interp, simulation_result = analyze_optimized_parameters(optimal_params)
     
     print(f"\n" + "="*60)
     print(f"OPTIMIZATION COMPLETE")
     print(f"="*60)
     print(f"Results saved to: simulation_plots/agg_rate_experimental_fit_results.png")
-    print(f"Final optimized parameters (h⁻¹ or nM⁻¹h⁻¹):")
-    print(f"  kb0_40 = {optimal_params[0]:.4e}, kf0_40 = {optimal_params[4]:.4e}")
-    print(f"  kb1_40 = {optimal_params[1]:.4e}, kf1_40 = {optimal_params[5]:.4e}")
-    print(f"  kb0_42 = {optimal_params[2]:.4e}, kf0_42 = {optimal_params[6]:.4e}")
-    print(f"  kb1_42 = {optimal_params[3]:.4e}, kf1_42 = {optimal_params[7]:.4e}")
-    print(f"  base_40 = {optimal_params[8]:.4e}, base_42 = {optimal_params[9]:.4e}")
+    print(f"Final optimized parameters:")
+    print(f"  kb0_42 = {optimal_params[0]:.4e}, kf0_42 = {optimal_params[2]:.4e}")
+    print(f"  kb1_42 = {optimal_params[1]:.4e}, kf1_42 = {optimal_params[3]:.4e}")
+    print(f"  asymp_42 = {optimal_params[4]:.3f}, forHill42 = {optimal_params[5]:.3f}")
+    print(f"  BackHill42 = {optimal_params[6]:.3f}")
     print(f"Final sum of squared residuals: {final_error:.4e}")
-    print(f"RMS error: {np.sqrt(final_error/len(exp_ratios)):.4f} (ratio units)")
+    print(f"RMS error (ISF): {np.sqrt(final_error/len(isf_concentrations)):.4f} (pg/mL)")
+    print(f"RMS error (CSF): {np.sqrt(final_error/len(csf_concentrations)):.4f} (pg/mL)")
     
-    # Calculate and display the final simulation vs experimental ratio
-    final_sim_ratio = sim_ratios[-1] if len(sim_ratios) > 0 else 0
-    final_exp_ratio = exp_ratios[-1]
-    ratio = final_sim_ratio / final_exp_ratio if final_exp_ratio > 0 else float('inf')
-    print(f"Final concentration ratio (sim/exp): {ratio:.2f}")
-    print(f"Target ratio should be close to 1.0 for good fit")
+    # Calculate and display the final simulation vs experimental ratios
+    final_sim_isf = sim_isf_interp[-1] if len(sim_isf_interp) > 0 else 0
+    final_sim_csf = sim_csf_interp[-1] if len(sim_csf_interp) > 0 else 0
+    final_exp_isf = isf_concentrations[-1]
+    final_exp_csf = csf_concentrations[-1]
+    isf_ratio = final_sim_isf / final_exp_isf if final_exp_isf > 0 else float('inf')
+    csf_ratio = final_sim_csf / final_exp_csf if final_exp_csf > 0 else float('inf')
+    print(f"Final ISF ratio (sim/exp): {isf_ratio:.2f}")
+    print(f"Final CSF ratio (sim/exp): {csf_ratio:.2f}")
+    print(f"Target ratios should be close to 1.0 for good fit")
     
     # Calculate and display percent changes
     calculate_percent_change_table(optimal_params) 
