@@ -65,7 +65,7 @@ def calculate_suvr(sol, model, c1=2.52, c2=1.3, c3=3.5, c4=400000, volume_scale_
                 size_str = name.split('Oligomer')[1]
                 size = int(size_str)
                 # Weight by size
-                ab42_oligo += size * sol.ys[t, idx]
+                ab42_oligo += (size-1) * sol.ys[t, idx]
         
         # Calculate AB42 protofibril sum (fibrils 17-23)
         ab42_proto = 0.0
@@ -73,14 +73,14 @@ def calculate_suvr(sol, model, c1=2.52, c2=1.3, c3=3.5, c4=400000, volume_scale_
             if ab42_protofibril_pattern.match(name):
                 # Extract fibril size
                 size = int(name.split('Fibril')[1])
-                ab42_proto += size * sol.ys[t, idx]
+                ab42_proto += (size-1) * sol.ys[t, idx]
         
         # Get AB42 plaque
         ab42_plaque = sol.ys[t, y_indexes.get('AB42_Plaque_unbound', 0)]
         
-        print("Oligomer load: ", ab42_oligo/volume_scale_factor_isf)
-        print("Protofibril load: ", ab42_proto/volume_scale_factor_isf)
-        print("Plaque load: ", ab42_plaque/volume_scale_factor_isf)
+        #print("Oligomer load: ", ab42_oligo/volume_scale_factor_isf)
+        #print("Protofibril load: ", ab42_proto/volume_scale_factor_isf)
+        #print("Plaque load: ", ab42_plaque/volume_scale_factor_isf)
 
         # Calculate the weighted sum
         weighted_sum = (ab42_oligo + ab42_proto + c2 * ab42_plaque)/volume_scale_factor_isf

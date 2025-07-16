@@ -58,11 +58,11 @@ class RateofSpeciesChange(eqx.Module):
 
 
 	def IDE_AB40_clearance(self, y, w, c, t):
-		return c[230] * y[258] * (((y[2]/0.2505) * c[239])**c[233] / (((y[2]/0.2505) * c[239])**c[233] + c[234]**c[233])) * c[222]
+		return c[230] * y[258] * (((y[2]/0.2505) * c[239])**c[233] / (((y[2]/0.2505) * c[239])**c[233] + c[234]**c[233])) * c[222] * c[222]
 
 
 	def IDE_AB42_clearance(self, y, w, c, t):
-		return c[230] * y[259] * (((y[3]/0.2505) * c[239])**c[237] / (((y[3]/0.2505) * c[239])**c[237] + c[238]**c[237])) * c[222]
+		return c[230] * y[259] * (((y[3]/0.2505) * c[239])**c[237] / (((y[3]/0.2505) * c[239])**c[237] + c[238]**c[237])) * c[222] * c[222]
 
 
 	def AB40_dimer_formation(self, y, w, c, t):
@@ -2665,10 +2665,10 @@ class RateofSpeciesChange(eqx.Module):
 		return c[548] * (y[233]/0.00235)
 
 	def RateCL_AB40_IDE(self, y, w, c, t):
-		return -c[240] * y[258]
+		return -c[240] * y[258] * c[222]
 
 	def RateCL_AB42_IDE(self, y, w, c, t):
-		return -c[241] * y[259]
+		return -c[241] * y[259] * c[222]
 
 	def RateMicroglia_Hi_Fract(self, y, w, c, t):
 		return (1 + c[529] * w[2] / (c[530] + w[2])) * c[521] * (y[260]/1.0) * (c[523] - (y[260]/1.0)) / (c[523] - c[524]) - c[521] * (y[260]/1.0)

@@ -938,6 +938,7 @@
               <ci> exp_decline_rate_IDE_forty </ci>
             </apply>
             <ci> CL_AB40_IDE </ci>
+            <ci> VIS_brain </ci>
           </apply>
         </math>
       </rateRule>
@@ -950,6 +951,7 @@
               <ci> exp_decline_rate_IDE_fortytwo </ci>
             </apply>
             <ci> CL_AB42_IDE </ci>
+            <ci> VIS_brain </ci>
           </apply>
         </math>
       </rateRule>
@@ -1370,6 +1372,7 @@
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
+              <ci> VIS_brain </ci>
             </apply>
           </math>
         </kineticLaw>
@@ -1416,6 +1419,7 @@
                   </apply>
                 </apply>
               </apply>
+              <ci> VIS_brain </ci>
               <ci> VIS_brain </ci>
             </apply>
           </math>

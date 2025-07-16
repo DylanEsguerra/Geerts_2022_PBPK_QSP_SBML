@@ -24,12 +24,8 @@ References:
 
 # Calculation of forward and backward Rates 
 # Note no plaque rates 
-# Note no 24 to 12 breakdown
-import jax
-jax.config.update("jax_enable_x64", True)
-import jax.numpy as np
+
 import matplotlib.pyplot as plt
-from tabulate import tabulate
 
 # Define the equations for forward (KF) and backward (KB) rate extrapolation
 def extrapolate_kf(kf0, kf1, j, Asymp, HillA):
@@ -238,9 +234,9 @@ def calculate_k_rates(
     kb1_forty = convert_backward_rate(original_kb1_forty)
     kf1_fortytwo = convert_forward_rate(original_kf1_fortytwo)
     kb1_fortytwo = convert_backward_rate(original_kb1_fortytwo)
-    
+    '''
     # Create and print conversion table
-    #print("\nRate Constant Unit Conversion:")
+    print("\nRate Constant Unit Conversion:")
     table_data = [
         ["k+12 (Aβ40)", f"{original_kf0_forty:.1f} M⁻¹s⁻¹", f"{kf0_forty:.6f} nM⁻¹h⁻¹"],
         ["k-12 (Aβ40)", f"{original_kb0_forty:.3f} s⁻¹", f"{kb0_forty:.6f} h⁻¹"],
@@ -252,8 +248,8 @@ def calculate_k_rates(
         ["k-23 (Aβ42)", f"{original_kb1_fortytwo:.3f} s⁻¹", f"{kb1_fortytwo:.6f} h⁻¹"]
     ]
     headers = ["Rate Constant", "Original Value", "Converted Value"]
-    #print(tabulate(table_data, headers, tablefmt="grid"))
-    
+    print(tabulate(table_data, headers, tablefmt="grid"))
+    '''
     # Generate oligomer sizes from 4 to 24
     oligomer_sizes = list(range(4, 25))
 

@@ -4,6 +4,8 @@ import pandas as pd
 import argparse
 from pathlib import Path
 import matplotlib.pyplot as plt
+import os
+import sys
 from visualize_tellurium_simulation import (
     load_tellurium_data, 
     create_solution_object, 
@@ -18,6 +20,11 @@ from visualize_tellurium_simulation import (
 )
 import re
 
+# Add parent directory to path to import K_rates_extrapolate
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent_dir)
+from K_rates_extrapolate import calculate_k_rates
+
 def run_simulation(rr, years, output_file):
     selections = ['time'] + rr.getFloatingSpeciesIds() + rr.getGlobalParameterIds() + rr.getReactionIds()
     start_time = 0
@@ -28,139 +35,219 @@ def run_simulation(rr, years, output_file):
     df.to_csv(output_file, index=False)
     return output_file
 
+def set_optimized_values(rr):
+    """
+    Set optimized parameter values that are common to both APOE4 and non-APOE4 models.
+    Returns a list of any parameters that couldn't be set.
+    """
+    failed_params = []
+
+    rr.setValue('IDE_conc', 7.208542043204368)
+    rr.setValue('Microglia_cell_count', 0.6158207628681558)
+    rr.setValue('k_APP_production', 125.39958281853755)
+    rr.setValue('k_M_O2_fortytwo',0.0011969797316319238)
+    rr.setValue('k_O2_M_fortytwo',71.27022085388667)
+    rr.setValue('k_O2_O3_fortytwo',0.0009995988649416513)
+    rr.setValue('k_O3_O2_fortytwo',5.696488107534822e-07)
+    rr.setValue('k_O3_O4_fortytwo',0.01)
+    rr.setValue('k_O4_O5_fortytwo',0.00273185)
+    rr.setValue('k_O5_O6_fortytwo',0.00273361)
+    rr.setValue('CL_AB42_IDE', 400)
+    rr.setValue('exp_decline_rate_IDE_fortytwo',1.15E-05)
+    rr.setValue('k_F24_O12_fortytwo',8.411308100233814)
+
+
+    # Calculate and set aggregation rates using K_rates_extrapolate with Don's specific values
+    # Convert from h⁻¹ to s⁻¹ for the rate calculation function
+    # Using Don's specific values as the base rates
+    kf0_fortytwo = rr.getValue('k_M_O2_fortytwo') / 3.6e-6 # k_M_O2_fortytwo (nM⁻¹h⁻¹ to M⁻¹s⁻¹)
+    kf1_fortytwo = rr.getValue('k_O2_O3_fortytwo') / 3.6e-6  # k_O2_O3_fortytwo (nM⁻¹h⁻¹ to M⁻¹s⁻¹)
+    kb0_fortytwo = rr.getValue('k_O2_M_fortytwo') / 3600      # k_O2_M_fortytwo (h⁻¹ to s⁻¹)
+    kb1_fortytwo = rr.getValue('k_O3_O2_fortytwo') / 3600  # k_O3_O2_fortytwo (h⁻¹ to s⁻¹)
+    
+    try:
+        rates = calculate_k_rates(
+            original_kf0_fortytwo=kf0_fortytwo,
+            original_kf1_fortytwo=kf1_fortytwo,
+            original_kb0_fortytwo=kb0_fortytwo,
+            original_kb1_fortytwo=kb1_fortytwo,
+            baseline_ab42_plaque_rate=0.0443230279057089  # Baseline_AB42_O_P
+        )
+        
+        # Update all AB42 rates, including plaque rates
+        for key, value in rates.items():
+            if '_fortytwo' in key:
+                try:
+                    setattr(rr, key, value)
+                    print(f"Set {key} to {value}")
+                except Exception as e:
+                    error_msg = f"Could not set {key}: {e}"
+                    print(error_msg)
+                    failed_params.append(error_msg)
+    except Exception as e:
+        error_msg = f"Could not calculate aggregation rates: {e}"
+        print(error_msg)
+        failed_params.append(error_msg)
+    
+    return failed_params
+
 def set_apoe4_params(rr):
-    # Set APOE4 values for EC50 and Vmax
-    rr.setValue('Microglia_EC50_forty', 20)
-    rr.setValue('Microglia_EC50_fortytwo', 300)
-    rr.setValue('Microglia_Vmax_forty', 0.0001)
-    rr.setValue('Microglia_Vmax_fortytwo', 0.0001)
+    """Set APOE4-specific microglia parameters after setting optimized values."""
+    # Set optimized values first
+    failed_params = set_optimized_values(rr)
+    
+    # Set APOE4-specific microglia parameters
+    apoe4_params = {
+        'Microglia_EC50_forty': 20,
+        'Microglia_EC50_fortytwo': 300,
+        'Microglia_Vmax_forty': 0.0001,
+        'Microglia_Vmax_fortytwo': 0.0001
+    }
+    
+    for param_name, value in apoe4_params.items():
+        try:
+            rr.setValue(param_name, value)
+        except Exception as e:
+            error_msg = f"Could not set APOE4 parameter {param_name}: {e}"
+            print(error_msg)
+            failed_params.append(error_msg)
+    
+    if failed_params:
+        print(f"APOE4 simulation: {len(failed_params)} parameters failed to set")
+    else:
+        print("APOE4 simulation: All parameters set successfully")
 
 def set_nonapoe4_params(rr):
-    # Set Non-APOE4 values for EC50 and Vmax
-    rr.setValue('Microglia_EC50_forty', 8)
-    rr.setValue('Microglia_EC50_fortytwo', 120)
-    rr.setValue('Microglia_Vmax_forty', 0.00015)
-    rr.setValue('Microglia_Vmax_fortytwo', 0.00015)
+    """Set non-APOE4-specific microglia parameters after setting optimized values."""
+    # Set optimized values first
+    failed_params = set_optimized_values(rr)
+    
+    # Set non-APOE4-specific microglia parameters
+    nonapoe4_params = {
+        'Microglia_EC50_forty': 8,
+        'Microglia_EC50_fortytwo': 120,
+        'Microglia_Vmax_forty': 0.00015,
+        'Microglia_Vmax_fortytwo': 0.00015
+    }
+    
+    for param_name, value in nonapoe4_params.items():
+        try:
+            rr.setValue(param_name, value)
+        except Exception as e:
+            error_msg = f"Could not set non-APOE4 parameter {param_name}: {e}"
+            print(error_msg)
+            failed_params.append(error_msg)
+    
+    if failed_params:
+        print(f"Non-APOE4 simulation: {len(failed_params)} parameters failed to set")
+    else:
+        print("Non-APOE4 simulation: All parameters set successfully")
 
-def plot_four_panel_ab42_apoe4_only(
-    sol_apoe4, model_apoe4, drug_type="gantenerumab", plots_dir=None
+def plot_six_panel_ab42_comparison(
+    sol_apoe4, model_apoe4, sol_nonapoe4, model_nonapoe4, drug_type="gantenerumab", plots_dir=None
 ):
-    """Create a four-panel plot for APOE4 only, showing AB42 species with specified colors and styles."""
-    import matplotlib.pyplot as plt
+    """Create a six-panel plot comparing APOE4 and non-APOE4 simulations."""
     if plots_dir is None:
         plots_dir = Path("simulation_plots/tellurium_steady_state_apoe_compare")
     plots_dir.mkdir(parents=True, exist_ok=True)
 
-    from visualize_tellurium_simulation import calculate_suvr
-
     # Colors
-    blue = '#1f77b4'
-    yellow = '#ffb300'
+    red = '#d62728'  # APOE4
+    blue = '#1f77b4' # non-APOE4
 
-    # Create 2x2 subplot layout, slightly smaller
-    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(14, 10))
+    fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(3, 2, figsize=(16, 10))
 
-    # Time axis
-    x_values = sol_apoe4.ts / 24.0 / 365.0
-    start_idx = np.where(x_values >= (max(x_values) - 80))[0][0]
-    x_filtered = x_values[start_idx:]
-
-    # APOE4 model indexes
+    # --- Process APOE4 Data ---
+    x_values_a = sol_apoe4.ts / 24.0 / 365.0
+    start_idx_a = np.where(x_values_a >= (max(x_values_a) - 80))[0][0]
+    x_filtered_a = x_values_a[start_idx_a:]
     yidx_a = model_apoe4.y_indexes
     volume_scale_factor_isf = 0.2505
 
-    # 1. Panel 1: AB42 Oligomers (weighted and unweighted loads)
-    ab42_oligomer_pattern = re.compile(r'AB42_Oligomer\d+$')
-    oligomer_loads_a = {'weighted': [], 'unweighted': []}
-    for t in range(len(sol_apoe4.ts)):
-        weighted_sum_a = 0.0
-        unweighted_sum_a = 0.0
-        for name, idx in yidx_a.items():
-            if ab42_oligomer_pattern.match(name):
-                size = int(name.split('Oligomer')[1])
-                concentration = sol_apoe4.ys[t, idx]
-                weighted_sum_a += size * concentration
-                unweighted_sum_a += concentration
-        oligomer_loads_a['weighted'].append(weighted_sum_a / volume_scale_factor_isf)
-        oligomer_loads_a['unweighted'].append(unweighted_sum_a / volume_scale_factor_isf)
-    # Plot oligomer loads
-    ax1.plot(x_filtered, oligomer_loads_a['unweighted'][start_idx:],
-             linewidth=3, color=blue, linestyle='-', label='Oligomers')
-    ax1.plot(x_filtered, oligomer_loads_a['weighted'][start_idx:],
-             linewidth=3, color=yellow, linestyle='-', label='Oligomers weighted')
-    ax1.set_ylabel('Concentration', fontsize=18, fontweight='bold')
-    ax1.set_xlabel('Time', fontsize=18, fontweight='bold')
-    ax1.set_title('Oligomers', fontsize=20, fontweight='bold')
-    ax1.grid(True, alpha=0.3)
-    ax1.legend(fontsize=14)
-    ax1.tick_params(axis='both', which='major', labelsize=14)
+    # --- Process non-APOE4 Data ---
+    x_values_n = sol_nonapoe4.ts / 24.0 / 365.0
+    start_idx_n = np.where(x_values_n >= (max(x_values_n) - 80))[0][0]
+    x_filtered_n = x_values_n[start_idx_n:]
+    yidx_n = model_nonapoe4.y_indexes
 
-    # 2. Panel 2: AB42 Fibrils (weighted and unweighted loads)
-    ab42_fibril_pattern = re.compile(r'AB42_Fibril\d+$')
-    fibril_loads_a = {'weighted': [], 'unweighted': []}
-    for t in range(len(sol_apoe4.ts)):
-        weighted_sum_a = 0.0
-        unweighted_sum_a = 0.0
-        for name, idx in yidx_a.items():
-            if ab42_fibril_pattern.match(name):
-                size = int(name.split('Fibril')[1])
-                concentration = sol_apoe4.ys[t, idx]
-                weighted_sum_a += size * concentration
-                unweighted_sum_a += concentration
-        fibril_loads_a['weighted'].append(weighted_sum_a / volume_scale_factor_isf)
-        fibril_loads_a['unweighted'].append(unweighted_sum_a / volume_scale_factor_isf)
-    # Plot fibril loads
-    ax2.plot(x_filtered, fibril_loads_a['unweighted'][start_idx:],
-             linewidth=3, color=blue, linestyle='-', label='Proto')
-    ax2.plot(x_filtered, fibril_loads_a['weighted'][start_idx:],
-             linewidth=3, color=yellow, linestyle='-', label='Proto weighted')
-    ax2.set_ylabel('Concentration', fontsize=18, fontweight='bold')
-    ax2.set_xlabel('Time', fontsize=18, fontweight='bold')
-    ax2.set_title('Proto', fontsize=20, fontweight='bold')
-    ax2.grid(True, alpha=0.3)
-    ax2.legend(fontsize=14)
-    ax2.tick_params(axis='both', which='major', labelsize=14)
+    # Panel 1: Oligomers (Top Left)
+    oligomer_loads_a = np.array([np.sum([int(name.split('Oligomer')[1]) * sol_apoe4.ys[t, idx] for name, idx in yidx_a.items() if re.match(r'AB42_Oligomer\d+$', name)]) for t in range(len(sol_apoe4.ts))]) / volume_scale_factor_isf
+    oligomer_loads_n = np.array([np.sum([int(name.split('Oligomer')[1]) * sol_nonapoe4.ys[t, idx] for name, idx in yidx_n.items() if re.match(r'AB42_Oligomer\d+$', name)]) for t in range(len(sol_nonapoe4.ts))]) / volume_scale_factor_isf
+    ax1.plot(x_filtered_a, oligomer_loads_a[start_idx_a:], linewidth=3, color=red, label='APOE4 Oligomers')
+    ax1.plot(x_filtered_n, oligomer_loads_n[start_idx_n:], linewidth=3, color=blue, label='non-APOE4 Oligomers')
+    ax1.set_title('Weighted Oligomers', fontsize=16, fontweight='bold')
 
-    # 3. Panel 3: SUVR
-    suvr_a = calculate_suvr(sol_apoe4, model_apoe4)[start_idx:]
-    ax3.plot(x_filtered, suvr_a, linewidth=3, color=blue, label='SUVR')
-    ax3.set_ylabel('Concentration', fontsize=18, fontweight='bold')
-    ax3.set_xlabel('Time', fontsize=18, fontweight='bold')
-    ax3.set_title('SUVR', fontsize=20, fontweight='bold')
-    ax3.grid(True, alpha=0.3)
-    ax3.legend(fontsize=14)
-    ax3.tick_params(axis='both', which='major', labelsize=14)
+    # Panel 2: Protofibrils (Top Right)
+    fibril_loads_a = np.array([np.sum([int(name.split('Fibril')[1]) * sol_apoe4.ys[t, idx] for name, idx in yidx_a.items() if re.match(r'AB42_Fibril\d+$', name)]) for t in range(len(sol_apoe4.ts))]) / volume_scale_factor_isf
+    fibril_loads_n = np.array([np.sum([int(name.split('Fibril')[1]) * sol_nonapoe4.ys[t, idx] for name, idx in yidx_n.items() if re.match(r'AB42_Fibril\d+$', name)]) for t in range(len(sol_nonapoe4.ts))]) / volume_scale_factor_isf
+    ax2.plot(x_filtered_a, fibril_loads_a[start_idx_a:], linewidth=3, color=red, label='APOE4 Protofibrils')
+    ax2.plot(x_filtered_n, fibril_loads_n[start_idx_n:], linewidth=3, color=blue, label='non-APOE4 Protofibrils')
+    ax2.set_title('Weighted Protofibrils', fontsize=16, fontweight='bold')
 
-    # 4. Panel 4: AB42 Monomers in ISF and Plaque
-    ab42_isf_a = sol_apoe4.ys[:, yidx_a['AB42_Monomer']] / volume_scale_factor_isf
-    ab42_plaque_a = sol_apoe4.ys[:, yidx_a['AB42_Plaque_unbound']] / volume_scale_factor_isf
-    ax4.plot(x_filtered, ab42_isf_a[start_idx:], linewidth=3, color=blue, linestyle='-', label='AB42 Monomer (ISF)')
-    ax4.plot(x_filtered, ab42_plaque_a[start_idx:], linewidth=3, color=yellow, linestyle='-', label='AB42 Plaque')
-    ax4.set_ylabel('Concentration', fontsize=18, fontweight='bold')
-    ax4.set_xlabel('Time', fontsize=18, fontweight='bold')
-    ax4.set_title('AB42_O1_ISF and AB42_O25_ISF', fontsize=20, fontweight='bold')
-    ax4.grid(True, alpha=0.3)
-    ax4.legend(fontsize=14)
-    ax4.tick_params(axis='both', which='major', labelsize=14)
+    # Panel 3: SUVR (Middle Left)
+    suvr_a = calculate_suvr(sol_apoe4, model_apoe4)[start_idx_a:]
+    suvr_n = calculate_suvr(sol_nonapoe4, model_nonapoe4)[start_idx_n:]
+    ax3.plot(x_filtered_a, suvr_a, linewidth=3, color=red, label='APOE4 SUVR')
+    ax3.plot(x_filtered_n, suvr_n, linewidth=3, color=blue, label='non-APOE4 SUVR')
+    ax3.set_title('SUVR', fontsize=16, fontweight='bold')
+
+    # Panel 4: AB42 Monomer (Middle Right)
+    monomer_a = sol_apoe4.ys[start_idx_a:, yidx_a['AB42_Monomer']] / volume_scale_factor_isf
+    monomer_n = sol_nonapoe4.ys[start_idx_n:, yidx_n['AB42_Monomer']] / volume_scale_factor_isf
+    ax4.plot(x_filtered_a, monomer_a, linewidth=3, color=red, label='APOE4 Monomer')
+    ax4.plot(x_filtered_n, monomer_n, linewidth=3, color=blue, label='non-APOE4 Monomer')
+    ax4.set_title('AB42 Monomer (ISF)', fontsize=16, fontweight='bold')
+
+    # Panel 5: CL_AB42_IDE (Bottom Left)
+    cl_ide_a = sol_apoe4.ys[start_idx_a:, yidx_a['CL_AB42_IDE']] / volume_scale_factor_isf
+    cl_ide_n = sol_nonapoe4.ys[start_idx_n:, yidx_n['CL_AB42_IDE']] / volume_scale_factor_isf
+    ax5.plot(x_filtered_a, cl_ide_a, linewidth=3, color=red, label='APOE4 CL_AB42_IDE')
+    ax5.plot(x_filtered_n, cl_ide_n, linewidth=3, color=blue, label='non-APOE4 CL_AB42_IDE')
+    ax5.set_title('AB42 IDE Clearance', fontsize=16, fontweight='bold')
+
+    # Panel 6: AB42 Plaque (Bottom Right)
+    plaque_a = sol_apoe4.ys[start_idx_a:, yidx_a['AB42_Plaque_unbound']] / volume_scale_factor_isf
+    plaque_n = sol_nonapoe4.ys[start_idx_n:, yidx_n['AB42_Plaque_unbound']] / volume_scale_factor_isf
+    ax6.plot(x_filtered_a, plaque_a, linewidth=3, color=red, label='APOE4 Plaque')
+    ax6.plot(x_filtered_n, plaque_n, linewidth=3, color=blue, label='non-APOE4 Plaque')
+    ax6.set_title('AB42 Plaque Load', fontsize=16, fontweight='bold')
+
+
+    # Set specific y-axis labels for each panel
+    ax1.set_ylabel('Oligomer Load (nM)', fontsize=14, fontweight='bold')
+    ax2.set_ylabel('Protofibril Load (nM)', fontsize=14, fontweight='bold')
+    ax3.set_ylabel('SUVR', fontsize=14, fontweight='bold')
+    ax4.set_ylabel('AB42 Monomer (nM)', fontsize=14, fontweight='bold')
+    ax5.set_ylabel('IDE Clearance (1/h)', fontsize=14, fontweight='bold')
+    ax6.set_ylabel('Plaque Load (nM)', fontsize=14, fontweight='bold')
+    
+    # Set x-axis labels and other formatting for all panels
+    for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
+        ax.set_xlabel('Time (years)', fontsize=14, fontweight='bold')
+        ax.grid(True, alpha=0.3)
+        ax.legend(fontsize=12)
+        ax.tick_params(axis='both', which='major', labelsize=12)
 
     plt.tight_layout()
-    fig.savefig(plots_dir / f'{drug_type.lower()}_four_panel_ab42_apoe4_only.png', dpi=300, bbox_inches='tight')
+    fig.savefig(plots_dir / f'{drug_type.lower()}_six_panel_ab42_comparison.png', dpi=300, bbox_inches='tight')
     plt.show()
     plt.close(fig)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run Tellurium simulation for APOE4 only.")
+    parser = argparse.ArgumentParser(description="Run Tellurium simulation for APOE4 and non-APOE4 comparison.")
     parser.add_argument("--years", type=float, default=100.0, help="Number of years to simulate")
     parser.add_argument("--drug", type=str, choices=["lecanemab", "gantenerumab"], default="gantenerumab", help="Drug type simulated")
     args = parser.parse_args()
 
-    xml_path = Path("../generated/sbml/combined_master_model.xml")
-    with open(xml_path, "r") as f:
+    sbml_path = Path("../generated/sbml/combined_master_model.xml")
+    #antimony_path = Path("../generated/sbml/Geerts_2023_1.txt")
+    with open(sbml_path, "r") as f:
         sbml_str = f.read()
+        #antimony_str = f.read()
 
-    # Run APOE4 only
+    # --- Run APOE4 Simulation ---
+    #rr = te.loadSBMLModel(sbml_str)
     rr = te.loadSBMLModel(sbml_str)
-    rr.reset()
     rr.setIntegrator('cvode')
     rr.integrator.absolute_tolerance = 1e-8
     rr.integrator.relative_tolerance = 1e-8
@@ -168,29 +255,40 @@ if __name__ == "__main__":
     set_apoe4_params(rr)
     output_file_apoe4 = f'default_simulation_results_{args.years}yr_all_vars_apoe4.csv'
     run_simulation(rr, args.years, output_file_apoe4)
-
-    # Load results
     df_apoe4 = pd.read_csv(output_file_apoe4)
 
-    # Create solution objects directly from the CSV data
-    time_apoe4 = df_apoe4['time'].values
-    species_apoe4 = df_apoe4.drop('time', axis=1).values
+    # --- Run non-APOE4 Simulation ---
+    rr.reset() # Reset for the new simulation
+    set_nonapoe4_params(rr)
+    output_file_nonapoe4 = f'default_simulation_results_{args.years}yr_all_vars_nonapoe4.csv'
+    run_simulation(rr, args.years, output_file_nonapoe4)
+    df_nonapoe4 = pd.read_csv(output_file_nonapoe4)
 
-    # Create model objects with species indexes
+    # --- Create Solution and Model Objects ---
     class SimpleModel:
         def __init__(self, species_names, initial_conditions):
             self.y_indexes = {name: idx for idx, name in enumerate(species_names)}
             self.y0 = initial_conditions
 
+    # APOE4 objects
+    time_apoe4 = df_apoe4['time'].values
+    species_apoe4 = df_apoe4.drop('time', axis=1).values
     model_apoe4 = SimpleModel(df_apoe4.drop('time', axis=1).columns, species_apoe4[0])
-
     sol_apoe4 = create_solution_object(time_apoe4, species_apoe4)
 
+    # non-APOE4 objects
+    time_nonapoe4 = df_nonapoe4['time'].values
+    species_nonapoe4 = df_nonapoe4.drop('time', axis=1).values
+    model_nonapoe4 = SimpleModel(df_nonapoe4.drop('time', axis=1).columns, species_nonapoe4[0])
+    sol_nonapoe4 = create_solution_object(time_nonapoe4, species_nonapoe4)
+
+    # --- Generate Plots ---
     plots_dir = Path("simulation_plots/tellurium_steady_state_apoe_compare")
     plots_dir.mkdir(parents=True, exist_ok=True)
 
-    plot_four_panel_ab42_apoe4_only(
-        sol_apoe4, model_apoe4, drug_type=args.drug, plots_dir=plots_dir
+    plot_six_panel_ab42_comparison(
+        sol_apoe4, model_apoe4, sol_nonapoe4, model_nonapoe4,
+        drug_type=args.drug, plots_dir=plots_dir
     )
 
-    print(f"APOE4 simulation and four-panel AB42 plots complete. Plots saved to {plots_dir}") 
+    print(f"APOE4 vs non-APOE4 simulation and comparison plots complete. Plots saved to {plots_dir}") 
