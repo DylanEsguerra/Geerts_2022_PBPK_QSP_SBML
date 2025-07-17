@@ -10,9 +10,7 @@ Key Features:
 - Handles both Aβ40 and Aβ42 species separately
 - Uses experimentally determined rates for small oligomers as anchor points
 - Implements Hill function-based extrapolation with asymptotic behavior
-- Converts rates from literature units (M⁻¹s⁻¹, s⁻¹) to model units (nM⁻¹h⁻¹, h⁻¹)
 - Calculates gain factors (forward/backward ratios) to assess aggregation propensity
-- Calculates size-dependent plaque formation rates (multiplied by oligomer/fibril length)
 
 The extrapolated rates are used by the oligomer and fibril modules to model the complete
 aggregation cascade from monomers through oligomers to fibrils and plaques.
@@ -20,6 +18,10 @@ aggregation cascade from monomers through oligomers to fibrils and plaques.
 References:
 - Original rate constants from literature for AB40 and AB42 dimer/trimer formation
 - Hill function parameters tuned to match experimental observations of aggregation behavior
+
+Note: This module expects rate constants to be provided in model units (nM⁻¹h⁻¹ for forward rates, h⁻¹ for backward rates).
+The original Garai paper reported rates in M⁻¹s⁻¹ (forward) and s⁻¹ (backward), which would need to be converted
+before calling this function if using those literature values directly.
 """
 
 # Calculation of forward and backward Rates 
@@ -134,26 +136,18 @@ def calculate_plaque_rates(baseline_ab40_rate, baseline_ab42_rate, forward_rates
     
     return plaque_rates
 
-def convert_forward_rate(rate_M_s):
-    """Convert from M⁻¹s⁻¹ to nM⁻¹h⁻¹"""
-    # 1 M⁻¹s⁻¹ = 3.6 × 10⁻⁶ nM⁻¹h⁻¹
-    return rate_M_s * 3.6e-6
-
-def convert_backward_rate(rate_s):
-    """Convert from s⁻¹ to h⁻¹"""
-    # 1 s⁻¹ = 3600 h⁻¹
-    return rate_s * 3600
-
 def calculate_k_rates(
-    # Original rates from literature (M⁻¹s⁻¹ for forward, s⁻¹ for backward)
-    original_kf0_forty=0.5 * 10**2,  # AB40 monomer to dimer
-    original_kf0_fortytwo=9.9 * 10**2,  # AB42 monomer to dimer
-    original_kf1_forty=20.0,  # AB40 dimer to trimer
-    original_kf1_fortytwo=38.0,  # AB42 dimer to trimer
-    original_kb0_forty=2.7 * 10**-3,  # AB40 dimer to monomer
-    original_kb0_fortytwo=12.7 * 10**-3,  # AB42 dimer to monomer
-    original_kb1_forty=0.00001 / 3600,  # AB40 trimer to dimer
-    original_kb1_fortytwo=0.00001 / 3600,  # AB42 trimer to dimer
+    # Rate constants in model units (nM⁻¹h⁻¹ for forward, h⁻¹ for backward)
+    # Note: Original Garai paper values were in M⁻¹s⁻¹ (forward) and s⁻¹ (backward)
+    # Conversion factors: 1 M⁻¹s⁻¹ = 3.6 × 10⁻⁶ nM⁻¹h⁻¹, 1 s⁻¹ = 3600 h⁻¹
+    kf0_forty=0.00018,  # AB40 monomer to dimer (was 50 M⁻¹s⁻¹ in Garai)
+    kf0_fortytwo=0.0003564,  # AB42 monomer to dimer (was 99 M⁻¹s⁻¹ in Garai)
+    kf1_forty=0.000072,  # AB40 dimer to trimer (was 20 M⁻¹s⁻¹ in Garai)
+    kf1_fortytwo=0.0001368,  # AB42 dimer to trimer (was 38 M⁻¹s⁻¹ in Garai)
+    kb0_forty=9.72,  # AB40 dimer to monomer (was 2.7e-3 s⁻¹ in Garai)
+    kb0_fortytwo=45.72,  # AB42 dimer to monomer (was 12.7e-3 s⁻¹ in Garai)
+    kb1_forty=0.00001,  # AB40 trimer to dimer (was 0 s⁻¹ in Garai so set to rate cutoff from Geerts)
+    kb1_fortytwo=0.00001,  # AB42 trimer to dimer (was 1.08 s⁻¹ in Garai, but we found setting to 0.00001 gives better fit to Geerts data)
     
     # Hill coefficients and asymptotic values
     forAsymp40=0.3,  # Asymptotic value for AB40 forward rates
@@ -179,22 +173,22 @@ def calculate_k_rates(
     
     Parameters:
     -----------
-    original_kf0_forty: float
-        AB40 monomer to dimer forward rate (M⁻¹s⁻¹)
-    original_kf0_fortytwo: float
-        AB42 monomer to dimer forward rate (M⁻¹s⁻¹)
-    original_kf1_forty: float
-        AB40 dimer to trimer forward rate (M⁻¹s⁻¹)
-    original_kf1_fortytwo: float
-        AB42 dimer to trimer forward rate (M⁻¹s⁻¹)
-    original_kb0_forty: float
-        AB40 dimer to monomer backward rate (s⁻¹)
-    original_kb0_fortytwo: float
-        AB42 dimer to monomer backward rate (s⁻¹)
-    original_kb1_forty: float
-        AB40 trimer to dimer backward rate (s⁻¹)
-    original_kb1_fortytwo: float
-        AB42 trimer to dimer backward rate (s⁻¹)
+    kf0_forty: float
+        AB40 monomer to dimer forward rate (nM⁻¹h⁻¹)
+    kf0_fortytwo: float
+        AB42 monomer to dimer forward rate (nM⁻¹h⁻¹)
+    kf1_forty: float
+        AB40 dimer to trimer forward rate (nM⁻¹h⁻¹)
+    kf1_fortytwo: float
+        AB42 dimer to trimer forward rate (nM⁻¹h⁻¹)
+    kb0_forty: float
+        AB40 dimer to monomer backward rate (h⁻¹)
+    kb0_fortytwo: float
+        AB42 dimer to monomer backward rate (h⁻¹)
+    kb1_forty: float
+        AB40 trimer to dimer backward rate (h⁻¹)
+    kb1_fortytwo: float
+        AB42 trimer to dimer backward rate (h⁻¹)
     forAsymp40: float
         Asymptotic value for AB40 forward rates
     forAsymp42: float
@@ -225,31 +219,6 @@ def calculate_k_rates(
     dict
         Dictionary containing all extrapolated rate constants including plaque rates
     """
-    # Convert rates to appropriate units
-    kf0_forty = convert_forward_rate(original_kf0_forty)  
-    kb0_forty = convert_backward_rate(original_kb0_forty)
-    kf0_fortytwo = convert_forward_rate(original_kf0_fortytwo)
-    kb0_fortytwo = convert_backward_rate(original_kb0_fortytwo)
-    kf1_forty = convert_forward_rate(original_kf1_forty)
-    kb1_forty = convert_backward_rate(original_kb1_forty)
-    kf1_fortytwo = convert_forward_rate(original_kf1_fortytwo)
-    kb1_fortytwo = convert_backward_rate(original_kb1_fortytwo)
-    '''
-    # Create and print conversion table
-    print("\nRate Constant Unit Conversion:")
-    table_data = [
-        ["k+12 (Aβ40)", f"{original_kf0_forty:.1f} M⁻¹s⁻¹", f"{kf0_forty:.6f} nM⁻¹h⁻¹"],
-        ["k-12 (Aβ40)", f"{original_kb0_forty:.3f} s⁻¹", f"{kb0_forty:.6f} h⁻¹"],
-        ["k+23 (Aβ40)", f"{original_kf1_forty:.1f} M⁻¹s⁻¹", f"{kf1_forty:.6f} nM⁻¹h⁻¹"],
-        ["k-23 (Aβ40)", f"{original_kb1_forty:.3f} s⁻¹", f"{kb1_forty:.6f} h⁻¹"],
-        ["k+12 (Aβ42)", f"{original_kf0_fortytwo:.1f} M⁻¹s⁻¹", f"{kf0_fortytwo:.6f} nM⁻¹h⁻¹"],
-        ["k-12 (Aβ42)", f"{original_kb0_fortytwo:.3f} s⁻¹", f"{kb0_fortytwo:.6f} h⁻¹"],
-        ["k+23 (Aβ42)", f"{original_kf1_fortytwo:.1f} M⁻¹s⁻¹", f"{kf1_fortytwo:.6f} nM⁻¹h⁻¹"],
-        ["k-23 (Aβ42)", f"{original_kb1_fortytwo:.3f} s⁻¹", f"{kb1_fortytwo:.6f} h⁻¹"]
-    ]
-    headers = ["Rate Constant", "Original Value", "Converted Value"]
-    print(tabulate(table_data, headers, tablefmt="grid"))
-    '''
     # Generate oligomer sizes from 4 to 24
     oligomer_sizes = list(range(4, 25))
 
@@ -333,7 +302,7 @@ def calculate_k_rates(
             if key_40 in plaque_rates and key_42 in plaque_rates:
                 forward_rate_40 = forward_rates_forty.get(forward_key_40, 0)
                 forward_rate_42 = forward_rates_fortytwo.get(forward_key_42, 0)
-                #print(f"  Size {size}: AB40 = {plaque_rates[key_40]:.6f} (forward_rate = {forward_rate_40:.6f}), AB42 = {plaque_rates[key_42]:.6f} (forward_rate = {forward_rate_42:.6f})")
+                #print(f"  Size {size}: AB40 = {plaque_rates[key_40]:.6f} (forward_rate = {forward_rate_40:.6f} × {baseline_ab40_plaque_rate:.6f}), AB42 = {plaque_rates[key_42]:.6f} (forward_rate = {forward_rate_42:.6f} × {baseline_ab42_plaque_rate:.6f})")
     #else:
         #print(f"\nPlaque formation rates using baseline values (no forward rate multiplier):")
         #print(f"AB40 rate: {baseline_ab40_plaque_rate:.6f} L/(nM·h)")

@@ -247,7 +247,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Paths to your two CSVs
-    csv1 = f'generated/{args.years}_year_simulation_results_{args.drug}.csv'
+    #csv1 = f'generated/{args.years}_year_simulation_results_{args.drug}.csv'
+    csv1 = f'Tellurium/default_simulation_results_{args.years}yr_compare_to_ODE.csv'
+    # Note this compares both versions that have no Vmax/EC50 approach for microglia clearance
+    # comparing vmax to non vmax is also valuable to understand the impact of the vmax/EC50 approach
     csv2 = f'ODE_version/results/no_dose/{args.drug.capitalize()}_no_dose_{args.years}yr_results.csv'
     outdir = 'generated/figures/comparison'
     Path(outdir).mkdir(parents=True, exist_ok=True)

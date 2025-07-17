@@ -13,7 +13,7 @@ def load_parameters(antibody_name='Gant', **agg_kwargs):
     
     Args:
         antibody_name: Name of the antibody to use ('Gant' or 'Lec')
-        **agg_kwargs: Optional overrides for aggregation parameters (e.g., forAsymp42, backAsymp42, BackHill42, original_kb0_fortytwo, original_kb1_fortytwo, baseline_ab40_plaque_rate, baseline_ab42_plaque_rate, enable_forward_rate_multiplier)
+        **agg_kwargs: Optional overrides for aggregation parameters (e.g., forAsymp42, backAsymp42, BackHill42, kb0_fortytwo, kb1_fortytwo, baseline_ab40_plaque_rate, baseline_ab42_plaque_rate, enable_forward_rate_multiplier)
     
     Returns:
         Dictionary of all parameters as JAX arrays
@@ -32,14 +32,14 @@ def load_parameters(antibody_name='Gant', **agg_kwargs):
     
     # Extract rate-related parameters for calculate_k_rates
     rate_params = {
-        'original_kf0_forty': params['original_kf0_forty'],
-        'original_kf0_fortytwo': params['original_kf0_fortytwo'],
-        'original_kf1_forty': params['original_kf1_forty'],
-        'original_kf1_fortytwo': params['original_kf1_fortytwo'],
-        'original_kb0_forty': params['original_kb0_forty'],
-        'original_kb0_fortytwo': params['original_kb0_fortytwo'],
-        'original_kb1_forty': params['original_kb1_forty'],
-        'original_kb1_fortytwo': params['original_kb1_fortytwo'],
+        'kf0_forty': params['k_M_O2_forty'],
+        'kf0_fortytwo': params['k_M_O2_fortytwo'],
+        'kf1_forty': params['k_O2_O3_forty'],
+        'kf1_fortytwo': params['k_O2_O3_fortytwo'],
+        'kb0_forty': params['k_O2_M_forty'],
+        'kb0_fortytwo': params['k_O2_M_fortytwo'],
+        'kb1_forty': params['k_O3_O2_forty'],
+        'kb1_fortytwo': params['k_O3_O2_fortytwo'],
         'forAsymp40': params['forAsymp40'],
         'forAsymp42': params['forAsymp42'],
         'backAsymp40': params['backAsymp40'],
@@ -57,8 +57,8 @@ def load_parameters(antibody_name='Gant', **agg_kwargs):
     
     # Only pass keys to calculate_k_rates that it expects
     k_rates_keys = {
-        'original_kf0_forty', 'original_kf0_fortytwo', 'original_kf1_forty', 'original_kf1_fortytwo',
-        'original_kb0_forty', 'original_kb0_fortytwo', 'original_kb1_forty', 'original_kb1_fortytwo',
+        'kf0_forty', 'kf0_fortytwo', 'kf1_forty', 'kf1_fortytwo',
+        'kb0_forty', 'kb0_fortytwo', 'kb1_forty', 'kb1_fortytwo',
         'forAsymp40', 'forAsymp42', 'backAsymp40', 'backAsymp42',
         'forHill40', 'forHill42', 'BackHill40', 'BackHill42', 'rate_cutoff',
         'baseline_ab40_plaque_rate', 'baseline_ab42_plaque_rate', 'enable_plaque_forward_rate_multiplier'

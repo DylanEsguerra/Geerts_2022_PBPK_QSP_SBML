@@ -123,13 +123,13 @@ BackHill40,2.5,dimensionless,BackHillA,Geerts assumed,0,
 BackHill42,3.0,dimensionless,BackHillB,Geerts assumed,0,
 Hill,3.5,dimensionless,SUVR_Hill,Geerts Fitted,0,
 rate_cutoff,0.00001,1/h,Minimum allowed rate for backward reactions,Geerts assumed,0,
-k_M_O2_forty,0.00018,L / (nano * mol * h),NA, Garai Tabel 1 ,1,Unsure of these
+k_M_O2_forty,0.00018,L / (nano * mol * h),monToDiA, Garai Tabel 1 ,1,Unsure of these
 k_O2_M_forty,9.72,1/h, NA,Garai Tabel 1 ,1,Unsure of these
 k_M_O2_fortytwo,0.0003564,L / (nano * mol * h),monToDiB, Garai Tabel 1 ,1,Unsure of these
 k_O2_M_fortytwo,45.72,1/h,NA,Garai Tabel 1 ,1,Unsure of these
-k_O2_O3_forty,0.000072,L / (nano * mol * h),NA, Garai Tabel 1 ,1,Unsure of these
+k_O2_O3_forty,0.000072,L / (nano * mol * h),diToTriA, Garai Tabel 1 ,1,Unsure of these
 k_O3_O2_forty,0.00001,1/h,NA,Garai value was 0 so using Geerts baseline,1,Unsure of these
-k_O2_O3_fortytwo,0.0001368,L / (nano * mol * h),NA, Garai Tabel 1 ,0,
+k_O2_O3_fortytwo,0.0001368,L / (nano * mol * h),diToTriB, Garai Tabel 1 ,0,
 k_O3_O2_fortytwo,0.00001,1/h, NA,Garai Tabel 1 ,0,
 k_F24_O12_forty,2,dimensionless,Baseline_AB40_Oligomer_Fibril_splitting,Geerts assumed,0,
 k_F24_O12_fortytwo,1,dimensionless,Baseline_AB42_Oligomer_Fibril_splitting,Geerts assumed,0,

@@ -29,7 +29,7 @@ output_file = f'default_simulation_results_{args.years}yr_all_vars.csv'
 
 if not args.plot_only:
     # Load the SBML model
-    xml_path = Path("../generated/sbml/combined_master_model.xml")
+    xml_path = Path("../generated/sbml/combined_master_model_gantenerumab.xml")
     with open(xml_path, "r") as f:
         sbml_str = f.read()
 

@@ -582,7 +582,6 @@ def qsp_ode_model(t: float, state: Dict[str, float], params: Dict[str, Any]) -> 
     # Equation for Anti_AB42_Oligo_total_wtsum
     new_state['Anti_AB42_Oligo_total_wtsum'] = 0 
     # Equation for Anti_ABeta_bound_sum
-    # This is a big Bug, the sum value needs to be calculated in the ODE function for the Microglia to work 
     new_state['Anti_ABeta_bound_sum'] = 0 
     # Equation for Anti_ABeta_total_bound_wtsum
     new_state['Anti_ABeta_total_bound_wtsum'] = 0 

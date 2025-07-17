@@ -207,13 +207,34 @@ def create_microglia_model(params, params_with_units):
         modifier_hi_fract = reaction.createModifier()
         modifier_hi_fract.setSpecies("Microglia_Hi_Fract")
         
-        # Create kinetic law
+        # Create kinetic law - different formula for plaque vs other species
         kinetic_law = reaction.createKineticLaw()
-        math_ast = libsbml.parseL3Formula(
-            f"{species_id} * Microglia_cell_count * "
-            f"(Microglia_Hi_Fract * Microglia_CL_high_mAb + "
-            f"(1 - Microglia_Hi_Fract) * Microglia_CL_low_mAb) * VIS_brain"
-        )
+        
+        # Check if this is a plaque species
+        if "Plaque" in species_id:
+            # Use original formula for plaque scaled by 0.5
+            math_ast = libsbml.parseL3Formula(
+                f"0.5 * {species_id} * Microglia_cell_count * "
+                f"(Microglia_Hi_Fract * Microglia_CL_high_mAb + "
+                f"(1 - Microglia_Hi_Fract) * Microglia_CL_low_mAb) * VIS_brain"
+            )
+        else:
+            #'''
+            # Use new formula for oligomers and fibrils
+            math_ast = libsbml.parseL3Formula(
+                f"{species_id} * Microglia_cell_count * "
+                f"(Microglia_Hi_Fract * Microglia_Hi_Lo_ratio * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {species_id})) + "
+                f"(1 - Microglia_Hi_Fract) * (Microglia_Vmax_{suffix}/(Microglia_EC50_{suffix} + {species_id}))) * VIS_brain"
+            )
+            '''
+            # original formula
+            math_ast = libsbml.parseL3Formula(
+                f"{species_id} * Microglia_cell_count * "
+                f"(Microglia_Hi_Fract * Microglia_CL_high_mAb + "
+                f"(1 - Microglia_Hi_Fract) * Microglia_CL_low_mAb) * VIS_brain"
+            )
+            '''
+        
         kinetic_law.setMath(math_ast)
         
         # Add species-specific sink as product
@@ -237,6 +258,12 @@ def create_microglia_model(params, params_with_units):
         ("EC50_Up", params["EC50_Up"]),
         ("SmaxPro", params["SmaxPro"]),
         ("EC50_pro", params["EC50_pro"]),
+        # New parameters for updated clearance formula
+        ("Microglia_Hi_Lo_ratio", params["Microglia_Hi_Lo_ratio"]),
+        ("Microglia_Vmax_forty", params["Microglia_Vmax_forty"]),
+        ("Microglia_Vmax_fortytwo", params["Microglia_Vmax_fortytwo"]),
+        ("Microglia_EC50_forty", params["Microglia_EC50_forty"]),
+        ("Microglia_EC50_fortytwo", params["Microglia_EC50_fortytwo"]),
     ]
     
     for param_id, value in microglia_params:
@@ -249,6 +276,10 @@ def create_microglia_model(params, params_with_units):
         if param_id.startswith('gamma'):
             param.setUnits("per_hour")
         elif param_id.startswith('EC50'):
+            param.setUnits("nanomole_per_litre")
+        elif param_id.startswith('Microglia_Vmax'):
+            param.setUnits("nanomole_per_hour")
+        elif param_id.startswith('Microglia_EC50'):
             param.setUnits("nanomole_per_litre")
         else:
             param.setUnits("dimensionless")
@@ -317,6 +348,12 @@ def create_microglia_model(params, params_with_units):
     param = model.createParameter()
     param.setId("Microglia_cell_count_0")
     param.setValue(params["Microglia_cell_count_0"])
+    param.setConstant(True)
+    param.setUnits("dimensionless")
+
+    param = model.createParameter()
+    param.setId("Microglia_Hi_Fract_0")
+    param.setValue(params["Microglia_Hi_Fract_0"])
     param.setConstant(True)
     param.setUnits("dimensionless")
     
