@@ -1,6 +1,4 @@
 """
-Modifed IDE clearance to match Don's model
-
 Module for modeling amyloid beta (Aβ) production in the brain.
 This is a QSP component that models the production of Aβ monomers (both 40 and 42 amino acid variants)
 from amyloid precursor protein (APP) through enzymatic cleavage.
@@ -396,13 +394,13 @@ def create_geerts_monomer_production_model(params, params_with_units):
     ide_rule40 = model.createRateRule()
     ide_rule40.setId("CL_AB40_IDE_rule")
     ide_rule40.setVariable("CL_AB40_IDE")
-    ide_rule40.setMath(libsbml.parseL3Formula("-exp_decline_rate_IDE_forty*CL_AB40_IDE * VIS_brain"))
+    ide_rule40.setMath(libsbml.parseL3Formula("-exp_decline_rate_IDE_forty*CL_AB40_IDE"))
     #ide_rule40.setMath(libsbml.parseL3Formula("AB40_IDE_Kcat_lin"))
     # AB42 IDE efficiency rule
     ide_rule42 = model.createRateRule()
     ide_rule42.setId("CL_AB42_IDE_rule")
     ide_rule42.setVariable("CL_AB42_IDE")
-    ide_rule42.setMath(libsbml.parseL3Formula("-exp_decline_rate_IDE_fortytwo*CL_AB42_IDE * VIS_brain"))
+    ide_rule42.setMath(libsbml.parseL3Formula("-exp_decline_rate_IDE_fortytwo*CL_AB42_IDE"))
     #ide_rule42.setMath(libsbml.parseL3Formula("AB42_IDE_Kcat_lin"))
     
     # Add AB40 clearance reaction
@@ -426,7 +424,7 @@ def create_geerts_monomer_production_model(params, params_with_units):
 
     # Kinetic law for IDE clearance of AB40
     kinetic_law = reaction6.createKineticLaw()
-    math_ast = libsbml.parseL3Formula("(IDE_conc * CL_AB40_IDE * (pow(AB40_Monomer * Unit_removal_1, AB40_IDE_Hill) / (pow(AB40_Monomer * Unit_removal_1, AB40_IDE_Hill) + pow(AB40_IDE_IC50, AB40_IDE_Hill)))) * VIS_brain * VIS_brain")
+    math_ast = libsbml.parseL3Formula("(IDE_conc * CL_AB40_IDE * (pow(AB40_Monomer * Unit_removal_1, AB40_IDE_Hill) / (pow(AB40_Monomer * Unit_removal_1, AB40_IDE_Hill) + pow(AB40_IDE_IC50, AB40_IDE_Hill)))) * VIS_brain")
     kinetic_law.setMath(math_ast)
     
     # Add AB42 clearance reaction
@@ -449,7 +447,7 @@ def create_geerts_monomer_production_model(params, params_with_units):
     
     # Kinetic law for IDE clearance of AB42
     kinetic_law = reaction7.createKineticLaw()
-    math_ast = libsbml.parseL3Formula("(IDE_conc * CL_AB42_IDE * (pow(AB42_Monomer * Unit_removal_1, AB42_IDE_Hill) / (pow(AB42_Monomer * Unit_removal_1, AB42_IDE_Hill) + pow(AB42_IDE_IC50, AB42_IDE_Hill)))) * VIS_brain * VIS_brain")
+    math_ast = libsbml.parseL3Formula("(IDE_conc * CL_AB42_IDE * (pow(AB42_Monomer * Unit_removal_1, AB42_IDE_Hill) / (pow(AB42_Monomer * Unit_removal_1, AB42_IDE_Hill) + pow(AB42_IDE_IC50, AB42_IDE_Hill)))) * VIS_brain")
     kinetic_law.setMath(math_ast)
     
     

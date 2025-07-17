@@ -1372,7 +1372,6 @@
                 </apply>
               </apply>
               <ci> VIS_brain </ci>
-              <ci> VIS_brain </ci>
             </apply>
           </math>
         </kineticLaw>
@@ -1419,7 +1418,6 @@
                   </apply>
                 </apply>
               </apply>
-              <ci> VIS_brain </ci>
               <ci> VIS_brain </ci>
             </apply>
           </math>

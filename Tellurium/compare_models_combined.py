@@ -1,3 +1,37 @@
+"""
+Model Comparison Script: Dylan_LibSBML vs Don_Antimony_PBPK
+
+This script compares two different implementations of the Geerts model:
+
+1. Dylan_LibSBML Model (Combined Master Model):
+   - Generated using libSBML and sbmltoodejax
+   - IDE clearance implemented as a time-varying parameter (CL_AB42_IDE)
+   - Uses a rate rule for parameter evolution of CL_AB42_IDE
+   - Requires modification to include additional volume multiplication in clearance terms in order to match Don's model
+
+2. Don_Antimony_PBPK Model:
+   - Written directly in Antimony syntax
+   - IDE clearance implemented as a species (IDE_activity_ISF)
+   - Uses a reaction for species evolution of IDE_activity_ISF
+   - Different volume handling in clearance terms
+
+KEY DIFFERENCES:
+- IDE clearance: Parameter vs Species implementation
+- Volume handling: Don's model appears to multiply the clearance by the volume of the ISF compartment
+- Model generation: libSBML vs direct Antimony
+
+COMPARISON RESULTS:
+- Antimony models (txt files): Models match when CL_AB42_IDE = 400
+- SBML models (xml files): Models match when CL_AB42_IDE = 100.2
+    - Note: The SBML version is the original version from Dylan's model. 
+    - The Antimony version is the modified version that matches Don's model.
+
+USAGE:
+    python compare_models_combined.py [--years YEARS] [--mode {antimony,sbml}]
+    --mode antimony: Compare using Antimony text files (CL_AB42_IDE = 400)
+    --mode sbml: Compare using SBML XML files (CL_AB42_IDE = 100.2)
+"""
+
 import tellurium as te
 import numpy as np
 import pandas as pd
@@ -33,8 +67,9 @@ def run_simulation_dylan_model(rr, years, output_file):
     num_points = 300
     
     
-    rr.setValue('IDE_conc', 0.005)
-    '''
+    #'''
+    rr.setValue('IDE_conc', 3)
+    #rr.setValue('IDE_conc', 0.005)
     rr.setValue('k_APP_production', 75)
     rr.setValue('k_M_O2_fortytwo',0.003564)
     rr.setValue('k_F24_O12_fortytwo',100)
@@ -42,8 +77,12 @@ def run_simulation_dylan_model(rr, years, output_file):
     rr.setValue('k_O3_O4_fortytwo',0.01)
     rr.setValue('k_O4_O5_fortytwo',0.00273185)
     rr.setValue('k_O5_O6_fortytwo',0.00273361)
-    rr.setValue('CL_AB42_IDE', 400)
-    '''
+    # CL_AB42_IDE is now set in the main script based on mode
+    # rr.setValue('CL_AB42_IDE', 400) # 400 * 0.2505 = 100.2
+    # rr.setValue('CL_AB42_IDE', 100.2) # 400 * 0.2505 = 100.2
+
+    rr.setValue('exp_decline_rate_IDE_fortytwo',1.15E-05)
+    #'''
     
     
     result = rr.simulate(start_time, end_time, num_points, selections=selections)
@@ -62,7 +101,7 @@ def run_simulation_don_model(rr, years, output_file):
     selections = ['time', '[AB42_O1_ISF]', '[AB42_O25_ISF]', '[IDE_activity_ISF]']
     for i in range(2, 25):  # O2 through O24
         selections.append(f'[AB42_O{i}_ISF]')
-    rr.setValue('IDE_conc_ISF', 0.005)
+    #rr.setValue('IDE_conc_ISF', 3 / 0.2505)
     result = rr.simulate(start_time, end_time, num_points, selections)
     
     # Convert to DataFrame for compatibility
@@ -118,7 +157,7 @@ def calculate_suvr_don(result):
     return suvr
 
 def plot_six_panel_model_comparison(
-    sol_dylan, model_dylan, result_don, drug_type="gantenerumab", plots_dir=None
+    sol_dylan, model_dylan, result_don, drug_type="gantenerumab", plots_dir=None, mode="sbml"
 ):
     """Create a six-panel plot comparing Dylan_LibSBML and Don_Antimony_PBPK model simulations."""
     if plots_dir is None:
@@ -240,7 +279,7 @@ def plot_six_panel_model_comparison(
         ax.tick_params(axis='both', which='major', labelsize=12)
 
     plt.tight_layout()
-    fig.savefig(plots_dir / f'{drug_type.lower()}_model_comparison_six_panel.png', dpi=300, bbox_inches='tight')
+    fig.savefig(plots_dir / f'{drug_type.lower()}_model_comparison_six_panel_{mode}.png', dpi=300, bbox_inches='tight')
     plt.show()
     plt.close(fig)
 
@@ -248,44 +287,73 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run Tellurium simulation comparing Dylan_LibSBML and Don_Antimony_PBPK models.")
     parser.add_argument("--years", type=float, default=100.0, help="Number of years to simulate")
     parser.add_argument("--drug", type=str, choices=["lecanemab", "gantenerumab"], default="gantenerumab", help="Drug type simulated")
+    parser.add_argument("--mode", type=str, choices=["antimony", "sbml"], default="sbml", 
+                      help="Comparison mode: 'antimony' for txt files (CL_AB42_IDE=400), 'sbml' for xml files (CL_AB42_IDE=100.2)")
     args = parser.parse_args()
 
+    print(f"Running comparison in {args.mode.upper()} mode")
+    if args.mode == "antimony":
+        print("Using Antimony text files - CL_AB42_IDE will be set to 400")
+    else:
+        print("Using SBML XML files - CL_AB42_IDE will be set to 100.2")
+
     # Load Dylan_LibSBML model (combined master model)
-    sbml_path_dylan = Path("../generated/sbml/combined_master_model.xml")
-    with open(sbml_path_dylan, "r") as f:
-        sbml_str_dylan = f.read()
-        #antimony_str_dylan = f.read()
+    if args.mode == "antimony":
+        antimony_path_dylan = Path("../generated/sbml/combined_master_model_MTK_Microglia2_Antimony.txt")
+        with open(antimony_path_dylan, "r") as f:
+            antimony_str_dylan = f.read()
+        sbml_str_dylan = None
+    else:
+        sbml_path_dylan = Path("../generated/sbml/combined_master_model.xml")
+        with open(sbml_path_dylan, "r") as f:
+            sbml_str_dylan = f.read()
+        antimony_str_dylan = None
 
     # Load Don_Antimony_PBPK model
-    #sbml_path_don = Path("../generated/sbml/Antimony_PBPK_model_removed_new.xml")
-    sbml_path_don = Path("Antimony_PBPK_model.xml")
-    with open(sbml_path_don, "r") as f:
-        sbml_str_don = f.read()
-        #antimony_str_don = f.read()
+    if args.mode == "antimony":
+        antimony_path_don = Path("../generated/sbml/Antimony_PBPK_model.txt")
+        with open(antimony_path_don, "r") as f:
+            antimony_str_don = f.read()
+        sbml_str_don = None
+    else:
+        sbml_path_don = Path("../generated/sbml/Antimony_PBPK_model.xml")
+        with open(sbml_path_don, "r") as f:
+            sbml_str_don = f.read()
+        antimony_str_don = None
 
-    # --- Run Dylan_LibSBML Model Simulation (using default parameters) ---
+    # --- Run Dylan_LibSBML Model Simulation ---
     print("Running Dylan_LibSBML model simulation...")
-    rr_dylan = te.loadSBMLModel(sbml_str_dylan)
+    if args.mode == "antimony":
+        rr_dylan = te.loadAntimonyModel(antimony_str_dylan)
+    else:
+        rr_dylan = te.loadSBMLModel(sbml_str_dylan)
     rr_dylan.setIntegrator('cvode')
     rr_dylan.integrator.absolute_tolerance = 1e-8
     rr_dylan.integrator.relative_tolerance = 1e-8
     rr_dylan.integrator.setValue('stiff', True)
     
-    # Use default parameters (no parameter modifications)
-    output_file_dylan = f'dylan_libsbml_model_simulation_results_{args.years}yr.csv'
+    # Set appropriate CL_AB42_IDE value based on mode
+    if args.mode == "antimony":
+        rr_dylan.setValue('CL_AB42_IDE', 400)  # For Antimony comparison
+    else:
+        rr_dylan.setValue('CL_AB42_IDE', 100.2)  # For SBML comparison
+    
+    output_file_dylan = f'dylan_libsbml_model_simulation_results_{args.years}yr_{args.mode}.csv'
     run_simulation_dylan_model(rr_dylan, args.years, output_file_dylan)
     df_dylan = pd.read_csv(output_file_dylan)
 
-    # --- Run Don_Antimony_PBPK Model Simulation (using default parameters) ---
+    # --- Run Don_Antimony_PBPK Model Simulation ---
     print("Running Don_Antimony_PBPK model simulation...")
-    rr_don = te.loadSBMLModel(sbml_str_don)
+    if args.mode == "antimony":
+        rr_don = te.loadAntimonyModel(antimony_str_don)
+    else:
+        rr_don = te.loadSBMLModel(sbml_str_don)
     rr_don.setIntegrator('cvode')
     rr_don.integrator.absolute_tolerance = 1e-8
     rr_don.integrator.relative_tolerance = 1e-8
     rr_don.integrator.setValue('stiff', True)
     
-    # Use default parameters (no parameter modifications)
-    output_file_don = f'don_antimony_pbpk_model_simulation_results_{args.years}yr.csv'
+    output_file_don = f'don_antimony_pbpk_model_simulation_results_{args.years}yr_{args.mode}.csv'
     result_don = run_simulation_don_model(rr_don, args.years, output_file_don)
 
     # --- Create Solution and Model Objects for Dylan_LibSBML Model ---
@@ -306,9 +374,14 @@ if __name__ == "__main__":
 
     plot_six_panel_model_comparison(
         sol_dylan, model_dylan, result_don,
-        drug_type=args.drug, plots_dir=plots_dir
+        drug_type=args.drug, plots_dir=plots_dir, mode=args.mode
     )
 
-    print(f"Model comparison simulation and plots complete. Plots saved to {plots_dir}")
+    print(f"Model comparison simulation and plots complete ({args.mode.upper()} mode).")
+    print(f"Plots saved to {plots_dir}")
     print(f"Dylan_LibSBML model results: {output_file_dylan}")
-    print(f"Don_Antimony_PBPK model results: {output_file_don}") 
+    print(f"Don_Antimony_PBPK model results: {output_file_don}")
+    if args.mode == "antimony":
+        print("Note: CL_AB42_IDE was set to 400 for Antimony comparison")
+    else:
+        print("Note: CL_AB42_IDE was set to 100.2 for SBML comparison") 
