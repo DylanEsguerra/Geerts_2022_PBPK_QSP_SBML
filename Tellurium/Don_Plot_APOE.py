@@ -42,41 +42,44 @@ def set_optimized_values(rr):
     """
     failed_params = []
 
-    rr.setValue('IDE_conc', 7.208542043204368)
-    rr.setValue('Microglia_cell_count', 0.6158207628681558)
-    rr.setValue('k_APP_production', 125.39958281853755)
-    rr.setValue('k_M_O2_fortytwo',0.0011969797316319238)
-    rr.setValue('k_O2_M_fortytwo',71.27022085388667)
-    rr.setValue('k_O2_O3_fortytwo',0.0009995988649416513)
-    rr.setValue('k_O3_O2_fortytwo',5.696488107534822e-07)
+    #'''
+    rr.setValue('IDE_conc', 3)
+    #rr.setValue('IDE_conc', 0.005)
+    rr.setValue('k_APP_production', 75)
+    rr.setValue('k_M_O2_fortytwo',0.003564)
+    rr.setValue('k_F24_O12_fortytwo',100)
+    rr.setValue('k_O2_O3_fortytwo',0.01368)
     rr.setValue('k_O3_O4_fortytwo',0.01)
     rr.setValue('k_O4_O5_fortytwo',0.00273185)
     rr.setValue('k_O5_O6_fortytwo',0.00273361)
-    rr.setValue('CL_AB42_IDE', 400)
-    rr.setValue('exp_decline_rate_IDE_fortytwo',1.15E-05)
-    rr.setValue('k_F24_O12_fortytwo',8.411308100233814)
+    # CL_AB42_IDE is now set in the main script based on mode
+    #rr.setValue('CL_AB42_IDE', 400) # 400 * 0.2505 = 100.2
+    rr.setValue('CL_AB42_IDE', 100.2) # 400 * 0.2505 = 100.2
+
+    rr.setValue('exp_decline_rate_IDE_fortytwo',1.15E-05*0.2525)
+    #'''
 
 
     # Calculate and set aggregation rates using K_rates_extrapolate with Don's specific values
-    # Convert from h⁻¹ to s⁻¹ for the rate calculation function
+    # No need to convert from h⁻¹ to s⁻¹ for the rate calculation function
     # Using Don's specific values as the base rates
-    kf0_fortytwo = rr.getValue('k_M_O2_fortytwo') / 3.6e-6 # k_M_O2_fortytwo (nM⁻¹h⁻¹ to M⁻¹s⁻¹)
-    kf1_fortytwo = rr.getValue('k_O2_O3_fortytwo') / 3.6e-6  # k_O2_O3_fortytwo (nM⁻¹h⁻¹ to M⁻¹s⁻¹)
-    kb0_fortytwo = rr.getValue('k_O2_M_fortytwo') / 3600      # k_O2_M_fortytwo (h⁻¹ to s⁻¹)
-    kb1_fortytwo = rr.getValue('k_O3_O2_fortytwo') / 3600  # k_O3_O2_fortytwo (h⁻¹ to s⁻¹)
+    kf0_fortytwo = rr.getValue('k_M_O2_fortytwo') 
+    kf1_fortytwo = rr.getValue('k_O2_O3_fortytwo')
+    kb0_fortytwo = rr.getValue('k_O2_M_fortytwo') 
+    kb1_fortytwo = rr.getValue('k_O3_O2_fortytwo') 
     
     try:
         rates = calculate_k_rates(
-            original_kf0_fortytwo=kf0_fortytwo,
-            original_kf1_fortytwo=kf1_fortytwo,
-            original_kb0_fortytwo=kb0_fortytwo,
-            original_kb1_fortytwo=kb1_fortytwo,
-            baseline_ab42_plaque_rate=0.0443230279057089  # Baseline_AB42_O_P
-        )
+        kf0_fortytwo=kf0_fortytwo,
+        kf1_fortytwo=kf1_fortytwo,
+        kb0_fortytwo=kb0_fortytwo,
+        kb1_fortytwo=kb1_fortytwo,
+        baseline_ab42_plaque_rate=0.06,
+    )
         
         # Update all AB42 rates, including plaque rates
         for key, value in rates.items():
-            if '_fortytwo' in key:
+            if 'Plaque_fortytwo' in key: # trying only don plot for initial values test 
                 try:
                     setattr(rr, key, value)
                     print(f"Set {key} to {value}")
@@ -88,6 +91,12 @@ def set_optimized_values(rr):
         error_msg = f"Could not calculate aggregation rates: {e}"
         print(error_msg)
         failed_params.append(error_msg)
+
+    # use these to override the rates     
+
+    rr.setValue('k_O3_O4_fortytwo',0.01)
+    rr.setValue('k_O4_O5_fortytwo',0.00273185)
+    rr.setValue('k_O5_O6_fortytwo',0.00273361)
     
     return failed_params
 
@@ -239,7 +248,7 @@ if __name__ == "__main__":
     parser.add_argument("--drug", type=str, choices=["lecanemab", "gantenerumab"], default="gantenerumab", help="Drug type simulated")
     args = parser.parse_args()
 
-    sbml_path = Path("../generated/sbml/combined_master_model.xml")
+    sbml_path = Path("../generated/sbml/combined_master_model_gantenerumab.xml")
     #antimony_path = Path("../generated/sbml/Geerts_2023_1.txt")
     with open(sbml_path, "r") as f:
         sbml_str = f.read()

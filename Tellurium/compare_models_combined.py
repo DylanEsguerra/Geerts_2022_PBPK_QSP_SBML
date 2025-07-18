@@ -77,11 +77,11 @@ def run_simulation_dylan_model(rr, years, output_file):
     rr.setValue('k_O3_O4_fortytwo',0.01)
     rr.setValue('k_O4_O5_fortytwo',0.00273185)
     rr.setValue('k_O5_O6_fortytwo',0.00273361)
-    # CL_AB42_IDE is now set in the main script based on mode
+    # CL_AB42_IDE and exp_decline_rate_IDE_fortytwo are now set in the main script based on mode
     # rr.setValue('CL_AB42_IDE', 400) # 400 * 0.2505 = 100.2
     # rr.setValue('CL_AB42_IDE', 100.2) # 400 * 0.2505 = 100.2
-
-    rr.setValue('exp_decline_rate_IDE_fortytwo',1.15E-05)
+    # rr.setValue('exp_decline_rate_IDE_fortytwo', 1.15E-05) # For Antimony
+    # rr.setValue('exp_decline_rate_IDE_fortytwo', 1.15E-05*0.2525) # For SBML
     #'''
     
     
@@ -304,7 +304,7 @@ if __name__ == "__main__":
             antimony_str_dylan = f.read()
         sbml_str_dylan = None
     else:
-        sbml_path_dylan = Path("../generated/sbml/combined_master_model.xml")
+        sbml_path_dylan = Path("../generated/sbml/combined_master_model_gantenerumab.xml")
         with open(sbml_path_dylan, "r") as f:
             sbml_str_dylan = f.read()
         antimony_str_dylan = None
@@ -337,6 +337,14 @@ if __name__ == "__main__":
         rr_dylan.setValue('CL_AB42_IDE', 400)  # For Antimony comparison
     else:
         rr_dylan.setValue('CL_AB42_IDE', 100.2)  # For SBML comparison
+    
+    # Set appropriate exp_decline_rate_IDE_fortytwo value based on mode
+    # For SBML: use volume-scaled value (1.15E-05*0.2525) because volume multiplication was removed from the decay
+    # For Antimony: use unscaled value (1.15E-05) because volume term is still in the rate itself
+    if args.mode == "antimony":
+        rr_dylan.setValue('exp_decline_rate_IDE_fortytwo', 1.15E-05)  # For Antimony comparison
+    else:
+        rr_dylan.setValue('exp_decline_rate_IDE_fortytwo', 1.15E-05*0.2525)  # For SBML comparison
     
     output_file_dylan = f'dylan_libsbml_model_simulation_results_{args.years}yr_{args.mode}.csv'
     run_simulation_dylan_model(rr_dylan, args.years, output_file_dylan)
@@ -383,5 +391,7 @@ if __name__ == "__main__":
     print(f"Don_Antimony_PBPK model results: {output_file_don}")
     if args.mode == "antimony":
         print("Note: CL_AB42_IDE was set to 400 for Antimony comparison")
+        print("Note: exp_decline_rate_IDE_fortytwo was set to 1.15E-05 (unscaled) for Antimony comparison")
     else:
-        print("Note: CL_AB42_IDE was set to 100.2 for SBML comparison") 
+        print("Note: CL_AB42_IDE was set to 100.2 for SBML comparison")
+        print("Note: exp_decline_rate_IDE_fortytwo was set to 1.15E-05*0.2525 (volume-scaled) for SBML comparison") 

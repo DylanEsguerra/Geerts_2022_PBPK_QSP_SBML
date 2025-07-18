@@ -122,7 +122,7 @@ if __name__ == "__main__":
     parser.add_argument("--drug", type=str, choices=["lecanemab", "gantenerumab"], default="gantenerumab", help="Drug type simulated")
     args = parser.parse_args()
 
-    xml_path = Path("../generated/sbml/combined_master_model.xml")
+    xml_path = Path("../generated/sbml/combined_master_model_gantenerumab.xml")
     with open(xml_path, "r") as f:
         sbml_str = f.read()
 
