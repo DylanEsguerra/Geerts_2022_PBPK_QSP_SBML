@@ -262,8 +262,6 @@ model *Combined_Master_Model()
 
   // Assignment Rules:
   Anti_ABeta_bound_sum := AB40_Oligomer02_Antibody_bound + AB42_Oligomer02_Antibody_bound + AB40_Oligomer03_Antibody_bound + AB42_Oligomer03_Antibody_bound + AB40_Oligomer04_Antibody_bound + AB42_Oligomer04_Antibody_bound + AB40_Oligomer05_Antibody_bound + AB42_Oligomer05_Antibody_bound + AB40_Oligomer06_Antibody_bound + AB42_Oligomer06_Antibody_bound + AB40_Oligomer07_Antibody_bound + AB42_Oligomer07_Antibody_bound + AB40_Oligomer08_Antibody_bound + AB42_Oligomer08_Antibody_bound + AB40_Oligomer09_Antibody_bound + AB42_Oligomer09_Antibody_bound + AB40_Oligomer10_Antibody_bound + AB42_Oligomer10_Antibody_bound + AB40_Oligomer11_Antibody_bound + AB42_Oligomer11_Antibody_bound + AB40_Oligomer12_Antibody_bound + AB42_Oligomer12_Antibody_bound + AB40_Oligomer13_Antibody_bound + AB42_Oligomer13_Antibody_bound + AB40_Oligomer14_Antibody_bound + AB42_Oligomer14_Antibody_bound + AB40_Oligomer15_Antibody_bound + AB42_Oligomer15_Antibody_bound + AB40_Oligomer16_Antibody_bound + AB42_Oligomer16_Antibody_bound + AB40_Fibril17_Antibody_bound + AB42_Fibril17_Antibody_bound + AB40_Fibril18_Antibody_bound + AB42_Fibril18_Antibody_bound + AB40_Fibril19_Antibody_bound + AB42_Fibril19_Antibody_bound + AB40_Fibril20_Antibody_bound + AB42_Fibril20_Antibody_bound + AB40_Fibril21_Antibody_bound + AB42_Fibril21_Antibody_bound + AB40_Fibril22_Antibody_bound + AB42_Fibril22_Antibody_bound + AB40_Fibril23_Antibody_bound + AB42_Fibril23_Antibody_bound + AB40_Fibril24_Antibody_bound + AB42_Fibril24_Antibody_bound + AB40_Plaque_Antibody_bound + AB42_Plaque_Antibody_bound;
-  InputCent := piecewise(piecewise(IV_DoseAmount/IV_DoseDuration, (time - floor(time/IV_DoseInterval)*IV_DoseInterval) < IV_DoseDuration, 0), (time < MaxDosingTime) && (floor(time/IV_DoseInterval) < IV_NumDoses), 0);
-  InputSC := piecewise(piecewise(SC_DoseAmount/SC_DoseDuration, (time - floor(time/SC_DoseInterval)*SC_DoseInterval) < SC_DoseDuration, 0), (time < MaxDosingTime) && (floor(time/SC_DoseInterval) < SC_NumDoses), 0);
 
   // Rate Rules:
   Microglia_Hi_Fract' = (1 + SmaxUp*Anti_ABeta_bound_sum/(EC50_Up + Anti_ABeta_bound_sum))*gamma_fr*Microglia_Hi_Fract*(Microglia_Hi_fract_max - Microglia_Hi_Fract)/(Microglia_Hi_fract_max - Microglia_Hi_fract_base) - gamma_fr*Microglia_Hi_Fract;
@@ -511,10 +509,10 @@ model *Combined_Master_Model()
   AB42_microglia_fibril24_clearance: AB42_Fibril24 => $Sink_AB42_Fibril24; AB42_Fibril24*Microglia_cell_count*(Microglia_Hi_Fract*Microglia_Hi_Lo_ratio*(Microglia_Vmax_fortytwo/(Microglia_EC50_fortytwo + AB42_Fibril24)) + (1 - Microglia_Hi_Fract)*(Microglia_Vmax_fortytwo/(Microglia_EC50_fortytwo + AB42_Fibril24)))*VIS_brain;
   AB42_antibody_plaque_binding: AB42_Plaque_unbound + Ab_t => AB42_Plaque_Antibody_bound; fta3*AB42_Plaque_unbound*Ab_t*VIS_brain;
   AB42_microglia_plaque_clearance: AB42_Plaque_unbound => $Sink_AB42_Plaque_unbound; 0.5*AB42_Plaque_unbound*Microglia_cell_count*(Microglia_Hi_Fract*Microglia_CL_high_AB42 + (1 - Microglia_Hi_Fract)*Microglia_CL_low_AB42)*VIS_brain;
-  input_to_subcut: $Source_SubCut_absorption => SubCut_absorption; InputSC;
+  input_to_subcut: $Source_SubCut_absorption => SubCut_absorption; 0; // Dosing now handled by events
   subcut_to_central: SubCut_absorption => PK_central; PK_SC_ka*PK_SC_bio*SubCut_absorption;
   subcut_elimination: SubCut_absorption => $Sink_SubCut_absorption; PK_SC_ka*(1 - PK_SC_bio)*SubCut_absorption;
-  input_to_central: $Source_PK_central => PK_central; InputCent;
+  input_to_central: $Source_PK_central => PK_central; 0; // Dosing now handled by events
   central_to_peripheral: PK_central => PK_per; PK_CLd2*PK_central;
   peripheral_to_central: PK_per => PK_central; PK_CLd2*PK_per;
   central_clearance: PK_central => $Sink_PK_central; PK_CL*PK_central;
@@ -2515,26 +2513,13 @@ model *Combined_Master_Model()
   k_F23_F24_fortytwo has per_nanomole_per_hour;
   k_F24_F23_fortytwo = 1.99992766205286e-05;
   k_F24_F23_fortytwo has per_nanomole_per_hour;
-  InputCent has nanomole_per_hour;
-  IV_DoseAmount = 0;
-  IV_DoseAmount has nanomole;
-  IV_DoseDuration = 1;
-  IV_DoseDuration has hour;
-  IV_DoseInterval = 336;
-  IV_DoseInterval has hour;
-  MaxDosingTime = 13140;
-  MaxDosingTime has hour;
-  IV_NumDoses = 0;
-  IV_NumDoses has dimensionless;
-  InputSC has nanomole_per_hour;
-  SC_DoseAmount = 0;
+  // Event-based dosing parameters for subcutaneous gantenerumab
+  dose_start_age = 70; // Age at which dosing starts (years)
+  dose_start_age has dimensionless;
+  starting_age = 0; // Starting age for the simulation (years)
+  starting_age has dimensionless;
+  SC_DoseAmount = 2050.6; // Subcutaneous dose amount (1200 mg in nanomole)
   SC_DoseAmount has nanomole;
-  SC_DoseDuration = 1;
-  SC_DoseDuration has hour;
-  SC_DoseInterval = 672;
-  SC_DoseInterval has hour;
-  SC_NumDoses = 0;
-  SC_NumDoses has dimensionless;
   VBBB_brain = 0.0065909;
   VBBB_brain has litre;
   V_BCSFB_brain = 0.0006591;
@@ -2679,8 +2664,7 @@ model *Combined_Master_Model()
   sigma_ISF_ABeta42_oligomer02 has dimensionless;
 
   // Other declarations:
-  var Anti_ABeta_bound_sum, CL_AB40_IDE, CL_AB42_IDE, InputCent, IV_DoseAmount;
-  var IV_NumDoses, InputSC, SC_DoseAmount, SC_NumDoses;
+  var Anti_ABeta_bound_sum, CL_AB40_IDE, CL_AB42_IDE;
   const comp_ISF_brain, comp_microglia, comp_BBB_Bound, comp_BBB_Unbound;
   const comp_FcRn_free_BBB, comp_BCSFB_Bound, comp_BCSFB_Unbound, comp_FcRn_free_BCSFB;
   const comp_Brain_plasma, comp_Central_compartment, comp_CSF_CM, comp_CSF_LV;
@@ -2760,8 +2744,7 @@ model *Combined_Master_Model()
   const k_F21_F22_fortytwo, k_F22_F21_forty, k_F22_F21_fortytwo, k_F22_F23_forty;
   const k_F22_F23_fortytwo, k_F23_F22_forty, k_F23_F22_fortytwo, k_F24_O12_forty;
   const k_F24_O12_fortytwo, k_F23_F24_forty, k_F24_F23_forty, k_F23_F24_fortytwo;
-  const k_F24_F23_fortytwo, IV_DoseDuration, IV_DoseInterval, MaxDosingTime;
-  const SC_DoseDuration, SC_DoseInterval, VBBB_brain, V_BCSFB_brain, Vp_brain;
+  const k_F24_F23_fortytwo, VBBB_brain, V_BCSFB_brain, Vp_brain;
   const Vcent, V_CM_brain, V_LV_brain, V_SAS_brain, V_TFV_brain, Vper, V_SubCut;
   const VES_brain, Q_p_brain, Q_CSF_brain, Q_ISF_brain, Q_PVS, L_brain, kon_FcRn;
   const koff_FcRn, kdeg, FR, f_BBB, f_LV, f_BCSFB, PK_SC_ka, PK_SC_bio, PK_CL;
@@ -2778,6 +2761,34 @@ model *Combined_Master_Model()
   const V_PVS, sigma_ISF, Qbrain_ISFpsv, PS_Ab_ISF_PVS, Pe, CL_AB40_plaque_bound_PVS;
   const CL_AB42_plaque_bound_PVS, CL_AB40_plaque_free_PVS, CL_AB42_plaque_free_PVS;
   const sigma_ISF_ABeta40_oligomer02, sigma_ISF_ABeta42_oligomer02;
+
+  // Events:
+  // Gantenerumab subcutaneous dosing schedule: Every 4 weeks (28 days) for 1.5 years, starting at dose_start_age
+  // Time decomposition: days*hours
+  // 4 weeks = 28*24 hours = 672 hours
+  // 1 year = 365*24 hours = 8760 hours
+  // Events are triggered when time >= (target_age - starting_age) * hours_per_year + 2 hour buffer
+  // 1.5 years = ~19 doses (1.5 * 365 / 28 = 19.5)
+  E1: at (time >= (dose_start_age - starting_age) * 365*24 + 2): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 1 at dose_start_age + 2 hours
+  E2: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 1*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 2 (4 weeks later)
+  E3: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 2*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 3
+  E4: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 3*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 4
+  E5: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 4*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 5
+  E6: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 5*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 6
+  E7: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 6*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 7
+  E8: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 7*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 8
+  E9: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 8*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 9
+  E10: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 9*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 10
+  E11: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 10*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 11
+  E12: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 11*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 12
+  E13: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 12*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 13
+  E14: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 13*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 14
+  E15: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 14*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 15
+  E16: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 15*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 16
+  E17: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 16*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 17
+  E18: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 17*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 18
+  E19: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 18*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 19 (final dose at ~1.5 years)
+  
 
   // Unit definitions:
   unit hour = 3600 second;

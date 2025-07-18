@@ -41,15 +41,20 @@ class SimpleModel:
         self.y_indexes = {name: idx for idx, name in enumerate(species_names)}
         self.y0 = initial_conditions
 
-def run_drug_model_simulation(rr, years, output_file):
+def run_drug_model_simulation(rr, years, output_file, is_placebo=False):
     """Run simulation for Drug model with SBML mode parameters."""
     selections = ['time'] + rr.getFloatingSpeciesIds() + rr.getGlobalParameterIds() + rr.getReactionIds()
     start_time = 0
     end_time = years * 365 * 24
     num_points = int(end_time/100)
+    rr.reset()
     
     # Apply SBML mode parameter updates (same as compare_models_combined.py)
-    print("Setting SBML mode parameters...")
+    if is_placebo:
+        print("Setting SBML mode parameters for PLACEBO simulation...")
+    else:
+        print("Setting SBML mode parameters for DRUG simulation...")
+    
     rr.setValue('IDE_conc', 3)
     rr.setValue('k_APP_production', 75)
     rr.setValue('k_M_O2_fortytwo', 0.003564)
@@ -63,24 +68,32 @@ def run_drug_model_simulation(rr, years, output_file):
     rr.setValue('CL_AB42_IDE', 100.2)  # 400 * 0.2505 = 100.2 
     rr.setValue('exp_decline_rate_IDE_fortytwo', 1.15E-05*0.2525)  # Volume-scaled 
     
-    print(f"Running {years}-year simulation...")
+    # Set drug dose to 0 for placebo
+    if is_placebo:
+        rr.setValue('SC_DoseAmount', 0)
+        print("PLACEBO: SC_DoseAmount set to 0")
+    
+    print(f"Running {years}-year {'PLACEBO' if is_placebo else 'DRUG'} simulation...")
     result = rr.simulate(start_time, end_time, num_points, selections=selections)
 
     df = pd.DataFrame(result, columns=selections)
     df.to_csv(output_file, index=False)
-    print(f"Simulation results saved to: {output_file}")
+    print(f"{'PLACEBO' if is_placebo else 'DRUG'} simulation results saved to: {output_file}")
     return output_file
 
-def create_drug_model_plots(sol, model, plots_dir):
-    """Create comprehensive plots for Drug model showing last 4 years of data."""
-    print("Creating Drug model visualization plots...")
+def create_drug_model_plots(sol_drug, model_drug, sol_placebo, model_placebo, plots_dir):
+    """Create comprehensive plots for Drug model showing last 4 years of data with placebo comparison."""
+    print("Creating Drug model visualization plots with placebo comparison...")
     
-    # Convert time to years
-    years = sol.ts / (24 * 365)
+    # Convert time to years for both simulations
+    years_drug = sol_drug.ts / (24 * 365)
+    years_placebo = sol_placebo.ts / (24 * 365)
     
     # Find the last 4 years of data
-    last_4_years_mask = years >= (years[-1] - 4)
-    years_filtered = years[last_4_years_mask]
+    last_4_years_mask_drug = years_drug >= (years_drug[-1] - 4)
+    last_4_years_mask_placebo = years_placebo >= (years_placebo[-1] - 4)
+    years_filtered_drug = years_drug[last_4_years_mask_drug]
+    years_filtered_placebo = years_placebo[last_4_years_mask_placebo]
     
     # Volume scaling factor for ISF compartment
     volume_scale_factor_isf = 0.2505
@@ -89,18 +102,29 @@ def create_drug_model_plots(sol, model, plots_dir):
     fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(16, 10))
     
     # 1. Oligomer Loads (top left)
-    y_indexes = model.y_indexes
+    y_indexes_drug = model_drug.y_indexes
+    y_indexes_placebo = model_placebo.y_indexes
     
-    # Calculate weighted oligomer loads for AB42 (O2-O16)
-    ab42_oligomer_load = np.zeros(len(sol.ts))
+    # Calculate weighted oligomer loads for AB42 (O2-O16) - DRUG
+    ab42_oligomer_load_drug = np.zeros(len(sol_drug.ts))
     for i in range(2, 17):
         species_name = f'AB42_Oligomer{i:02d}'
-        if species_name in y_indexes:
-            ab42_oligomer_load += (i-1) * sol.ys[:, y_indexes[species_name]]
+        if species_name in y_indexes_drug:
+            ab42_oligomer_load_drug += (i-1) * sol_drug.ys[:, y_indexes_drug[species_name]]
     
-    ab42_oligomer_load_filtered = ab42_oligomer_load[last_4_years_mask] / volume_scale_factor_isf
+    ab42_oligomer_load_filtered_drug = ab42_oligomer_load_drug[last_4_years_mask_drug] / volume_scale_factor_isf
     
-    ax1.plot(years_filtered, ab42_oligomer_load_filtered, linewidth=3, color='green', label='AB42 Oligomers')
+    # Calculate weighted oligomer loads for AB42 (O2-O16) - PLACEBO
+    ab42_oligomer_load_placebo = np.zeros(len(sol_placebo.ts))
+    for i in range(2, 17):
+        species_name = f'AB42_Oligomer{i:02d}'
+        if species_name in y_indexes_placebo:
+            ab42_oligomer_load_placebo += (i-1) * sol_placebo.ys[:, y_indexes_placebo[species_name]]
+    
+    ab42_oligomer_load_filtered_placebo = ab42_oligomer_load_placebo[last_4_years_mask_placebo] / volume_scale_factor_isf
+    
+    ax1.plot(years_filtered_drug, ab42_oligomer_load_filtered_drug, linewidth=3, color='green', label='Drug')
+    ax1.plot(years_filtered_placebo, ab42_oligomer_load_filtered_placebo, linewidth=3, color='black', label='Placebo')
     ax1.set_ylabel('Oligomer Load (nM)', fontsize=16, fontweight='bold')
     ax1.set_xlabel('Time (years)', fontsize=16, fontweight='bold')
     ax1.set_title('AB42 Oligomer Load (Last 4 Years)', fontsize=18, fontweight='bold')
@@ -109,16 +133,26 @@ def create_drug_model_plots(sol, model, plots_dir):
     ax1.tick_params(axis='both', which='major', labelsize=14)
     
     # 2. Protofibril Loads (top right)
-    # Calculate weighted fibril loads for AB42 (F17-F24)
-    ab42_fibril_load = np.zeros(len(sol.ts))
+    # Calculate weighted fibril loads for AB42 (F17-F24) - DRUG
+    ab42_fibril_load_drug = np.zeros(len(sol_drug.ts))
     for i in range(17, 25):
         species_name = f'AB42_Fibril{i:02d}'
-        if species_name in y_indexes:
-            ab42_fibril_load += (i-1) * sol.ys[:, y_indexes[species_name]]
+        if species_name in y_indexes_drug:
+            ab42_fibril_load_drug += (i-1) * sol_drug.ys[:, y_indexes_drug[species_name]]
     
-    ab42_fibril_load_filtered = ab42_fibril_load[last_4_years_mask] / volume_scale_factor_isf
+    ab42_fibril_load_filtered_drug = ab42_fibril_load_drug[last_4_years_mask_drug] / volume_scale_factor_isf
     
-    ax2.plot(years_filtered, ab42_fibril_load_filtered, linewidth=3, color='green', label='AB42 Protofibrils')
+    # Calculate weighted fibril loads for AB42 (F17-F24) - PLACEBO
+    ab42_fibril_load_placebo = np.zeros(len(sol_placebo.ts))
+    for i in range(17, 25):
+        species_name = f'AB42_Fibril{i:02d}'
+        if species_name in y_indexes_placebo:
+            ab42_fibril_load_placebo += (i-1) * sol_placebo.ys[:, y_indexes_placebo[species_name]]
+    
+    ab42_fibril_load_filtered_placebo = ab42_fibril_load_placebo[last_4_years_mask_placebo] / volume_scale_factor_isf
+    
+    ax2.plot(years_filtered_drug, ab42_fibril_load_filtered_drug, linewidth=3, color='green', label='Drug')
+    ax2.plot(years_filtered_placebo, ab42_fibril_load_filtered_placebo, linewidth=3, color='black', label='Placebo')
     ax2.set_ylabel('Protofibril Load (nM)', fontsize=16, fontweight='bold')
     ax2.set_xlabel('Time (years)', fontsize=16, fontweight='bold')
     ax2.set_title('AB42 Protofibril Load (Last 4 Years)', fontsize=18, fontweight='bold')
@@ -127,10 +161,14 @@ def create_drug_model_plots(sol, model, plots_dir):
     ax2.tick_params(axis='both', which='major', labelsize=14)
     
     # 3. Plaque Loads (bottom left)
-    ab42_plaque = sol.ys[:, y_indexes['AB42_Plaque_unbound']] / volume_scale_factor_isf
-    ab42_plaque_filtered = ab42_plaque[last_4_years_mask]
+    ab42_plaque_drug = sol_drug.ys[:, y_indexes_drug['AB42_Plaque_unbound']] / volume_scale_factor_isf
+    ab42_plaque_filtered_drug = ab42_plaque_drug[last_4_years_mask_drug]
     
-    ax3.plot(years_filtered, ab42_plaque_filtered, linewidth=3, color='green', label='AB42 Plaque')
+    ab42_plaque_placebo = sol_placebo.ys[:, y_indexes_placebo['AB42_Plaque_unbound']] / volume_scale_factor_isf
+    ab42_plaque_filtered_placebo = ab42_plaque_placebo[last_4_years_mask_placebo]
+    
+    ax3.plot(years_filtered_drug, ab42_plaque_filtered_drug, linewidth=3, color='green', label='Drug')
+    ax3.plot(years_filtered_placebo, ab42_plaque_filtered_placebo, linewidth=3, color='black', label='Placebo')
     ax3.set_ylabel('Plaque Load (nM)', fontsize=16, fontweight='bold')
     ax3.set_xlabel('Time (years)', fontsize=16, fontweight='bold')
     ax3.set_title('AB42 Plaque Load (Last 4 Years)', fontsize=18, fontweight='bold')
@@ -139,10 +177,14 @@ def create_drug_model_plots(sol, model, plots_dir):
     ax3.tick_params(axis='both', which='major', labelsize=14)
     
     # 4. SUVR Plot (bottom right)
-    suvr = calculate_suvr(sol, model)
-    suvr_filtered = suvr[last_4_years_mask]
+    suvr_drug = calculate_suvr(sol_drug, model_drug)
+    suvr_filtered_drug = suvr_drug[last_4_years_mask_drug]
     
-    ax4.plot(years_filtered, suvr_filtered, linewidth=3, color='green', label='SUVR')
+    suvr_placebo = calculate_suvr(sol_placebo, model_placebo)
+    suvr_filtered_placebo = suvr_placebo[last_4_years_mask_placebo]
+    
+    ax4.plot(years_filtered_drug, suvr_filtered_drug, linewidth=3, color='green', label='Drug')
+    ax4.plot(years_filtered_placebo, suvr_filtered_placebo, linewidth=3, color='black', label='Placebo')
     ax4.set_ylabel('SUVR', fontsize=16, fontweight='bold')
     ax4.set_xlabel('Time (years)', fontsize=16, fontweight='bold')
     ax4.set_title('SUVR Progression (Last 4 Years)', fontsize=18, fontweight='bold')
@@ -155,7 +197,7 @@ def create_drug_model_plots(sol, model, plots_dir):
     plt.show()
     plt.close(fig)
     
-    print(f"Drug model plots saved to {plots_dir}")
+    print(f"Drug model plots with placebo comparison saved to {plots_dir}")
 
 
 def create_mab_csf_plot(sol, model, plots_dir):
@@ -244,19 +286,27 @@ def main():
     rr.integrator.relative_tolerance = 1e-8
     rr.integrator.setValue('stiff', True)
     
-    # Run simulation
-    output_file = f'drug_model_simulation_results_{years}yr_sbml.csv'
-    run_drug_model_simulation(rr, years, output_file)
+    # Run DRUG simulation
+    output_file_drug = f'drug_model_simulation_results_{years}yr_sbml.csv'
+    run_drug_model_simulation(rr, years, output_file_drug, is_placebo=False)
     
-    # Load results for analysis
-    df = pd.read_csv(output_file)
+    # Load DRUG results for analysis
+    df_drug = pd.read_csv(output_file_drug)
+    time_values_drug = df_drug['time'].values
+    species_data_drug = df_drug.drop('time', axis=1).values
+    sol_drug = Solution(time_values_drug, species_data_drug)
+    model_drug = SimpleModel(df_drug.drop('time', axis=1).columns, species_data_drug[0])
     
-    # Create solution and model objects for visualization
-    time_values = df['time'].values
-    species_data = df.drop('time', axis=1).values
+    # Run PLACEBO simulation
+    output_file_placebo = f'placebo_model_simulation_results_{years}yr_sbml.csv'
+    run_drug_model_simulation(rr, years, output_file_placebo, is_placebo=True)
     
-    sol = Solution(time_values, species_data)
-    model = SimpleModel(df.drop('time', axis=1).columns, species_data[0])
+    # Load PLACEBO results for analysis
+    df_placebo = pd.read_csv(output_file_placebo)
+    time_values_placebo = df_placebo['time'].values
+    species_data_placebo = df_placebo.drop('time', axis=1).values
+    sol_placebo = Solution(time_values_placebo, species_data_placebo)
+    model_placebo = SimpleModel(df_placebo.drop('time', axis=1).columns, species_data_placebo[0])
     
     # Create output directory for plots
     plots_dir = Path("simulation_plots/drug_model_74yr_sbml")
@@ -265,15 +315,15 @@ def main():
     # Generate plots
     print("Generating plots...")
     
-    # Create new visualization for Drug model - last 4 years
-    create_drug_model_plots(sol, model, plots_dir)
+    # Create new visualization for Drug model - last 4 years with placebo comparison
+    create_drug_model_plots(sol_drug, model_drug, sol_placebo, model_placebo, plots_dir)
     
-    # Create mAb CSF plot
-    create_mab_csf_plot(sol, model, plots_dir)
+    # Create mAb CSF plot (drug only)
+    create_mab_csf_plot(sol_drug, model_drug, plots_dir)
     
-    # Get final values for summary
-    final_values = get_ab42_ratios_and_concentrations_final_values(sol, model)
-    final_suvr = get_suvr_final_value(sol, model)
+    # Get final values for summary (using drug simulation)
+    final_values = get_ab42_ratios_and_concentrations_final_values(sol_drug, model_drug)
+    final_suvr = get_suvr_final_value(sol_drug, model_drug)
     
     print("\n" + "="*60)
     print("SIMULATION SUMMARY")
@@ -284,7 +334,8 @@ def main():
     print(f"Key parameters:")
     print(f"  - CL_AB42_IDE: 100.2")
     print(f"  - exp_decline_rate_IDE_fortytwo: {1.15E-05*0.2525:.2e}")
-    print(f"Results file: {output_file}")
+    print(f"Drug results file: {output_file_drug}")
+    print(f"Placebo results file: {output_file_placebo}")
     print(f"Plots directory: {plots_dir}")
     print("\nFinal values:")
     print(f"  - AB42/AB40 ratio: {final_values['brain_plasma_ratio']:.4f}")
@@ -292,7 +343,9 @@ def main():
     print(f"  - SUVR: {final_suvr:.4f}")
     print("="*60)
     
-    print(f"\nSimulation complete! Results saved to {output_file}")
+    print(f"\nSimulation complete!")
+    print(f"Drug results saved to {output_file_drug}")
+    print(f"Placebo results saved to {output_file_placebo}")
     print(f"Plots saved to {plots_dir}")
 
 if __name__ == "__main__":
