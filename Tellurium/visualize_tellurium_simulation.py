@@ -83,7 +83,7 @@ def calculate_suvr(sol, model, c1=2.52, c2=1.3, c3=3.5, c4=400000, volume_scale_
         #print("Plaque load: ", ab42_plaque/volume_scale_factor_isf)
 
         # Calculate the weighted sum
-        weighted_sum = (ab42_oligo + ab42_proto + c2 * ab42_plaque)/volume_scale_factor_isf
+        weighted_sum = (ab42_oligo + ab42_proto + c2 * 24 * ab42_plaque)/volume_scale_factor_isf
         
         # Calculate the numerator and denominator for SUVR
         numerator = c1 * (weighted_sum ** c3)

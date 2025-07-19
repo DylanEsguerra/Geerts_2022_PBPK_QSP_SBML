@@ -1,4 +1,5 @@
 """
+* may be making extra plaque rates * 
 Rate Constant Extrapolation Module for Amyloid Beta Aggregation
 
 This module calculates forward and backward rate constants for amyloid beta (Aβ) oligomerization

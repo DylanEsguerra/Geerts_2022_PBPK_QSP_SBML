@@ -78,8 +78,8 @@ def run_simulation_dylan_model(rr, years, output_file):
     rr.setValue('k_O4_O5_fortytwo',0.00273185)
     rr.setValue('k_O5_O6_fortytwo',0.00273361)
     # CL_AB42_IDE and exp_decline_rate_IDE_fortytwo are now set in the main script based on mode
-    # rr.setValue('CL_AB42_IDE', 400) # 400 * 0.2505 = 100.2
-    # rr.setValue('CL_AB42_IDE', 100.2) # 400 * 0.2505 = 100.2
+    #rr.setValue('CL_AB42_IDE', 400) # 400 * 0.2505 = 100.2 ISE_activity_ISF
+    #rr.setValue('CL_AB42_IDE', 100.2) # 400 * 0.2505 = 100.2
     # rr.setValue('exp_decline_rate_IDE_fortytwo', 1.15E-05) # For Antimony
     # rr.setValue('exp_decline_rate_IDE_fortytwo', 1.15E-05*0.2525) # For SBML
     #'''
@@ -237,7 +237,7 @@ def plot_six_panel_model_comparison(
     # Panel 5: IDE Activity/Clearance (Bottom Left)
     # Dylan_LibSBML model: CL_AB42_IDE
     if 'CL_AB42_IDE' in yidx_dylan:
-        cl_ide_dylan = sol_dylan.ys[start_idx_dylan:, yidx_dylan['CL_AB42_IDE']] 
+        cl_ide_dylan = sol_dylan.ys[start_idx_dylan:, yidx_dylan['CL_AB42_IDE']]/volume_scale_factor_isf
         ax5.plot(x_filtered_dylan, cl_ide_dylan, linewidth=3, color=red, label="Dylan_LibSBML Model IDE Clearance")
         ax5.set_ylabel('IDE Clearance (1/h)', fontsize=14, fontweight='bold')
     else:
@@ -311,7 +311,8 @@ if __name__ == "__main__":
 
     # Load Don_Antimony_PBPK model
     if args.mode == "antimony":
-        antimony_path_don = Path("../generated/sbml/Antimony_PBPK_model.txt")
+        #antimony_path_don = Path("../generated/sbml/Antimony_PBPK_model.txt")
+        antimony_path_don = Path("Antimony_Geerts_model_opt_flexible6a.txt")
         with open(antimony_path_don, "r") as f:
             antimony_str_don = f.read()
         sbml_str_don = None

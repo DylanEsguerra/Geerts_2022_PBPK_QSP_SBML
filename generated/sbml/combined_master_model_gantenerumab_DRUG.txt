@@ -262,12 +262,15 @@ model *Combined_Master_Model()
 
   // Assignment Rules:
   Anti_ABeta_bound_sum := AB40_Oligomer02_Antibody_bound + AB42_Oligomer02_Antibody_bound + AB40_Oligomer03_Antibody_bound + AB42_Oligomer03_Antibody_bound + AB40_Oligomer04_Antibody_bound + AB42_Oligomer04_Antibody_bound + AB40_Oligomer05_Antibody_bound + AB42_Oligomer05_Antibody_bound + AB40_Oligomer06_Antibody_bound + AB42_Oligomer06_Antibody_bound + AB40_Oligomer07_Antibody_bound + AB42_Oligomer07_Antibody_bound + AB40_Oligomer08_Antibody_bound + AB42_Oligomer08_Antibody_bound + AB40_Oligomer09_Antibody_bound + AB42_Oligomer09_Antibody_bound + AB40_Oligomer10_Antibody_bound + AB42_Oligomer10_Antibody_bound + AB40_Oligomer11_Antibody_bound + AB42_Oligomer11_Antibody_bound + AB40_Oligomer12_Antibody_bound + AB42_Oligomer12_Antibody_bound + AB40_Oligomer13_Antibody_bound + AB42_Oligomer13_Antibody_bound + AB40_Oligomer14_Antibody_bound + AB42_Oligomer14_Antibody_bound + AB40_Oligomer15_Antibody_bound + AB42_Oligomer15_Antibody_bound + AB40_Oligomer16_Antibody_bound + AB42_Oligomer16_Antibody_bound + AB40_Fibril17_Antibody_bound + AB42_Fibril17_Antibody_bound + AB40_Fibril18_Antibody_bound + AB42_Fibril18_Antibody_bound + AB40_Fibril19_Antibody_bound + AB42_Fibril19_Antibody_bound + AB40_Fibril20_Antibody_bound + AB42_Fibril20_Antibody_bound + AB40_Fibril21_Antibody_bound + AB42_Fibril21_Antibody_bound + AB40_Fibril22_Antibody_bound + AB42_Fibril22_Antibody_bound + AB40_Fibril23_Antibody_bound + AB42_Fibril23_Antibody_bound + AB40_Fibril24_Antibody_bound + AB42_Fibril24_Antibody_bound + AB40_Plaque_Antibody_bound + AB42_Plaque_Antibody_bound;
+  current_age_hours := starting_age*365*24 + time; // Convert age to hours 
+
 
   // Rate Rules:
   Microglia_Hi_Fract' = (1 + SmaxUp*Anti_ABeta_bound_sum/(EC50_Up + Anti_ABeta_bound_sum))*gamma_fr*Microglia_Hi_Fract*(Microglia_Hi_fract_max - Microglia_Hi_Fract)/(Microglia_Hi_fract_max - Microglia_Hi_fract_base) - gamma_fr*Microglia_Hi_Fract;
   Microglia_cell_count' = ((1 + SmaxPro*Anti_ABeta_bound_sum/(EC50_pro + Anti_ABeta_bound_sum))*gamma_MG*Microglia_cells_max/(Microglia_cells_max - Microglia_baseline))*Microglia_cell_count*(Microglia_cells_max - Microglia_cell_count)/Microglia_cells_max - gamma_MG*Microglia_cell_count;
   CL_AB40_IDE' = -exp_decline_rate_IDE_forty*CL_AB40_IDE;
   CL_AB42_IDE' = -exp_decline_rate_IDE_fortytwo*CL_AB42_IDE;
+
 
   // Reactions:
   APP_to_C99: APP => C99; k_C99*APP*VIS_brain;
@@ -2764,30 +2767,28 @@ model *Combined_Master_Model()
 
   // Events:
   // Gantenerumab subcutaneous dosing schedule: Every 4 weeks (28 days) for 1.5 years, starting at dose_start_age
-  // Time decomposition: days*hours
-  // 4 weeks = 28*24 hours = 672 hours
-  // 1 year = 365*24 hours = 8760 hours
-  // Events are triggered when time >= (target_age - starting_age) * hours_per_year + 2 hour buffer
+  // Age-based events: Events are triggered when current_age_hours >= target_age
+  // 4 weeks = 28/365 years 
   // 1.5 years = ~19 doses (1.5 * 365 / 28 = 19.5)
-  E1: at (time >= (dose_start_age - starting_age) * 365*24 + 2): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 1 at dose_start_age + 2 hours
-  E2: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 1*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 2 (4 weeks later)
-  E3: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 2*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 3
-  E4: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 3*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 4
-  E5: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 4*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 5
-  E6: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 5*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 6
-  E7: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 6*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 7
-  E8: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 7*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 8
-  E9: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 8*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 9
-  E10: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 9*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 10
-  E11: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 10*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 11
-  E12: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 11*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 12
-  E13: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 12*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 13
-  E14: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 13*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 14
-  E15: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 14*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 15
-  E16: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 15*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 16
-  E17: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 16*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 17
-  E18: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 17*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 18
-  E19: at (time >= (dose_start_age - starting_age) * 365*24 + 2 + 18*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 19 (final dose at ~1.5 years)
+  E1: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 1 at dose_start_age + 2 hours
+  E2: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 1*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 2 (4 weeks later)
+  E3: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 2*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 3
+  E4: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 3*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 4
+  E5: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 4*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 5
+  E6: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 5*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 6
+  E7: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 6*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 7
+  E8: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 7*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 8
+  E9: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 8*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 9
+  E10: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 9*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 10
+  E11: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 10*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 11
+  E12: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 11*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 12
+  E13: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 12*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 13
+  E14: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 13*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 14
+  E15: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 14*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 15
+  E16: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 15*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 16
+  E17: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 16*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 17
+  E18: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 17*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 18
+  E19: at (current_age_hours >= (dose_start_age - starting_age) * 365*24 + 2 + 18*28*24): SubCut_absorption = SubCut_absorption + SC_DoseAmount // Dose 19 (final dose at ~1.5 years)
   
 
   // Unit definitions:
