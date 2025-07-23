@@ -139,7 +139,7 @@ The model uses sophisticated rate extrapolation implemented in `K_rates_extrapol
 **Key Features:**
 - Uses experimentally determined rates for small oligomers as anchor points
 - Handles Aβ40 and Aβ42 separately with different aggregation propensities
-- Defines $\text{FibForAj}$ rates as $K_{\text{O13\_Plaque\_42}} = K_{\text{O13\_O14\_42}} \times \text{Baseline\_AB42\_Oligomer\_Fibril\_Plaque}$ using Oligomer_13 as an example
+- Defines $\text{FibForAj}$ rates as $K_{\text{O13\_Plaque\_42}} = K_{\text{O13\_O14\_42}} \times \text{Baseline\_AB42\_Oligomer\_Fibril\_Plaque}$ using Oligomer\_13 as an example
 - **Note**: Backward rates are not provided in the original supplement and are copied from referenced paper [Garai 2013](https://www.pnas.org/doi/10.1073/pnas.1222478110?url_ver=Z39.88-2003&rfr_id=ori%3Arid%3Acrossref.org&rfr_dat=cr_pub++0pubmed)
 - **Note**: Found issues with Garai Rates including one issue in publication itself and another discrepancy between rate in Geerts and published rate
     - Garai et al. 2013 Figure 7 fails for published value of dimer to trimer rate for Abeta 42: k+23 (kf1 in Geerts) = 38 (M⁻¹s⁻¹), but is reproducible with k+23 = 380 (M⁻¹s⁻¹)
