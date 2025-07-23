@@ -34,7 +34,7 @@ simulation_selections = ['time', '[AB42_Monomer]',
                         '[AB42_Plaque_unbound]']
 
 # Load the SBML model
-xml_path = os.path.join(parent_dir, 'generated', 'sbml', 'combined_master_model.xml')
+xml_path = os.path.join(parent_dir, 'generated', 'sbml', 'combined_master_model_gantenerumab.xml')
 with open(xml_path, "r") as f:
     sbml_str = f.read()
 
@@ -79,8 +79,8 @@ def plot_extrapolated_rates_sensitivity(kb0_sim_results, kb1_sim_results):
     colors_kb0 = plt.cm.viridis(np.linspace(0, 1, len(kb0_fortytwo_values)))
     
     for i, kb0 in enumerate(kb0_fortytwo_values):
-        Garai_kb0 = kb0 / 3600  # Convert to 1/s
-        rates = calculate_k_rates(original_kb0_fortytwo=Garai_kb0)
+        #Garai_kb0 = kb0 / 3600  # Convert to 1/s
+        rates = calculate_k_rates(kb0_fortytwo=kb0)
         
         # Extract backward rates for AB42
         backward_rates_42 = []
@@ -115,8 +115,8 @@ def plot_extrapolated_rates_sensitivity(kb0_sim_results, kb1_sim_results):
     colors_kb1 = plt.cm.plasma(np.linspace(0, 1, len(kb1_fortytwo_values)))
     
     for i, kb1 in enumerate(kb1_fortytwo_values):
-        Garai_kb1 = kb1 / 3600  # Convert to 1/s
-        rates = calculate_k_rates(original_kb1_fortytwo=Garai_kb1)
+        #Garai_kb1 = kb1 / 3600  # Convert to 1/s
+        rates = calculate_k_rates(kb1_fortytwo=kb1)
         
         # Extract backward rates for AB42
         backward_rates_42 = []
@@ -141,8 +141,8 @@ def plot_extrapolated_rates_sensitivity(kb0_sim_results, kb1_sim_results):
     
     # --- Plot 3: Concentration-dependent gain factors for kb0 variation ---
     for i, kb0 in enumerate(kb0_fortytwo_values):
-        Garai_kb0 = kb0 / 3600
-        rates = calculate_k_rates(original_kb0_fortytwo=Garai_kb0)
+        #Garai_kb0 = kb0 / 3600
+        rates = calculate_k_rates(kb0_fortytwo=kb0)
         
         # Use stored simulation results instead of re-running simulations
         if kb0 not in kb0_sim_results:
@@ -220,8 +220,8 @@ def plot_extrapolated_rates_sensitivity(kb0_sim_results, kb1_sim_results):
     
     # --- Plot 4: Concentration-dependent gain factors for kb1 variation ---
     for i, kb1 in enumerate(kb1_fortytwo_values):
-        Garai_kb1 = kb1 / 3600
-        rates = calculate_k_rates(original_kb1_fortytwo=Garai_kb1)
+        #Garai_kb1 = kb1 / 3600
+        rates = calculate_k_rates(kb1_fortytwo=kb1)
         
         # Use stored simulation results instead of re-running simulations
         if kb1 not in kb1_sim_results:
@@ -359,8 +359,8 @@ for i, kb0 in enumerate(kb0_fortytwo_values):
     try:
         rr.reset()
         # Calculate all rates for this kb0
-        Garai_kb0 = kb0 / 3600  # Convert to 1/s
-        rates = calculate_k_rates(original_kb0_fortytwo=Garai_kb0)
+        #Garai_kb0 = kb0 / 3600  # Convert to 1/s
+        rates = calculate_k_rates(kb0_fortytwo=kb0)
         
         # Set the main parameter first
         rr.k_O2_M_fortytwo = kb0
@@ -468,8 +468,8 @@ for i, kb1 in enumerate(kb1_fortytwo_values):
         rr.integrator.relative_tolerance = 1e-8
         rr.integrator.setValue('stiff', True)
         
-        Garai_kb1 = kb1 / 3600  # Convert to 1/s for calculate_k_rates
-        rates = calculate_k_rates(original_kb1_fortytwo=Garai_kb1)
+        #Garai_kb1 = kb1 / 3600  # Convert to 1/s for calculate_k_rates
+        rates = calculate_k_rates(kb1_fortytwo=kb1)
         
         # Set the main parameter
         rr.k_O3_O2_fortytwo = kb1

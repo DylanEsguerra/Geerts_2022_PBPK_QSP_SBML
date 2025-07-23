@@ -109,6 +109,14 @@ def run_drug_model_simulation(rr, years, output_file, is_placebo=False):
     rr.setValue('k_O2_O3_fortytwo', 0.0009995988649416513)
     rr.setValue('k_O2_M_fortytwo', 71.27022085388667)
     rr.setValue('k_O3_O2_fortytwo', 5.696488107534822e-07)
+
+    rr.setValue('SC_DoseAmount', 2050.6*4)
+    rr.setValue('fta0', 1/1270)
+    rr.setValue('fta1', 1/30.7)
+    rr.setValue('fta2', 1/2.51)
+    rr.setValue('fta3', 1/0.69)
+
+    
     
     # SBML mode specific parameters
     rr.setValue('CL_AB42_IDE', 100.2)  # 400 * 0.2505 = 100.2 
