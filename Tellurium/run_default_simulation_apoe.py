@@ -42,9 +42,6 @@ def plot_ab42_ratios_and_concentrations_overlay(
 
     from visualize_tellurium_simulation import calculate_suvr
 
-    # Create 2x2 subplot layout: SUVR, ratio, ISF, CSF
-    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(20, 16))
-
     # Time axis
     x_values = sol_nonapoe4.ts / 24.0 / 365.0
     start_idx = np.where(x_values >= (max(x_values) - 80))[0][0]
@@ -59,62 +56,129 @@ def plot_ab42_ratios_and_concentrations_overlay(
     # APOE4
     yidx_a = model_apoe4.y_indexes
 
-    # 1. SUVR
+    # Calculate SUVR values
     suvr_n = calculate_suvr(sol_nonapoe4, model_nonapoe4)[start_idx:]
     suvr_a = calculate_suvr(sol_apoe4, model_apoe4)[start_idx:]
-    ax1.plot(x_filtered, suvr_n, linewidth=3, color='blue', label='SUVR Non-APOE4')
-    ax1.plot(x_filtered, suvr_a, linewidth=3, color='red', label='SUVR APOE4')
-    ax1.set_ylabel('SUVR', fontsize=26)
-    ax1.set_xlabel('Time (years)', fontsize=26)
-    ax1.set_title('SUVR Progression', fontsize=30)
-    ax1.grid(True, alpha=0.3)
-    ax1.legend(fontsize=20)
-    ax1.tick_params(axis='both', which='major', labelsize=22)
 
-    # 2. Brain plasma ratios
+    # Calculate SUVR rate per year (derivative)
+    suvr_rate_n = np.gradient(suvr_n, x_filtered)
+    suvr_rate_a = np.gradient(suvr_a, x_filtered)
+
+    # Get AB42 plaque data
+    ab42_plaque_n = sol_nonapoe4.ys[:, yidx_n['AB42_Plaque_unbound']][start_idx:]
+    ab42_plaque_a = sol_apoe4.ys[:, yidx_a['AB42_Plaque_unbound']][start_idx:]
+    
+    # Calculate plaque rate per year
+    plaque_rate_n = np.gradient(ab42_plaque_n, x_filtered)
+    plaque_rate_a = np.gradient(ab42_plaque_a, x_filtered)
+
+    # Get other data
     ab42_bp_n = sol_nonapoe4.ys[:, yidx_n['AB42Mu_Brain_Plasma']]
     ab40_bp_n = sol_nonapoe4.ys[:, yidx_n['AB40Mu_Brain_Plasma']]
     ab42_bp_a = sol_apoe4.ys[:, yidx_a['AB42Mu_Brain_Plasma']]
     ab40_bp_a = sol_apoe4.ys[:, yidx_a['AB40Mu_Brain_Plasma']]
     ratio_n = np.where(ab40_bp_n > 0, ab42_bp_n / ab40_bp_n, 0)[start_idx:]
     ratio_a = np.where(ab40_bp_a > 0, ab42_bp_a / ab40_bp_a, 0)[start_idx:]
-    ax2.plot(x_filtered, ratio_n, linewidth=2, color='blue', label='Non-APOE4')
-    ax2.plot(x_filtered, ratio_a, linewidth=2, color='red', label='APOE4')
-    ax2.set_ylabel('Ratio', fontsize=26)
-    ax2.set_xlabel('Time (years)', fontsize=26)
-    ax2.set_title('Brain Plasma AB42/AB40 Ratio', fontsize=30)
-    ax2.grid(True, alpha=0.3)
-    ax2.legend(fontsize=20)
-    ax2.tick_params(axis='both', which='major', labelsize=22)
-
-    # 3. ISF AB42
     ab42_isf_n = sol_nonapoe4.ys[:, yidx_n['AB42_Monomer']] / volume_scale_factor_isf * nM_to_pg
     ab42_isf_a = sol_apoe4.ys[:, yidx_a['AB42_Monomer']] / volume_scale_factor_isf * nM_to_pg
-    ax3.semilogy(x_filtered, ab42_isf_n[start_idx:], linewidth=2, color='blue', label='Non-APOE4')
-    ax3.semilogy(x_filtered, ab42_isf_a[start_idx:], linewidth=2, color='red', label='APOE4')
-    ax3.set_ylabel('Concentration (pg/mL)', fontsize=26)
-    ax3.set_xlabel('Time (years)', fontsize=26)
-    ax3.set_title('Total ISF AB42', fontsize=30)
-    ax3.grid(True, alpha=0.3)
-    ax3.legend(fontsize=20)
-    ax3.tick_params(axis='both', which='major', labelsize=22)
-
-    # 4. CSF SAS AB42
     ab42_sas_n = sol_nonapoe4.ys[:, yidx_n['AB42Mu_SAS']] / volume_scale_factor_csf * nM_to_pg
     ab42_sas_a = sol_apoe4.ys[:, yidx_a['AB42Mu_SAS']] / volume_scale_factor_csf * nM_to_pg
+
+    # --- Figure 1: SUVR, Ratio, ISF Monomer, CSF ---
+    fig1, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(12, 8))
+
+    # 1. SUVR
+    ax1.plot(x_filtered, suvr_n, linewidth=3, color='blue', label='SUVR Non-APOE4')
+    ax1.plot(x_filtered, suvr_a, linewidth=3, color='red', label='SUVR APOE4')
+    ax1.set_ylabel('SUVR', fontsize=20)
+    ax1.set_xlabel('Time (years)', fontsize=20)
+    ax1.set_title('SUVR Progression', fontsize=20)
+    ax1.grid(True, alpha=0.3)
+    ax1.legend(fontsize=12)
+    ax1.tick_params(axis='both', which='major', labelsize=12)
+
+    # 2. Ratio
+    ax2.plot(x_filtered, ratio_n, linewidth=2, color='blue', label='Non-APOE4')
+    ax2.plot(x_filtered, ratio_a, linewidth=2, color='red', label='APOE4')
+    ax2.set_ylabel('Ratio', fontsize=20)
+    ax2.set_xlabel('Time (years)', fontsize=20)
+    ax2.set_title('Brain Plasma AB42/AB40 Ratio', fontsize=20)
+    ax2.grid(True, alpha=0.3)
+    ax2.legend(fontsize=12)
+    ax2.tick_params(axis='both', which='major', labelsize=12)
+
+    # 3. ISF AB42 Monomer
+    ax3.semilogy(x_filtered, ab42_isf_n[start_idx:], linewidth=2, color='blue', label='Non-APOE4')
+    ax3.semilogy(x_filtered, ab42_isf_a[start_idx:], linewidth=2, color='red', label='APOE4')
+    ax3.set_ylabel('Concentration (pg/mL)', fontsize=20)
+    ax3.set_xlabel('Time (years)', fontsize=20)
+    ax3.set_title('Total ISF AB42', fontsize=20)
+    ax3.grid(True, alpha=0.3)
+    ax3.legend(fontsize=12)
+    ax3.tick_params(axis='both', which='major', labelsize=12)
+
+    # 4. CSF SAS AB42
     ax4.plot(x_filtered, ab42_sas_n[start_idx:], linewidth=2, color='blue', label='Non-APOE4')
     ax4.plot(x_filtered, ab42_sas_a[start_idx:], linewidth=2, color='red', label='APOE4')
-    ax4.set_ylabel('Concentration (pg/mL)', fontsize=26)
-    ax4.set_xlabel('Time (years)', fontsize=26)
-    ax4.set_title('CSF SAS AB42', fontsize=30)
+    ax4.set_ylabel('Concentration (pg/mL)', fontsize=20)
+    ax4.set_xlabel('Time (years)', fontsize=20)
+    ax4.set_title('CSF SAS AB42', fontsize=20)
     ax4.grid(True, alpha=0.3)
-    ax4.legend(fontsize=20)
-    ax4.tick_params(axis='both', which='major', labelsize=22)
+    ax4.legend(fontsize=12)
+    ax4.tick_params(axis='both', which='major', labelsize=12)
 
     plt.tight_layout()
-    fig.savefig(plots_dir / f'{drug_type.lower()}_ab42_ratios_and_concentrations_apoe_compare.png', dpi=300, bbox_inches='tight')
+    fig1.savefig(plots_dir / f'{drug_type.lower()}_ab42_ratios_and_concentrations_apoe_compare.png', dpi=300, bbox_inches='tight')
     plt.show()
-    plt.close(fig)
+    plt.close(fig1)
+
+    # --- Figure 2: SUVR, SUVR rate, Plaque, Plaque rate ---
+    fig2, ((bx1, bx2), (bx3, bx4)) = plt.subplots(2, 2, figsize=(12, 8))
+
+    # 1. SUVR
+    bx1.plot(x_filtered, suvr_n, linewidth=3, color='blue', label='SUVR Non-APOE4')
+    bx1.plot(x_filtered, suvr_a, linewidth=3, color='red', label='SUVR APOE4')
+    bx1.set_ylabel('SUVR', fontsize=20)
+    bx1.set_xlabel('Time (years)', fontsize=20)
+    bx1.set_title('SUVR Progression', fontsize=20)
+    bx1.grid(True, alpha=0.3)
+    bx1.legend(fontsize=12)
+    bx1.tick_params(axis='both', which='major', labelsize=12)
+
+    # 2. SUVR Rate per Year
+    bx2.plot(x_filtered, suvr_rate_n, linewidth=2, color='blue', label='Non-APOE4')
+    bx2.plot(x_filtered, suvr_rate_a, linewidth=2, color='red', label='APOE4')
+    bx2.set_ylabel('SUVR Rate (per year)', fontsize=20)
+    bx2.set_xlabel('Time (years)', fontsize=20)
+    bx2.set_title('SUVR Rate per Year', fontsize=20)
+    bx2.grid(True, alpha=0.3)
+    bx2.legend(fontsize=12)
+    bx2.tick_params(axis='both', which='major', labelsize=12)
+
+    # 3. AB42 Plaque
+    bx3.plot(x_filtered, ab42_plaque_n, linewidth=2, color='blue', label='Non-APOE4')
+    bx3.plot(x_filtered, ab42_plaque_a, linewidth=2, color='red', label='APOE4')
+    bx3.set_ylabel('Concentration (nM)', fontsize=20)
+    bx3.set_xlabel('Time (years)', fontsize=20)
+    bx3.set_title('AB42 Plaque', fontsize=20)
+    bx3.grid(True, alpha=0.3)
+    bx3.legend(fontsize=12)
+    bx3.tick_params(axis='both', which='major', labelsize=12)
+
+    # 4. AB42 Plaque Rate per Year
+    bx4.plot(x_filtered, plaque_rate_n, linewidth=2, color='blue', label='Non-APOE4')
+    bx4.plot(x_filtered, plaque_rate_a, linewidth=2, color='red', label='APOE4')
+    bx4.set_ylabel('Rate (nM/year)', fontsize=20)
+    bx4.set_xlabel('Time (years)', fontsize=20)
+    bx4.set_title('AB42 Plaque Rate per Year', fontsize=20)
+    bx4.grid(True, alpha=0.3)
+    bx4.legend(fontsize=12)
+    bx4.tick_params(axis='both', which='major', labelsize=12)
+
+    plt.tight_layout()
+    fig2.savefig(plots_dir / f'{drug_type.lower()}_ab42_plaque_dynamics_apoe_compare.png', dpi=300, bbox_inches='tight')
+    plt.show()
+    plt.close(fig2)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run Tellurium simulation for Non-APOE4 and APOE4.")
@@ -122,12 +186,15 @@ if __name__ == "__main__":
     parser.add_argument("--drug", type=str, choices=["lecanemab", "gantenerumab"], default="gantenerumab", help="Drug type simulated")
     args = parser.parse_args()
 
-    xml_path = Path("../generated/sbml/combined_master_model_gantenerumab.xml")
-    with open(xml_path, "r") as f:
-        sbml_str = f.read()
+    #xml_path = Path("../generated/sbml/combined_master_model_gantenerumab.xml")
+    antimony_path = Path("../generated/sbml/combined_master_model_gantenerumab.txt")
+    with open(antimony_path, "r") as f:
+        #sbml_str = f.read()
+        antimony_str = f.read()
 
     # Run Non-APOE4
-    rr = te.loadSBMLModel(sbml_str)
+    #rr = te.loadSBMLModel(sbml_str)
+    rr = te.loadAntimonyModel(antimony_str)
     rr.reset()
     rr.setIntegrator('cvode')
     rr.integrator.absolute_tolerance = 1e-8

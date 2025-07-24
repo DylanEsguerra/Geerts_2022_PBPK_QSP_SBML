@@ -2,11 +2,12 @@
 
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/DylanEsguerra/Geerts_2023_PBPK_QSP_SBML_Model)
 
-**NOTE** This branch contains the updated formulas for Microglia dependent clearance of Oligomers and Fibrils using Vmax, EC50, and Hi_Lo_Ratio rather than the CL_High and CL_Low values. Equations can be seen in libsbml modules. The ODE version has no updtates 
 
 This repository contains an open-sourced implementation of the Geerts et al. 2023 combined physiologically-based pharmacokinetic and quantitative systems pharmacology model for modeling amyloid aggregation in Alzheimer's disease.
 
 We have chosen to use open-sourced tools for all aspects of the model development process and are emphasizing a modular design process. We are using the Systems Biology Markup Language to save the model in XML format with the hope that other researchers can use it with the software of their choice. Our model is written in python with libsbml and solved using JAX diffrax library as well as Tellurium. 
+
+**NOTE** Tellurium is now the recomended tool for solving our model due to significant imporvement in runtime. We are in the process of transitioning the repository from SBML_to_ODE_JAX and diffrax to Tellurium and roadrunner. 
 
 ## Original Model Citation
 
