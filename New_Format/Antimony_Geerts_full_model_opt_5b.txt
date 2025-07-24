@@ -1,0 +1,1207 @@
+model pathway()
+
+compartment BBB = V_BBB
+compartment BCSFB = V_BCSFB
+compartment BrainPlasma = V_BrainPlasma
+compartment CM = V_CM
+compartment ISF = V_ISF
+compartment LV = V_LV
+compartment PVS = V_PVS
+compartment SAS = V_SAS
+compartment SubCutComp = V_SubCutComp
+compartment TFV = V_TFV
+compartment central = V_central
+compartment centralAntibody = V_centralAntibody
+compartment peripheral = V_peripheral
+compartment peripheralAntibody = V_peripheralAntibody
+
+substanceOnly species AB40_O10_ISF in ISF
+substanceOnly species AB40_O10_PVS in PVS
+substanceOnly species AB40_O10__Antibody_ISF in ISF
+substanceOnly species AB40_O10__Antibody_PVS in PVS
+substanceOnly species AB40_O11_ISF in ISF
+substanceOnly species AB40_O11_PVS in PVS
+substanceOnly species AB40_O11__Antibody_ISF in ISF
+substanceOnly species AB40_O11__Antibody_PVS in PVS
+substanceOnly species AB40_O12_ISF in ISF
+substanceOnly species AB40_O12_PVS in PVS
+substanceOnly species AB40_O12__Antibody_ISF in ISF
+substanceOnly species AB40_O12__Antibody_PVS in PVS
+substanceOnly species AB40_O13_ISF in ISF
+substanceOnly species AB40_O13_PVS in PVS
+substanceOnly species AB40_O13__Antibody_ISF in ISF
+substanceOnly species AB40_O13__Antibody_PVS in PVS
+substanceOnly species AB40_O14_ISF in ISF
+substanceOnly species AB40_O14_PVS in PVS
+substanceOnly species AB40_O14__Antibody_ISF in ISF
+substanceOnly species AB40_O14__Antibody_PVS in PVS
+substanceOnly species AB40_O15_ISF in ISF
+substanceOnly species AB40_O15_PVS in PVS
+substanceOnly species AB40_O15__Antibody_ISF in ISF
+substanceOnly species AB40_O15__Antibody_PVS in PVS
+substanceOnly species AB40_O16_ISF in ISF
+substanceOnly species AB40_O16_PVS in PVS
+substanceOnly species AB40_O16__Antibody_ISF in ISF
+substanceOnly species AB40_O16__Antibody_PVS in PVS
+substanceOnly species AB40_O17_ISF in ISF
+substanceOnly species AB40_O17_PVS in PVS
+substanceOnly species AB40_O17__Antibody_ISF in ISF
+substanceOnly species AB40_O17__Antibody_PVS in PVS
+substanceOnly species AB40_O18_ISF in ISF
+substanceOnly species AB40_O18_PVS in PVS
+substanceOnly species AB40_O18__Antibody_ISF in ISF
+substanceOnly species AB40_O18__Antibody_PVS in PVS
+substanceOnly species AB40_O19_ISF in ISF
+substanceOnly species AB40_O19_PVS in PVS
+substanceOnly species AB40_O19__Antibody_ISF in ISF
+substanceOnly species AB40_O19__Antibody_PVS in PVS
+substanceOnly species AB40_O1_BBB in BBB
+substanceOnly species AB40_O1_BCSFB in BCSFB
+substanceOnly species AB40_O1_BrainPlasma in BrainPlasma
+substanceOnly species AB40_O1_CM in CM
+substanceOnly species AB40_O1_ISF in ISF
+substanceOnly species AB40_O1_LV in LV
+substanceOnly species AB40_O1_PVS in PVS
+substanceOnly species AB40_O1_SAS in SAS
+substanceOnly species AB40_O1_TFV in TFV
+substanceOnly species AB40_O1__Antibody_BBB in BBB
+substanceOnly species AB40_O1__Antibody_BCSFB in BCSFB
+substanceOnly species AB40_O1__Antibody_BrainPlasma in BrainPlasma
+substanceOnly species AB40_O1__Antibody_CM in CM
+substanceOnly species AB40_O1__Antibody_ISF in ISF
+substanceOnly species AB40_O1__Antibody_LV in LV
+substanceOnly species AB40_O1__Antibody_PVS in PVS
+substanceOnly species AB40_O1__Antibody_SAS in SAS
+substanceOnly species AB40_O1__Antibody_TFV in TFV
+substanceOnly species AB40_O1__Antibody__FCRn_BBB in BBB
+substanceOnly species AB40_O1__Antibody__FCRn_BCSFB in BCSFB
+substanceOnly species AB40_O1__Antibody_centralAntibody in centralAntibody
+substanceOnly species AB40_O1__Antibody_peripheralAntibody in peripheralAntibody
+substanceOnly species AB40_O1_central in central
+substanceOnly species AB40_O1_peripheral in peripheral
+substanceOnly species AB40_O20_ISF in ISF
+substanceOnly species AB40_O20_PVS in PVS
+substanceOnly species AB40_O20__Antibody_ISF in ISF
+substanceOnly species AB40_O20__Antibody_PVS in PVS
+substanceOnly species AB40_O21_ISF in ISF
+substanceOnly species AB40_O21_PVS in PVS
+substanceOnly species AB40_O21__Antibody_ISF in ISF
+substanceOnly species AB40_O21__Antibody_PVS in PVS
+substanceOnly species AB40_O22_ISF in ISF
+substanceOnly species AB40_O22_PVS in PVS
+substanceOnly species AB40_O22__Antibody_ISF in ISF
+substanceOnly species AB40_O22__Antibody_PVS in PVS
+substanceOnly species AB40_O23_ISF in ISF
+substanceOnly species AB40_O23_PVS in PVS
+substanceOnly species AB40_O23__Antibody_ISF in ISF
+substanceOnly species AB40_O23__Antibody_PVS in PVS
+substanceOnly species AB40_O24_ISF in ISF
+substanceOnly species AB40_O24_PVS in PVS
+substanceOnly species AB40_O24__Antibody_ISF in ISF
+substanceOnly species AB40_O24__Antibody_PVS in PVS
+substanceOnly species AB40_O25_ISF in ISF
+substanceOnly species AB40_O25_PVS in PVS
+substanceOnly species AB40_O25__Antibody_ISF in ISF
+substanceOnly species AB40_O25__Antibody_PVS in PVS
+substanceOnly species AB40_O2_ISF in ISF
+substanceOnly species AB40_O2_PVS in PVS
+substanceOnly species AB40_O2__Antibody_ISF in ISF
+substanceOnly species AB40_O2__Antibody_PVS in PVS
+substanceOnly species AB40_O3_ISF in ISF
+substanceOnly species AB40_O3_PVS in PVS
+substanceOnly species AB40_O3__Antibody_ISF in ISF
+substanceOnly species AB40_O3__Antibody_PVS in PVS
+substanceOnly species AB40_O4_ISF in ISF
+substanceOnly species AB40_O4_PVS in PVS
+substanceOnly species AB40_O4__Antibody_ISF in ISF
+substanceOnly species AB40_O4__Antibody_PVS in PVS
+substanceOnly species AB40_O5_ISF in ISF
+substanceOnly species AB40_O5_PVS in PVS
+substanceOnly species AB40_O5__Antibody_ISF in ISF
+substanceOnly species AB40_O5__Antibody_PVS in PVS
+substanceOnly species AB40_O6_ISF in ISF
+substanceOnly species AB40_O6_PVS in PVS
+substanceOnly species AB40_O6__Antibody_ISF in ISF
+substanceOnly species AB40_O6__Antibody_PVS in PVS
+substanceOnly species AB40_O7_ISF in ISF
+substanceOnly species AB40_O7_PVS in PVS
+substanceOnly species AB40_O7__Antibody_ISF in ISF
+substanceOnly species AB40_O7__Antibody_PVS in PVS
+substanceOnly species AB40_O8_ISF in ISF
+substanceOnly species AB40_O8_PVS in PVS
+substanceOnly species AB40_O8__Antibody_ISF in ISF
+substanceOnly species AB40_O8__Antibody_PVS in PVS
+substanceOnly species AB40_O9_ISF in ISF
+substanceOnly species AB40_O9_PVS in PVS
+substanceOnly species AB40_O9__Antibody_ISF in ISF
+substanceOnly species AB40_O9__Antibody_PVS in PVS
+substanceOnly species AB42_O10_ISF in ISF
+substanceOnly species AB42_O10_PVS in PVS
+substanceOnly species AB42_O10__Antibody_ISF in ISF
+substanceOnly species AB42_O10__Antibody_PVS in PVS
+substanceOnly species AB42_O11_ISF in ISF
+substanceOnly species AB42_O11_PVS in PVS
+substanceOnly species AB42_O11__Antibody_ISF in ISF
+substanceOnly species AB42_O11__Antibody_PVS in PVS
+substanceOnly species AB42_O12_ISF in ISF
+substanceOnly species AB42_O12_PVS in PVS
+substanceOnly species AB42_O12__Antibody_ISF in ISF
+substanceOnly species AB42_O12__Antibody_PVS in PVS
+substanceOnly species AB42_O13_ISF in ISF
+substanceOnly species AB42_O13_PVS in PVS
+substanceOnly species AB42_O13__Antibody_ISF in ISF
+substanceOnly species AB42_O13__Antibody_PVS in PVS
+substanceOnly species AB42_O14_ISF in ISF
+substanceOnly species AB42_O14_PVS in PVS
+substanceOnly species AB42_O14__Antibody_ISF in ISF
+substanceOnly species AB42_O14__Antibody_PVS in PVS
+substanceOnly species AB42_O15_ISF in ISF
+substanceOnly species AB42_O15_PVS in PVS
+substanceOnly species AB42_O15__Antibody_ISF in ISF
+substanceOnly species AB42_O15__Antibody_PVS in PVS
+substanceOnly species AB42_O16_ISF in ISF
+substanceOnly species AB42_O16_PVS in PVS
+substanceOnly species AB42_O16__Antibody_ISF in ISF
+substanceOnly species AB42_O16__Antibody_PVS in PVS
+substanceOnly species AB42_O17_ISF in ISF
+substanceOnly species AB42_O17_PVS in PVS
+substanceOnly species AB42_O17__Antibody_ISF in ISF
+substanceOnly species AB42_O17__Antibody_PVS in PVS
+substanceOnly species AB42_O18_ISF in ISF
+substanceOnly species AB42_O18_PVS in PVS
+substanceOnly species AB42_O18__Antibody_ISF in ISF
+substanceOnly species AB42_O18__Antibody_PVS in PVS
+substanceOnly species AB42_O19_ISF in ISF
+substanceOnly species AB42_O19_PVS in PVS
+substanceOnly species AB42_O19__Antibody_ISF in ISF
+substanceOnly species AB42_O19__Antibody_PVS in PVS
+substanceOnly species AB42_O1_BBB in BBB
+substanceOnly species AB42_O1_BCSFB in BCSFB
+substanceOnly species AB42_O1_BrainPlasma in BrainPlasma
+substanceOnly species AB42_O1_CM in CM
+substanceOnly species AB42_O1_ISF in ISF
+substanceOnly species AB42_O1_LV in LV
+substanceOnly species AB42_O1_PVS in PVS
+substanceOnly species AB42_O1_SAS in SAS
+substanceOnly species AB42_O1_TFV in TFV
+substanceOnly species AB42_O1__Antibody_BBB in BBB
+substanceOnly species AB42_O1__Antibody_BCSFB in BCSFB
+substanceOnly species AB42_O1__Antibody_BrainPlasma in BrainPlasma
+substanceOnly species AB42_O1__Antibody_CM in CM
+substanceOnly species AB42_O1__Antibody_ISF in ISF
+substanceOnly species AB42_O1__Antibody_LV in LV
+substanceOnly species AB42_O1__Antibody_PVS in PVS
+substanceOnly species AB42_O1__Antibody_SAS in SAS
+substanceOnly species AB42_O1__Antibody_TFV in TFV
+substanceOnly species AB42_O1__Antibody__FCRn_BBB in BBB
+substanceOnly species AB42_O1__Antibody__FCRn_BCSFB in BCSFB
+substanceOnly species AB42_O1__Antibody_centralAntibody in centralAntibody
+substanceOnly species AB42_O1__Antibody_peripheralAntibody in peripheralAntibody
+substanceOnly species AB42_O1_central in central
+substanceOnly species AB42_O1_peripheral in peripheral
+substanceOnly species AB42_O20_ISF in ISF
+substanceOnly species AB42_O20_PVS in PVS
+substanceOnly species AB42_O20__Antibody_ISF in ISF
+substanceOnly species AB42_O20__Antibody_PVS in PVS
+substanceOnly species AB42_O21_ISF in ISF
+substanceOnly species AB42_O21_PVS in PVS
+substanceOnly species AB42_O21__Antibody_ISF in ISF
+substanceOnly species AB42_O21__Antibody_PVS in PVS
+substanceOnly species AB42_O22_ISF in ISF
+substanceOnly species AB42_O22_PVS in PVS
+substanceOnly species AB42_O22__Antibody_ISF in ISF
+substanceOnly species AB42_O22__Antibody_PVS in PVS
+substanceOnly species AB42_O23_ISF in ISF
+substanceOnly species AB42_O23_PVS in PVS
+substanceOnly species AB42_O23__Antibody_ISF in ISF
+substanceOnly species AB42_O23__Antibody_PVS in PVS
+substanceOnly species AB42_O24_ISF in ISF
+substanceOnly species AB42_O24_PVS in PVS
+substanceOnly species AB42_O24__Antibody_ISF in ISF
+substanceOnly species AB42_O24__Antibody_PVS in PVS
+substanceOnly species AB42_O25_ISF in ISF
+substanceOnly species AB42_O25_PVS in PVS
+substanceOnly species AB42_O25__Antibody_ISF in ISF
+substanceOnly species AB42_O25__Antibody_PVS in PVS
+substanceOnly species AB42_O2_ISF in ISF
+substanceOnly species AB42_O2_PVS in PVS
+substanceOnly species AB42_O2__Antibody_ISF in ISF
+substanceOnly species AB42_O2__Antibody_PVS in PVS
+substanceOnly species AB42_O3_ISF in ISF
+substanceOnly species AB42_O3_PVS in PVS
+substanceOnly species AB42_O3__Antibody_ISF in ISF
+substanceOnly species AB42_O3__Antibody_PVS in PVS
+substanceOnly species AB42_O4_ISF in ISF
+substanceOnly species AB42_O4_PVS in PVS
+substanceOnly species AB42_O4__Antibody_ISF in ISF
+substanceOnly species AB42_O4__Antibody_PVS in PVS
+substanceOnly species AB42_O5_ISF in ISF
+substanceOnly species AB42_O5_PVS in PVS
+substanceOnly species AB42_O5__Antibody_ISF in ISF
+substanceOnly species AB42_O5__Antibody_PVS in PVS
+substanceOnly species AB42_O6_ISF in ISF
+substanceOnly species AB42_O6_PVS in PVS
+substanceOnly species AB42_O6__Antibody_ISF in ISF
+substanceOnly species AB42_O6__Antibody_PVS in PVS
+substanceOnly species AB42_O7_ISF in ISF
+substanceOnly species AB42_O7_PVS in PVS
+substanceOnly species AB42_O7__Antibody_ISF in ISF
+substanceOnly species AB42_O7__Antibody_PVS in PVS
+substanceOnly species AB42_O8_ISF in ISF
+substanceOnly species AB42_O8_PVS in PVS
+substanceOnly species AB42_O8__Antibody_ISF in ISF
+substanceOnly species AB42_O8__Antibody_PVS in PVS
+substanceOnly species AB42_O9_ISF in ISF
+substanceOnly species AB42_O9_PVS in PVS
+substanceOnly species AB42_O9__Antibody_ISF in ISF
+substanceOnly species AB42_O9__Antibody_PVS in PVS
+substanceOnly species APP_ISF in ISF
+substanceOnly species Antibody_BBB in BBB
+substanceOnly species Antibody_BCSFB in BCSFB
+substanceOnly species Antibody_BrainPlasma in BrainPlasma
+substanceOnly species Antibody_CM in CM
+substanceOnly species Antibody_ISF in ISF
+substanceOnly species Antibody_LV in LV
+substanceOnly species Antibody_PVS in PVS
+substanceOnly species Antibody_SAS in SAS
+substanceOnly species Antibody_SubCutComp in SubCutComp
+substanceOnly species Antibody_TFV in TFV
+substanceOnly species Antibody__FCRn_BBB in BBB
+substanceOnly species Antibody__FCRn_BCSFB in BCSFB
+substanceOnly species Antibody_centralAntibody in centralAntibody
+substanceOnly species Antibody_peripheralAntibody in peripheralAntibody
+substanceOnly species C99_ISF in ISF
+substanceOnly species FCRn_BBB in BBB
+substanceOnly species FCRn_BCSFB in BCSFB
+
+AB40_O1_ISF + AB40_O1_ISF -> AB40_O2_ISF; k_O1_O2_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O1_ISF/V_ISF) * V_ISF
+AB40_O2_ISF -> AB40_O1_ISF + AB40_O1_ISF; k_O2_O1_AB40_ISF * (AB40_O2_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O2_ISF -> AB40_O3_ISF; k_O2_O3_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O2_ISF/V_ISF) * V_ISF
+AB40_O3_ISF -> AB40_O1_ISF + AB40_O2_ISF; k_O3_O2_AB40_ISF * (AB40_O3_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O3_ISF -> AB40_O4_ISF; k_O3_O4_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O3_ISF/V_ISF) * V_ISF
+AB40_O4_ISF -> AB40_O1_ISF + AB40_O3_ISF; k_O4_O3_AB40_ISF * (AB40_O4_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O4_ISF -> AB40_O5_ISF; k_O4_O5_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O4_ISF/V_ISF) * V_ISF
+AB40_O5_ISF -> AB40_O1_ISF + AB40_O4_ISF; k_O5_O4_AB40_ISF * (AB40_O5_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O5_ISF -> AB40_O6_ISF; k_O5_O6_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O5_ISF/V_ISF) * V_ISF
+AB40_O6_ISF -> AB40_O1_ISF + AB40_O5_ISF; k_O6_O5_AB40_ISF * (AB40_O6_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O6_ISF -> AB40_O7_ISF; k_O6_O7_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O6_ISF/V_ISF) * V_ISF
+AB40_O7_ISF -> AB40_O1_ISF + AB40_O6_ISF; k_O7_O6_AB40_ISF * (AB40_O7_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O7_ISF -> AB40_O8_ISF; k_O7_O8_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O7_ISF/V_ISF) * V_ISF
+AB40_O8_ISF -> AB40_O1_ISF + AB40_O7_ISF; k_O8_O7_AB40_ISF * (AB40_O8_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O8_ISF -> AB40_O9_ISF; k_O8_O9_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O8_ISF/V_ISF) * V_ISF
+AB40_O9_ISF -> AB40_O1_ISF + AB40_O8_ISF; k_O9_O8_AB40_ISF * (AB40_O9_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O9_ISF -> AB40_O10_ISF; k_O9_O10_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O9_ISF/V_ISF) * V_ISF
+AB40_O10_ISF -> AB40_O1_ISF + AB40_O9_ISF; k_O10_O9_AB40_ISF * (AB40_O10_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O10_ISF -> AB40_O11_ISF; k_O10_O11_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O10_ISF/V_ISF) * V_ISF
+AB40_O11_ISF -> AB40_O1_ISF + AB40_O10_ISF; k_O11_O10_AB40_ISF * (AB40_O11_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O11_ISF -> AB40_O12_ISF; k_O11_O12_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O11_ISF/V_ISF) * V_ISF
+AB40_O12_ISF -> AB40_O1_ISF + AB40_O11_ISF; k_O12_O11_AB40_ISF * (AB40_O12_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O12_ISF -> AB40_O13_ISF; k_O12_O13_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O12_ISF/V_ISF) * V_ISF
+AB40_O13_ISF -> AB40_O1_ISF + AB40_O12_ISF; k_O13_O12_AB40_ISF * (AB40_O13_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O13_ISF -> AB40_O14_ISF; k_O13_O14_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O13_ISF/V_ISF) * V_ISF
+AB40_O14_ISF -> AB40_O1_ISF + AB40_O13_ISF; k_O14_O13_AB40_ISF * (AB40_O14_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O14_ISF -> AB40_O15_ISF; k_O14_O15_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O14_ISF/V_ISF) * V_ISF
+AB40_O15_ISF -> AB40_O1_ISF + AB40_O14_ISF; k_O15_O14_AB40_ISF * (AB40_O15_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O15_ISF -> AB40_O16_ISF; k_O15_O16_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O15_ISF/V_ISF) * V_ISF
+AB40_O16_ISF -> AB40_O1_ISF + AB40_O15_ISF; k_O16_O15_AB40_ISF * (AB40_O16_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O16_ISF -> AB40_O17_ISF; k_O16_O17_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O16_ISF/V_ISF) * V_ISF
+AB40_O17_ISF -> AB40_O1_ISF + AB40_O16_ISF; k_O17_O16_AB40_ISF * (AB40_O17_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O17_ISF -> AB40_O18_ISF; k_O17_O18_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O17_ISF/V_ISF) * V_ISF
+AB40_O18_ISF -> AB40_O1_ISF + AB40_O17_ISF; k_O18_O17_AB40_ISF * (AB40_O18_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O18_ISF -> AB40_O19_ISF; k_O18_O19_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O18_ISF/V_ISF) * V_ISF
+AB40_O19_ISF -> AB40_O1_ISF + AB40_O18_ISF; k_O19_O18_AB40_ISF * (AB40_O19_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O19_ISF -> AB40_O20_ISF; k_O19_O20_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O19_ISF/V_ISF) * V_ISF
+AB40_O20_ISF -> AB40_O1_ISF + AB40_O19_ISF; k_O20_O19_AB40_ISF * (AB40_O20_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O20_ISF -> AB40_O21_ISF; k_O20_O21_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O20_ISF/V_ISF) * V_ISF
+AB40_O21_ISF -> AB40_O1_ISF + AB40_O20_ISF; k_O21_O20_AB40_ISF * (AB40_O21_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O21_ISF -> AB40_O22_ISF; k_O21_O22_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O21_ISF/V_ISF) * V_ISF
+AB40_O22_ISF -> AB40_O1_ISF + AB40_O21_ISF; k_O22_O21_AB40_ISF * (AB40_O22_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O22_ISF -> AB40_O23_ISF; k_O22_O23_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O22_ISF/V_ISF) * V_ISF
+AB40_O23_ISF -> AB40_O1_ISF + AB40_O22_ISF; k_O23_O22_AB40_ISF * (AB40_O23_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O23_ISF -> AB40_O24_ISF; k_O23_O24_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O23_ISF/V_ISF) * V_ISF
+AB40_O24_ISF -> AB40_O1_ISF + AB40_O23_ISF; k_O24_O23_AB40_ISF * (AB40_O24_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O1_ISF -> AB42_O2_ISF; k_O1_O2_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O1_ISF/V_ISF) * V_ISF
+AB42_O2_ISF -> AB42_O1_ISF + AB42_O1_ISF; k_O2_O1_AB42_ISF * (AB42_O2_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O2_ISF -> AB42_O3_ISF; k_O2_O3_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O2_ISF/V_ISF) * V_ISF
+AB42_O3_ISF -> AB42_O1_ISF + AB42_O2_ISF; k_O3_O2_AB42_ISF * (AB42_O3_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O3_ISF -> AB42_O4_ISF; k_O3_O4_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O3_ISF/V_ISF) * V_ISF
+AB42_O4_ISF -> AB42_O1_ISF + AB42_O3_ISF; k_O4_O3_AB42_ISF * (AB42_O4_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O4_ISF -> AB42_O5_ISF; k_O4_O5_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O4_ISF/V_ISF) * V_ISF
+AB42_O5_ISF -> AB42_O1_ISF + AB42_O4_ISF; k_O5_O4_AB42_ISF * (AB42_O5_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O5_ISF -> AB42_O6_ISF; k_O5_O6_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O5_ISF/V_ISF) * V_ISF
+AB42_O6_ISF -> AB42_O1_ISF + AB42_O5_ISF; k_O6_O5_AB42_ISF * (AB42_O6_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O6_ISF -> AB42_O7_ISF; k_O6_O7_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O6_ISF/V_ISF) * V_ISF
+AB42_O7_ISF -> AB42_O1_ISF + AB42_O6_ISF; k_O7_O6_AB42_ISF * (AB42_O7_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O7_ISF -> AB42_O8_ISF; k_O7_O8_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O7_ISF/V_ISF) * V_ISF
+AB42_O8_ISF -> AB42_O1_ISF + AB42_O7_ISF; k_O8_O7_AB42_ISF * (AB42_O8_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O8_ISF -> AB42_O9_ISF; k_O8_O9_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O8_ISF/V_ISF) * V_ISF
+AB42_O9_ISF -> AB42_O1_ISF + AB42_O8_ISF; k_O9_O8_AB42_ISF * (AB42_O9_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O9_ISF -> AB42_O10_ISF; k_O9_O10_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O9_ISF/V_ISF) * V_ISF
+AB42_O10_ISF -> AB42_O1_ISF + AB42_O9_ISF; k_O10_O9_AB42_ISF * (AB42_O10_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O10_ISF -> AB42_O11_ISF; k_O10_O11_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O10_ISF/V_ISF) * V_ISF
+AB42_O11_ISF -> AB42_O1_ISF + AB42_O10_ISF; k_O11_O10_AB42_ISF * (AB42_O11_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O11_ISF -> AB42_O12_ISF; k_O11_O12_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O11_ISF/V_ISF) * V_ISF
+AB42_O12_ISF -> AB42_O1_ISF + AB42_O11_ISF; k_O12_O11_AB42_ISF * (AB42_O12_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O12_ISF -> AB42_O13_ISF; k_O12_O13_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O12_ISF/V_ISF) * V_ISF
+AB42_O13_ISF -> AB42_O1_ISF + AB42_O12_ISF; k_O13_O12_AB42_ISF * (AB42_O13_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O13_ISF -> AB42_O14_ISF; k_O13_O14_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O13_ISF/V_ISF) * V_ISF
+AB42_O14_ISF -> AB42_O1_ISF + AB42_O13_ISF; k_O14_O13_AB42_ISF * (AB42_O14_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O14_ISF -> AB42_O15_ISF; k_O14_O15_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O14_ISF/V_ISF) * V_ISF
+AB42_O15_ISF -> AB42_O1_ISF + AB42_O14_ISF; k_O15_O14_AB42_ISF * (AB42_O15_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O15_ISF -> AB42_O16_ISF; k_O15_O16_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O15_ISF/V_ISF) * V_ISF
+AB42_O16_ISF -> AB42_O1_ISF + AB42_O15_ISF; k_O16_O15_AB42_ISF * (AB42_O16_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O16_ISF -> AB42_O17_ISF; k_O16_O17_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O16_ISF/V_ISF) * V_ISF
+AB42_O17_ISF -> AB42_O1_ISF + AB42_O16_ISF; k_O17_O16_AB42_ISF * (AB42_O17_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O17_ISF -> AB42_O18_ISF; k_O17_O18_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O17_ISF/V_ISF) * V_ISF
+AB42_O18_ISF -> AB42_O1_ISF + AB42_O17_ISF; k_O18_O17_AB42_ISF * (AB42_O18_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O18_ISF -> AB42_O19_ISF; k_O18_O19_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O18_ISF/V_ISF) * V_ISF
+AB42_O19_ISF -> AB42_O1_ISF + AB42_O18_ISF; k_O19_O18_AB42_ISF * (AB42_O19_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O19_ISF -> AB42_O20_ISF; k_O19_O20_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O19_ISF/V_ISF) * V_ISF
+AB42_O20_ISF -> AB42_O1_ISF + AB42_O19_ISF; k_O20_O19_AB42_ISF * (AB42_O20_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O20_ISF -> AB42_O21_ISF; k_O20_O21_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O20_ISF/V_ISF) * V_ISF
+AB42_O21_ISF -> AB42_O1_ISF + AB42_O20_ISF; k_O21_O20_AB42_ISF * (AB42_O21_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O21_ISF -> AB42_O22_ISF; k_O21_O22_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O21_ISF/V_ISF) * V_ISF
+AB42_O22_ISF -> AB42_O1_ISF + AB42_O21_ISF; k_O22_O21_AB42_ISF * (AB42_O22_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O22_ISF -> AB42_O23_ISF; k_O22_O23_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O22_ISF/V_ISF) * V_ISF
+AB42_O23_ISF -> AB42_O1_ISF + AB42_O22_ISF; k_O23_O22_AB42_ISF * (AB42_O23_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O23_ISF -> AB42_O24_ISF; k_O23_O24_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O23_ISF/V_ISF) * V_ISF
+AB42_O24_ISF -> AB42_O1_ISF + AB42_O23_ISF; k_O24_O23_AB42_ISF * (AB42_O24_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O1_ISF -> AB40_O2_ISF; k_O1_O2_AB40_ISF*AB40_PDMA_Vmax_ISF*((AB40_O25_ISF/V_ISF) / ((AB40_O25_ISF/V_ISF) + AB40_PDMA_EC50_ISF)) * (AB40_O1_ISF/V_ISF) * (AB40_O1_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O2_ISF -> AB40_O3_ISF; k_O2_O3_AB40_ISF*AB40_PDMA_Vmax_ISF*((AB40_O25_ISF/V_ISF) / ((AB40_O25_ISF/V_ISF) + AB40_PDMA_EC50_ISF)) * (AB40_O1_ISF/V_ISF) * (AB40_O2_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O3_ISF -> AB40_O4_ISF; k_O3_O4_AB40_ISF*AB40_PDMA_Vmax_ISF*((AB40_O25_ISF/V_ISF) / ((AB40_O25_ISF/V_ISF) + AB40_PDMA_EC50_ISF)) * (AB40_O1_ISF/V_ISF) * (AB40_O3_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O4_ISF -> AB40_O5_ISF; k_O4_O5_AB40_ISF*AB40_PDMA_Vmax_ISF*((AB40_O25_ISF/V_ISF) / ((AB40_O25_ISF/V_ISF) + AB40_PDMA_EC50_ISF)) * (AB40_O1_ISF/V_ISF) * (AB40_O4_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O5_ISF -> AB40_O6_ISF; k_O5_O6_AB40_ISF*AB40_PDMA_Vmax_ISF*((AB40_O25_ISF/V_ISF) / ((AB40_O25_ISF/V_ISF) + AB40_PDMA_EC50_ISF)) * (AB40_O1_ISF/V_ISF) * (AB40_O5_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O6_ISF -> AB40_O7_ISF; k_O6_O7_AB40_ISF*AB40_PDMA_Vmax_ISF*((AB40_O25_ISF/V_ISF) / ((AB40_O25_ISF/V_ISF) + AB40_PDMA_EC50_ISF)) * (AB40_O1_ISF/V_ISF) * (AB40_O6_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O7_ISF -> AB40_O8_ISF; k_O7_O8_AB40_ISF*AB40_PDMA_Vmax_ISF*((AB40_O25_ISF/V_ISF) / ((AB40_O25_ISF/V_ISF) + AB40_PDMA_EC50_ISF)) * (AB40_O1_ISF/V_ISF) * (AB40_O7_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O8_ISF -> AB40_O9_ISF; k_O8_O9_AB40_ISF*AB40_PDMA_Vmax_ISF*((AB40_O25_ISF/V_ISF) / ((AB40_O25_ISF/V_ISF) + AB40_PDMA_EC50_ISF)) * (AB40_O1_ISF/V_ISF) * (AB40_O8_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O9_ISF -> AB40_O10_ISF; k_O9_O10_AB40_ISF*AB40_PDMA_Vmax_ISF*((AB40_O25_ISF/V_ISF) / ((AB40_O25_ISF/V_ISF) + AB40_PDMA_EC50_ISF)) * (AB40_O1_ISF/V_ISF) * (AB40_O9_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O10_ISF -> AB40_O11_ISF; k_O10_O11_AB40_ISF*AB40_PDMA_Vmax_ISF*((AB40_O25_ISF/V_ISF) / ((AB40_O25_ISF/V_ISF) + AB40_PDMA_EC50_ISF)) * (AB40_O1_ISF/V_ISF) * (AB40_O10_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O11_ISF -> AB40_O12_ISF; k_O11_O12_AB40_ISF*AB40_PDMA_Vmax_ISF*((AB40_O25_ISF/V_ISF) / ((AB40_O25_ISF/V_ISF) + AB40_PDMA_EC50_ISF)) * (AB40_O1_ISF/V_ISF) * (AB40_O11_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O12_ISF -> AB40_O13_ISF; k_O12_O13_AB40_ISF*AB40_PDMA_Vmax_ISF*((AB40_O25_ISF/V_ISF) / ((AB40_O25_ISF/V_ISF) + AB40_PDMA_EC50_ISF)) * (AB40_O1_ISF/V_ISF) * (AB40_O12_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O13_ISF -> AB40_O14_ISF; k_O13_O14_AB40_ISF*AB40_PDMA_Vmax_ISF*((AB40_O25_ISF/V_ISF) / ((AB40_O25_ISF/V_ISF) + AB40_PDMA_EC50_ISF)) * (AB40_O1_ISF/V_ISF) * (AB40_O13_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O14_ISF -> AB40_O15_ISF; k_O14_O15_AB40_ISF*AB40_PDMA_Vmax_ISF*((AB40_O25_ISF/V_ISF) / ((AB40_O25_ISF/V_ISF) + AB40_PDMA_EC50_ISF)) * (AB40_O1_ISF/V_ISF) * (AB40_O14_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O15_ISF -> AB40_O16_ISF; k_O15_O16_AB40_ISF*AB40_PDMA_Vmax_ISF*((AB40_O25_ISF/V_ISF) / ((AB40_O25_ISF/V_ISF) + AB40_PDMA_EC50_ISF)) * (AB40_O1_ISF/V_ISF) * (AB40_O15_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O16_ISF -> AB40_O17_ISF; k_O16_O17_AB40_ISF*AB40_PDMA_Vmax_ISF*((AB40_O25_ISF/V_ISF) / ((AB40_O25_ISF/V_ISF) + AB40_PDMA_EC50_ISF)) * (AB40_O1_ISF/V_ISF) * (AB40_O16_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O1_ISF -> AB42_O2_ISF; k_O1_O2_AB42_ISF*AB42_PDMA_Vmax_ISF*((AB42_O25_ISF/V_ISF) / ((AB42_O25_ISF/V_ISF) + AB42_PDMA_EC50_ISF)) * (AB42_O1_ISF/V_ISF) * (AB42_O1_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O2_ISF -> AB42_O3_ISF; k_O2_O3_AB42_ISF*AB42_PDMA_Vmax_ISF*((AB42_O25_ISF/V_ISF) / ((AB42_O25_ISF/V_ISF) + AB42_PDMA_EC50_ISF)) * (AB42_O1_ISF/V_ISF) * (AB42_O2_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O3_ISF -> AB42_O4_ISF; k_O3_O4_AB42_ISF*AB42_PDMA_Vmax_ISF*((AB42_O25_ISF/V_ISF) / ((AB42_O25_ISF/V_ISF) + AB42_PDMA_EC50_ISF)) * (AB42_O1_ISF/V_ISF) * (AB42_O3_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O4_ISF -> AB42_O5_ISF; k_O4_O5_AB42_ISF*AB42_PDMA_Vmax_ISF*((AB42_O25_ISF/V_ISF) / ((AB42_O25_ISF/V_ISF) + AB42_PDMA_EC50_ISF)) * (AB42_O1_ISF/V_ISF) * (AB42_O4_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O5_ISF -> AB42_O6_ISF; k_O5_O6_AB42_ISF*AB42_PDMA_Vmax_ISF*((AB42_O25_ISF/V_ISF) / ((AB42_O25_ISF/V_ISF) + AB42_PDMA_EC50_ISF)) * (AB42_O1_ISF/V_ISF) * (AB42_O5_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O6_ISF -> AB42_O7_ISF; k_O6_O7_AB42_ISF*AB42_PDMA_Vmax_ISF*((AB42_O25_ISF/V_ISF) / ((AB42_O25_ISF/V_ISF) + AB42_PDMA_EC50_ISF)) * (AB42_O1_ISF/V_ISF) * (AB42_O6_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O7_ISF -> AB42_O8_ISF; k_O7_O8_AB42_ISF*AB42_PDMA_Vmax_ISF*((AB42_O25_ISF/V_ISF) / ((AB42_O25_ISF/V_ISF) + AB42_PDMA_EC50_ISF)) * (AB42_O1_ISF/V_ISF) * (AB42_O7_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O8_ISF -> AB42_O9_ISF; k_O8_O9_AB42_ISF*AB42_PDMA_Vmax_ISF*((AB42_O25_ISF/V_ISF) / ((AB42_O25_ISF/V_ISF) + AB42_PDMA_EC50_ISF)) * (AB42_O1_ISF/V_ISF) * (AB42_O8_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O9_ISF -> AB42_O10_ISF; k_O9_O10_AB42_ISF*AB42_PDMA_Vmax_ISF*((AB42_O25_ISF/V_ISF) / ((AB42_O25_ISF/V_ISF) + AB42_PDMA_EC50_ISF)) * (AB42_O1_ISF/V_ISF) * (AB42_O9_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O10_ISF -> AB42_O11_ISF; k_O10_O11_AB42_ISF*AB42_PDMA_Vmax_ISF*((AB42_O25_ISF/V_ISF) / ((AB42_O25_ISF/V_ISF) + AB42_PDMA_EC50_ISF)) * (AB42_O1_ISF/V_ISF) * (AB42_O10_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O11_ISF -> AB42_O12_ISF; k_O11_O12_AB42_ISF*AB42_PDMA_Vmax_ISF*((AB42_O25_ISF/V_ISF) / ((AB42_O25_ISF/V_ISF) + AB42_PDMA_EC50_ISF)) * (AB42_O1_ISF/V_ISF) * (AB42_O11_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O12_ISF -> AB42_O13_ISF; k_O12_O13_AB42_ISF*AB42_PDMA_Vmax_ISF*((AB42_O25_ISF/V_ISF) / ((AB42_O25_ISF/V_ISF) + AB42_PDMA_EC50_ISF)) * (AB42_O1_ISF/V_ISF) * (AB42_O12_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O13_ISF -> AB42_O14_ISF; k_O13_O14_AB42_ISF*AB42_PDMA_Vmax_ISF*((AB42_O25_ISF/V_ISF) / ((AB42_O25_ISF/V_ISF) + AB42_PDMA_EC50_ISF)) * (AB42_O1_ISF/V_ISF) * (AB42_O13_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O14_ISF -> AB42_O15_ISF; k_O14_O15_AB42_ISF*AB42_PDMA_Vmax_ISF*((AB42_O25_ISF/V_ISF) / ((AB42_O25_ISF/V_ISF) + AB42_PDMA_EC50_ISF)) * (AB42_O1_ISF/V_ISF) * (AB42_O14_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O15_ISF -> AB42_O16_ISF; k_O15_O16_AB42_ISF*AB42_PDMA_Vmax_ISF*((AB42_O25_ISF/V_ISF) / ((AB42_O25_ISF/V_ISF) + AB42_PDMA_EC50_ISF)) * (AB42_O1_ISF/V_ISF) * (AB42_O15_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O16_ISF -> AB42_O17_ISF; k_O16_O17_AB42_ISF*AB42_PDMA_Vmax_ISF*((AB42_O25_ISF/V_ISF) / ((AB42_O25_ISF/V_ISF) + AB42_PDMA_EC50_ISF)) * (AB42_O1_ISF/V_ISF) * (AB42_O16_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + Antibody_ISF -> AB40_O1__Antibody_ISF; k0_Antibody * (AB40_O1_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O1_PVS + Antibody_PVS -> AB40_O1__Antibody_PVS; k0_Antibody * (AB40_O1_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O1_BBB + Antibody_BBB -> AB40_O1__Antibody_BBB; k0_Antibody * (AB40_O1_BBB/V_BBB) * (Antibody_BBB/V_BBB) * V_BBB
+AB40_O1_BCSFB + Antibody_BCSFB -> AB40_O1__Antibody_BCSFB; k0_Antibody * (AB40_O1_BCSFB/V_BCSFB) * (Antibody_BCSFB/V_BCSFB) * V_BCSFB
+AB40_O1_BrainPlasma + Antibody_BrainPlasma -> AB40_O1__Antibody_BrainPlasma; k0_Antibody * (AB40_O1_BrainPlasma/V_BrainPlasma) * (Antibody_BrainPlasma/V_BrainPlasma) * V_BrainPlasma
+AB40_O1_CM + Antibody_CM -> AB40_O1__Antibody_CM; k0_Antibody * (AB40_O1_CM/V_CM) * (Antibody_CM/V_CM) * V_CM
+AB40_O1_LV + Antibody_LV -> AB40_O1__Antibody_LV; k0_Antibody * (AB40_O1_LV/V_LV) * (Antibody_LV/V_LV) * V_LV
+AB40_O1_TFV + Antibody_TFV -> AB40_O1__Antibody_TFV; k0_Antibody * (AB40_O1_TFV/V_TFV) * (Antibody_TFV/V_TFV) * V_TFV
+AB40_O1_SAS + Antibody_SAS -> AB40_O1__Antibody_SAS; k0_Antibody * (AB40_O1_SAS/V_SAS) * (Antibody_SAS/V_SAS) * V_SAS
+AB42_O1_ISF + Antibody_ISF -> AB42_O1__Antibody_ISF; k0_Antibody * (AB42_O1_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O1_PVS + Antibody_PVS -> AB42_O1__Antibody_PVS; k0_Antibody * (AB42_O1_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O1_BBB + Antibody_BBB -> AB42_O1__Antibody_BBB; k0_Antibody * (AB42_O1_BBB/V_BBB) * (Antibody_BBB/V_BBB) * V_BBB
+AB42_O1_BCSFB + Antibody_BCSFB -> AB42_O1__Antibody_BCSFB; k0_Antibody * (AB42_O1_BCSFB/V_BCSFB) * (Antibody_BCSFB/V_BCSFB) * V_BCSFB
+AB42_O1_BrainPlasma + Antibody_BrainPlasma -> AB42_O1__Antibody_BrainPlasma; k0_Antibody * (AB42_O1_BrainPlasma/V_BrainPlasma) * (Antibody_BrainPlasma/V_BrainPlasma) * V_BrainPlasma
+AB42_O1_CM + Antibody_CM -> AB42_O1__Antibody_CM; k0_Antibody * (AB42_O1_CM/V_CM) * (Antibody_CM/V_CM) * V_CM
+AB42_O1_LV + Antibody_LV -> AB42_O1__Antibody_LV; k0_Antibody * (AB42_O1_LV/V_LV) * (Antibody_LV/V_LV) * V_LV
+AB42_O1_TFV + Antibody_TFV -> AB42_O1__Antibody_TFV; k0_Antibody * (AB42_O1_TFV/V_TFV) * (Antibody_TFV/V_TFV) * V_TFV
+AB42_O1_SAS + Antibody_SAS -> AB42_O1__Antibody_SAS; k0_Antibody * (AB42_O1_SAS/V_SAS) * (Antibody_SAS/V_SAS) * V_SAS
+AB40_O2_ISF + Antibody_ISF -> AB40_O2__Antibody_ISF; k1_Antibody * (AB40_O2_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O2_PVS + Antibody_PVS -> AB40_O2__Antibody_PVS; k1_Antibody * (AB40_O2_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O3_ISF + Antibody_ISF -> AB40_O3__Antibody_ISF; k1_Antibody * (AB40_O3_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O3_PVS + Antibody_PVS -> AB40_O3__Antibody_PVS; k1_Antibody * (AB40_O3_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O4_ISF + Antibody_ISF -> AB40_O4__Antibody_ISF; k1_Antibody * (AB40_O4_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O4_PVS + Antibody_PVS -> AB40_O4__Antibody_PVS; k1_Antibody * (AB40_O4_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O5_ISF + Antibody_ISF -> AB40_O5__Antibody_ISF; k1_Antibody * (AB40_O5_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O5_PVS + Antibody_PVS -> AB40_O5__Antibody_PVS; k1_Antibody * (AB40_O5_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O6_ISF + Antibody_ISF -> AB40_O6__Antibody_ISF; k1_Antibody * (AB40_O6_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O6_PVS + Antibody_PVS -> AB40_O6__Antibody_PVS; k1_Antibody * (AB40_O6_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O7_ISF + Antibody_ISF -> AB40_O7__Antibody_ISF; k1_Antibody * (AB40_O7_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O7_PVS + Antibody_PVS -> AB40_O7__Antibody_PVS; k1_Antibody * (AB40_O7_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O8_ISF + Antibody_ISF -> AB40_O8__Antibody_ISF; k1_Antibody * (AB40_O8_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O8_PVS + Antibody_PVS -> AB40_O8__Antibody_PVS; k1_Antibody * (AB40_O8_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O9_ISF + Antibody_ISF -> AB40_O9__Antibody_ISF; k1_Antibody * (AB40_O9_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O9_PVS + Antibody_PVS -> AB40_O9__Antibody_PVS; k1_Antibody * (AB40_O9_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O10_ISF + Antibody_ISF -> AB40_O10__Antibody_ISF; k1_Antibody * (AB40_O10_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O10_PVS + Antibody_PVS -> AB40_O10__Antibody_PVS; k1_Antibody * (AB40_O10_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O11_ISF + Antibody_ISF -> AB40_O11__Antibody_ISF; k1_Antibody * (AB40_O11_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O11_PVS + Antibody_PVS -> AB40_O11__Antibody_PVS; k1_Antibody * (AB40_O11_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O12_ISF + Antibody_ISF -> AB40_O12__Antibody_ISF; k1_Antibody * (AB40_O12_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O12_PVS + Antibody_PVS -> AB40_O12__Antibody_PVS; k1_Antibody * (AB40_O12_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O13_ISF + Antibody_ISF -> AB40_O13__Antibody_ISF; k1_Antibody * (AB40_O13_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O13_PVS + Antibody_PVS -> AB40_O13__Antibody_PVS; k1_Antibody * (AB40_O13_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O14_ISF + Antibody_ISF -> AB40_O14__Antibody_ISF; k1_Antibody * (AB40_O14_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O14_PVS + Antibody_PVS -> AB40_O14__Antibody_PVS; k1_Antibody * (AB40_O14_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O15_ISF + Antibody_ISF -> AB40_O15__Antibody_ISF; k1_Antibody * (AB40_O15_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O15_PVS + Antibody_PVS -> AB40_O15__Antibody_PVS; k1_Antibody * (AB40_O15_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O16_ISF + Antibody_ISF -> AB40_O16__Antibody_ISF; k1_Antibody * (AB40_O16_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O16_PVS + Antibody_PVS -> AB40_O16__Antibody_PVS; k1_Antibody * (AB40_O16_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O17_ISF + Antibody_ISF -> AB40_O17__Antibody_ISF; k1_Antibody * (AB40_O17_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O17_PVS + Antibody_PVS -> AB40_O17__Antibody_PVS; k1_Antibody * (AB40_O17_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O2_ISF + Antibody_ISF -> AB42_O2__Antibody_ISF; k1_Antibody * (AB42_O2_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O2_PVS + Antibody_PVS -> AB42_O2__Antibody_PVS; k1_Antibody * (AB42_O2_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O3_ISF + Antibody_ISF -> AB42_O3__Antibody_ISF; k1_Antibody * (AB42_O3_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O3_PVS + Antibody_PVS -> AB42_O3__Antibody_PVS; k1_Antibody * (AB42_O3_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O4_ISF + Antibody_ISF -> AB42_O4__Antibody_ISF; k1_Antibody * (AB42_O4_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O4_PVS + Antibody_PVS -> AB42_O4__Antibody_PVS; k1_Antibody * (AB42_O4_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O5_ISF + Antibody_ISF -> AB42_O5__Antibody_ISF; k1_Antibody * (AB42_O5_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O5_PVS + Antibody_PVS -> AB42_O5__Antibody_PVS; k1_Antibody * (AB42_O5_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O6_ISF + Antibody_ISF -> AB42_O6__Antibody_ISF; k1_Antibody * (AB42_O6_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O6_PVS + Antibody_PVS -> AB42_O6__Antibody_PVS; k1_Antibody * (AB42_O6_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O7_ISF + Antibody_ISF -> AB42_O7__Antibody_ISF; k1_Antibody * (AB42_O7_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O7_PVS + Antibody_PVS -> AB42_O7__Antibody_PVS; k1_Antibody * (AB42_O7_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O8_ISF + Antibody_ISF -> AB42_O8__Antibody_ISF; k1_Antibody * (AB42_O8_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O8_PVS + Antibody_PVS -> AB42_O8__Antibody_PVS; k1_Antibody * (AB42_O8_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O9_ISF + Antibody_ISF -> AB42_O9__Antibody_ISF; k1_Antibody * (AB42_O9_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O9_PVS + Antibody_PVS -> AB42_O9__Antibody_PVS; k1_Antibody * (AB42_O9_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O10_ISF + Antibody_ISF -> AB42_O10__Antibody_ISF; k1_Antibody * (AB42_O10_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O10_PVS + Antibody_PVS -> AB42_O10__Antibody_PVS; k1_Antibody * (AB42_O10_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O11_ISF + Antibody_ISF -> AB42_O11__Antibody_ISF; k1_Antibody * (AB42_O11_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O11_PVS + Antibody_PVS -> AB42_O11__Antibody_PVS; k1_Antibody * (AB42_O11_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O12_ISF + Antibody_ISF -> AB42_O12__Antibody_ISF; k1_Antibody * (AB42_O12_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O12_PVS + Antibody_PVS -> AB42_O12__Antibody_PVS; k1_Antibody * (AB42_O12_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O13_ISF + Antibody_ISF -> AB42_O13__Antibody_ISF; k1_Antibody * (AB42_O13_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O13_PVS + Antibody_PVS -> AB42_O13__Antibody_PVS; k1_Antibody * (AB42_O13_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O14_ISF + Antibody_ISF -> AB42_O14__Antibody_ISF; k1_Antibody * (AB42_O14_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O14_PVS + Antibody_PVS -> AB42_O14__Antibody_PVS; k1_Antibody * (AB42_O14_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O15_ISF + Antibody_ISF -> AB42_O15__Antibody_ISF; k1_Antibody * (AB42_O15_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O15_PVS + Antibody_PVS -> AB42_O15__Antibody_PVS; k1_Antibody * (AB42_O15_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O16_ISF + Antibody_ISF -> AB42_O16__Antibody_ISF; k1_Antibody * (AB42_O16_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O16_PVS + Antibody_PVS -> AB42_O16__Antibody_PVS; k1_Antibody * (AB42_O16_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O17_ISF + Antibody_ISF -> AB42_O17__Antibody_ISF; k1_Antibody * (AB42_O17_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O17_PVS + Antibody_PVS -> AB42_O17__Antibody_PVS; k1_Antibody * (AB42_O17_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O18_ISF + Antibody_ISF -> AB40_O18__Antibody_ISF; k2_Antibody * (AB40_O18_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O18_PVS + Antibody_PVS -> AB40_O18__Antibody_PVS; k2_Antibody * (AB40_O18_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O19_ISF + Antibody_ISF -> AB40_O19__Antibody_ISF; k2_Antibody * (AB40_O19_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O19_PVS + Antibody_PVS -> AB40_O19__Antibody_PVS; k2_Antibody * (AB40_O19_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O20_ISF + Antibody_ISF -> AB40_O20__Antibody_ISF; k2_Antibody * (AB40_O20_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O20_PVS + Antibody_PVS -> AB40_O20__Antibody_PVS; k2_Antibody * (AB40_O20_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O21_ISF + Antibody_ISF -> AB40_O21__Antibody_ISF; k2_Antibody * (AB40_O21_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O21_PVS + Antibody_PVS -> AB40_O21__Antibody_PVS; k2_Antibody * (AB40_O21_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O22_ISF + Antibody_ISF -> AB40_O22__Antibody_ISF; k2_Antibody * (AB40_O22_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O22_PVS + Antibody_PVS -> AB40_O22__Antibody_PVS; k2_Antibody * (AB40_O22_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O23_ISF + Antibody_ISF -> AB40_O23__Antibody_ISF; k2_Antibody * (AB40_O23_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O23_PVS + Antibody_PVS -> AB40_O23__Antibody_PVS; k2_Antibody * (AB40_O23_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O24_ISF + Antibody_ISF -> AB40_O24__Antibody_ISF; k2_Antibody * (AB40_O24_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O24_PVS + Antibody_PVS -> AB40_O24__Antibody_PVS; k2_Antibody * (AB40_O24_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O18_ISF + Antibody_ISF -> AB42_O18__Antibody_ISF; k2_Antibody * (AB42_O18_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O18_PVS + Antibody_PVS -> AB42_O18__Antibody_PVS; k2_Antibody * (AB42_O18_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O19_ISF + Antibody_ISF -> AB42_O19__Antibody_ISF; k2_Antibody * (AB42_O19_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O19_PVS + Antibody_PVS -> AB42_O19__Antibody_PVS; k2_Antibody * (AB42_O19_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O20_ISF + Antibody_ISF -> AB42_O20__Antibody_ISF; k2_Antibody * (AB42_O20_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O20_PVS + Antibody_PVS -> AB42_O20__Antibody_PVS; k2_Antibody * (AB42_O20_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O21_ISF + Antibody_ISF -> AB42_O21__Antibody_ISF; k2_Antibody * (AB42_O21_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O21_PVS + Antibody_PVS -> AB42_O21__Antibody_PVS; k2_Antibody * (AB42_O21_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O22_ISF + Antibody_ISF -> AB42_O22__Antibody_ISF; k2_Antibody * (AB42_O22_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O22_PVS + Antibody_PVS -> AB42_O22__Antibody_PVS; k2_Antibody * (AB42_O22_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O23_ISF + Antibody_ISF -> AB42_O23__Antibody_ISF; k2_Antibody * (AB42_O23_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O23_PVS + Antibody_PVS -> AB42_O23__Antibody_PVS; k2_Antibody * (AB42_O23_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O24_ISF + Antibody_ISF -> AB42_O24__Antibody_ISF; k2_Antibody * (AB42_O24_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O24_PVS + Antibody_PVS -> AB42_O24__Antibody_PVS; k2_Antibody * (AB42_O24_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O25_ISF + Antibody_ISF -> AB40_O25__Antibody_ISF; k3_Antibody * (AB40_O25_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB40_O25_PVS + Antibody_PVS -> AB40_O25__Antibody_PVS; k3_Antibody * (AB40_O25_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB42_O25_ISF + Antibody_ISF -> AB42_O25__Antibody_ISF; k3_Antibody * (AB42_O25_ISF/V_ISF) * (Antibody_ISF/V_ISF) * V_ISF
+AB42_O25_PVS + Antibody_PVS -> AB42_O25__Antibody_PVS; k3_Antibody * (AB42_O25_PVS/V_PVS) * (Antibody_PVS/V_PVS) * V_PVS
+AB40_O1_ISF + AB40_O13_ISF -> AB40_O25_ISF; Baseline_AB40_O_P*k_O13_O14_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O13_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O14_ISF -> AB40_O25_ISF; Baseline_AB40_O_P*k_O14_O15_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O14_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O15_ISF -> AB40_O25_ISF; Baseline_AB40_O_P*k_O15_O16_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O15_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O16_ISF -> AB40_O25_ISF; Baseline_AB40_O_P*k_O16_O17_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O16_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O17_ISF -> AB40_O25_ISF; Baseline_AB40_O_P*k_O17_O18_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O17_ISF/V_ISF) * V_ISF
+AB40_O1_ISF + AB40_O18_ISF -> AB40_O25_ISF; Baseline_AB40_O_P*k_O18_O19_AB40_ISF * (AB40_O1_ISF/V_ISF) * (AB40_O18_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O13_ISF -> AB42_O25_ISF; Baseline_AB42_O_P*k_O13_O14_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O13_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O14_ISF -> AB42_O25_ISF; Baseline_AB42_O_P*k_O14_O15_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O14_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O15_ISF -> AB42_O25_ISF; Baseline_AB42_O_P*k_O15_O16_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O15_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O16_ISF -> AB42_O25_ISF; Baseline_AB42_O_P*k_O16_O17_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O16_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O17_ISF -> AB42_O25_ISF; Baseline_AB42_O_P*k_O17_O18_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O17_ISF/V_ISF) * V_ISF
+AB42_O1_ISF + AB42_O18_ISF -> AB42_O25_ISF; Baseline_AB42_O_P*k_O18_O19_AB42_ISF * (AB42_O1_ISF/V_ISF) * (AB42_O18_ISF/V_ISF) * V_ISF
+AB40_O2_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O2_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O2_ISF/V_ISF))) * (AB40_O2_ISF/V_ISF) * V_ISF
+AB40_O3_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O3_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O3_ISF/V_ISF))) * (AB40_O3_ISF/V_ISF) * V_ISF
+AB40_O4_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O4_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O4_ISF/V_ISF))) * (AB40_O4_ISF/V_ISF) * V_ISF
+AB40_O5_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O5_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O5_ISF/V_ISF))) * (AB40_O5_ISF/V_ISF) * V_ISF
+AB40_O6_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O6_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O6_ISF/V_ISF))) * (AB40_O6_ISF/V_ISF) * V_ISF
+AB40_O7_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O7_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O7_ISF/V_ISF))) * (AB40_O7_ISF/V_ISF) * V_ISF
+AB40_O8_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O8_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O8_ISF/V_ISF))) * (AB40_O8_ISF/V_ISF) * V_ISF
+AB40_O9_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O9_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O9_ISF/V_ISF))) * (AB40_O9_ISF/V_ISF) * V_ISF
+AB40_O10_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O10_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O10_ISF/V_ISF))) * (AB40_O10_ISF/V_ISF) * V_ISF
+AB40_O11_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O11_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O11_ISF/V_ISF))) * (AB40_O11_ISF/V_ISF) * V_ISF
+AB40_O12_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O12_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O12_ISF/V_ISF))) * (AB40_O12_ISF/V_ISF) * V_ISF
+AB40_O13_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O13_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O13_ISF/V_ISF))) * (AB40_O13_ISF/V_ISF) * V_ISF
+AB40_O14_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O14_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O14_ISF/V_ISF))) * (AB40_O14_ISF/V_ISF) * V_ISF
+AB40_O15_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O15_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O15_ISF/V_ISF))) * (AB40_O15_ISF/V_ISF) * V_ISF
+AB40_O16_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O16_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O16_ISF/V_ISF))) * (AB40_O16_ISF/V_ISF) * V_ISF
+AB40_O17_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O17_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O17_ISF/V_ISF))) * (AB40_O17_ISF/V_ISF) * V_ISF
+AB40_O18_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O18_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O18_ISF/V_ISF))) * (AB40_O18_ISF/V_ISF) * V_ISF
+AB40_O19_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O19_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O19_ISF/V_ISF))) * (AB40_O19_ISF/V_ISF) * V_ISF
+AB40_O20_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O20_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O20_ISF/V_ISF))) * (AB40_O20_ISF/V_ISF) * V_ISF
+AB40_O21_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O21_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O21_ISF/V_ISF))) * (AB40_O21_ISF/V_ISF) * V_ISF
+AB40_O22_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O22_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O22_ISF/V_ISF))) * (AB40_O22_ISF/V_ISF) * V_ISF
+AB40_O23_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O23_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O23_ISF/V_ISF))) * (AB40_O23_ISF/V_ISF) * V_ISF
+AB40_O24_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O24_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB40/(Microglia_EC50_AB40 + (AB40_O24_ISF/V_ISF))) * (AB40_O24_ISF/V_ISF) * V_ISF
+AB42_O2_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O2_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O2_ISF/V_ISF))) * (AB42_O2_ISF/V_ISF) * V_ISF
+AB42_O3_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O3_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O3_ISF/V_ISF))) * (AB42_O3_ISF/V_ISF) * V_ISF
+AB42_O4_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O4_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O4_ISF/V_ISF))) * (AB42_O4_ISF/V_ISF) * V_ISF
+AB42_O5_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O5_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O5_ISF/V_ISF))) * (AB42_O5_ISF/V_ISF) * V_ISF
+AB42_O6_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O6_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O6_ISF/V_ISF))) * (AB42_O6_ISF/V_ISF) * V_ISF
+AB42_O7_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O7_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O7_ISF/V_ISF))) * (AB42_O7_ISF/V_ISF) * V_ISF
+AB42_O8_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O8_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O8_ISF/V_ISF))) * (AB42_O8_ISF/V_ISF) * V_ISF
+AB42_O9_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O9_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O9_ISF/V_ISF))) * (AB42_O9_ISF/V_ISF) * V_ISF
+AB42_O10_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O10_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O10_ISF/V_ISF))) * (AB42_O10_ISF/V_ISF) * V_ISF
+AB42_O11_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O11_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O11_ISF/V_ISF))) * (AB42_O11_ISF/V_ISF) * V_ISF
+AB42_O12_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O12_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O12_ISF/V_ISF))) * (AB42_O12_ISF/V_ISF) * V_ISF
+AB42_O13_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O13_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O13_ISF/V_ISF))) * (AB42_O13_ISF/V_ISF) * V_ISF
+AB42_O14_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O14_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O14_ISF/V_ISF))) * (AB42_O14_ISF/V_ISF) * V_ISF
+AB42_O15_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O15_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O15_ISF/V_ISF))) * (AB42_O15_ISF/V_ISF) * V_ISF
+AB42_O16_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O16_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O16_ISF/V_ISF))) * (AB42_O16_ISF/V_ISF) * V_ISF
+AB42_O17_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O17_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O17_ISF/V_ISF))) * (AB42_O17_ISF/V_ISF) * V_ISF
+AB42_O18_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O18_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O18_ISF/V_ISF))) * (AB42_O18_ISF/V_ISF) * V_ISF
+AB42_O19_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O19_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O19_ISF/V_ISF))) * (AB42_O19_ISF/V_ISF) * V_ISF
+AB42_O20_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O20_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O20_ISF/V_ISF))) * (AB42_O20_ISF/V_ISF) * V_ISF
+AB42_O21_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O21_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O21_ISF/V_ISF))) * (AB42_O21_ISF/V_ISF) * V_ISF
+AB42_O22_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O22_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O22_ISF/V_ISF))) * (AB42_O22_ISF/V_ISF) * V_ISF
+AB42_O23_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O23_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O23_ISF/V_ISF))) * (AB42_O23_ISF/V_ISF) * V_ISF
+AB42_O24_ISF ->; Microglia*(Hi_lo_ratio*Microglia_high_frac*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O24_ISF/V_ISF)) + (1.0 - Microglia_high_frac)*Microglia_Vmax_AB42/(Microglia_EC50_AB42 + (AB42_O24_ISF/V_ISF))) * (AB42_O24_ISF/V_ISF) * V_ISF
+AB40_O25_ISF ->; 0.5*Microglia*(Microglia_high_frac*Microglia_high_rate_AB40 + (1.0 - Microglia_high_frac)*Microglia_low_rate_AB40) * (AB40_O25_ISF/V_ISF) * V_ISF
+AB42_O25_ISF ->; 0.5*Microglia*(Microglia_high_frac*Microglia_high_rate_AB42 + (1.0 - Microglia_high_frac)*Microglia_low_rate_AB42) * (AB42_O25_ISF/V_ISF) * V_ISF
+AB40_O1__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O1__Antibody_ISF/V_ISF) * V_ISF
+AB40_O2__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O2__Antibody_ISF/V_ISF) * V_ISF
+AB40_O3__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O3__Antibody_ISF/V_ISF) * V_ISF
+AB40_O4__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O4__Antibody_ISF/V_ISF) * V_ISF
+AB40_O5__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O5__Antibody_ISF/V_ISF) * V_ISF
+AB40_O6__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O6__Antibody_ISF/V_ISF) * V_ISF
+AB40_O7__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O7__Antibody_ISF/V_ISF) * V_ISF
+AB40_O8__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O8__Antibody_ISF/V_ISF) * V_ISF
+AB40_O9__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O9__Antibody_ISF/V_ISF) * V_ISF
+AB40_O10__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O10__Antibody_ISF/V_ISF) * V_ISF
+AB40_O11__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O11__Antibody_ISF/V_ISF) * V_ISF
+AB40_O12__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O12__Antibody_ISF/V_ISF) * V_ISF
+AB40_O13__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O13__Antibody_ISF/V_ISF) * V_ISF
+AB40_O14__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O14__Antibody_ISF/V_ISF) * V_ISF
+AB40_O15__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O15__Antibody_ISF/V_ISF) * V_ISF
+AB40_O16__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O16__Antibody_ISF/V_ISF) * V_ISF
+AB40_O17__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O17__Antibody_ISF/V_ISF) * V_ISF
+AB40_O18__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O18__Antibody_ISF/V_ISF) * V_ISF
+AB40_O19__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O19__Antibody_ISF/V_ISF) * V_ISF
+AB40_O20__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O20__Antibody_ISF/V_ISF) * V_ISF
+AB40_O21__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O21__Antibody_ISF/V_ISF) * V_ISF
+AB40_O22__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O22__Antibody_ISF/V_ISF) * V_ISF
+AB40_O23__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O23__Antibody_ISF/V_ISF) * V_ISF
+AB40_O24__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O24__Antibody_ISF/V_ISF) * V_ISF
+AB40_O25__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB40_O25__Antibody_ISF/V_ISF) * V_ISF
+AB42_O1__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O1__Antibody_ISF/V_ISF) * V_ISF
+AB42_O2__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O2__Antibody_ISF/V_ISF) * V_ISF
+AB42_O3__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O3__Antibody_ISF/V_ISF) * V_ISF
+AB42_O4__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O4__Antibody_ISF/V_ISF) * V_ISF
+AB42_O5__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O5__Antibody_ISF/V_ISF) * V_ISF
+AB42_O6__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O6__Antibody_ISF/V_ISF) * V_ISF
+AB42_O7__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O7__Antibody_ISF/V_ISF) * V_ISF
+AB42_O8__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O8__Antibody_ISF/V_ISF) * V_ISF
+AB42_O9__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O9__Antibody_ISF/V_ISF) * V_ISF
+AB42_O10__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O10__Antibody_ISF/V_ISF) * V_ISF
+AB42_O11__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O11__Antibody_ISF/V_ISF) * V_ISF
+AB42_O12__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O12__Antibody_ISF/V_ISF) * V_ISF
+AB42_O13__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O13__Antibody_ISF/V_ISF) * V_ISF
+AB42_O14__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O14__Antibody_ISF/V_ISF) * V_ISF
+AB42_O15__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O15__Antibody_ISF/V_ISF) * V_ISF
+AB42_O16__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O16__Antibody_ISF/V_ISF) * V_ISF
+AB42_O17__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O17__Antibody_ISF/V_ISF) * V_ISF
+AB42_O18__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O18__Antibody_ISF/V_ISF) * V_ISF
+AB42_O19__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O19__Antibody_ISF/V_ISF) * V_ISF
+AB42_O20__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O20__Antibody_ISF/V_ISF) * V_ISF
+AB42_O21__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O21__Antibody_ISF/V_ISF) * V_ISF
+AB42_O22__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O22__Antibody_ISF/V_ISF) * V_ISF
+AB42_O23__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O23__Antibody_ISF/V_ISF) * V_ISF
+AB42_O24__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O24__Antibody_ISF/V_ISF) * V_ISF
+AB42_O25__Antibody_ISF ->; Microglia*(Microglia_high_frac*Microglia_high_rate_mAb + (1.0 - Microglia_high_frac)*Microglia_low_rate_mAb) * (AB42_O25__Antibody_ISF/V_ISF) * V_ISF
+AB40_O24_ISF -> AB40_O12_ISF + AB40_O12_ISF; k_O24_O12_AB40_ISF*k_O24_O23_AB40_ISF * (AB40_O24_ISF/V_ISF) * V_ISF
+AB42_O24_ISF -> AB42_O12_ISF + AB42_O12_ISF; k_O24_O12_AB42_ISF*k_O24_O23_AB42_ISF * (AB42_O24_ISF/V_ISF) * V_ISF
+AB40_O1_ISF ->; IDE_conc_ISF * AB40_IDE_Kcat_ISF * (((AB40_O1_ISF/V_ISF))^AB40_IDE_Hill_ISF / (((AB40_O1_ISF/V_ISF))^AB40_IDE_Hill_ISF + AB40_IDE_IC50_ISF^AB40_IDE_Hill_ISF)) * V_ISF
+AB42_O1_ISF ->; IDE_conc_ISF * AB42_IDE_Kcat_ISF * (((AB42_O1_ISF/V_ISF))^AB42_IDE_Hill_ISF / (((AB42_O1_ISF/V_ISF))^AB42_IDE_Hill_ISF + AB42_IDE_IC50_ISF^AB42_IDE_Hill_ISF)) * V_ISF
+-> APP_ISF; k_APP_production * V_ISF
+-> AB40_O1_central; AB40_systemic_synthesis_rate 
+-> AB42_O1_central; AB42_systemic_synthesis_rate 
+APP_ISF -> C99_ISF; k_C99 * (APP_ISF/V_ISF) * V_ISF
+C99_ISF ->; v_C99 * (C99_ISF/V_ISF) * V_ISF
+C99_ISF -> AB40_O1_ISF; k_AB40 * (C99_ISF/V_ISF) * V_ISF
+C99_ISF -> AB42_O1_ISF; k_AB42 * (C99_ISF/V_ISF) * V_ISF
+AB40_O2_ISF -> AB40_O2_PVS; (1.0 - sigma_ISF_PVS_oligomer1) * Q_PVS * (AB40_O2_ISF/V_ISF)
+AB40_O3_ISF -> AB40_O3_PVS; (1.0 - sigma_ISF_PVS_oligomer1) * Q_PVS * (AB40_O3_ISF/V_ISF)
+AB40_O4_ISF -> AB40_O4_PVS; (1.0 - sigma_ISF_PVS_oligomer1) * Q_PVS * (AB40_O4_ISF/V_ISF)
+AB40_O5_ISF -> AB40_O5_PVS; (1.0 - sigma_ISF_PVS_oligomer1) * Q_PVS * (AB40_O5_ISF/V_ISF)
+AB40_O6_ISF -> AB40_O6_PVS; (1.0 - sigma_ISF_PVS_oligomer1) * Q_PVS * (AB40_O6_ISF/V_ISF)
+AB40_O7_ISF -> AB40_O7_PVS; (1.0 - sigma_ISF_PVS_oligomer1) * Q_PVS * (AB40_O7_ISF/V_ISF)
+AB40_O8_ISF -> AB40_O8_PVS; (1.0 - sigma_ISF_PVS_oligomer1) * Q_PVS * (AB40_O8_ISF/V_ISF)
+AB40_O9_ISF -> AB40_O9_PVS; (1.0 - sigma_ISF_PVS_oligomer1) * Q_PVS * (AB40_O9_ISF/V_ISF)
+AB40_O10_ISF -> AB40_O10_PVS; (1.0 - sigma_ISF_PVS_oligomer2) * Q_PVS * (AB40_O10_ISF/V_ISF)
+AB40_O11_ISF -> AB40_O11_PVS; (1.0 - sigma_ISF_PVS_oligomer2) * Q_PVS * (AB40_O11_ISF/V_ISF)
+AB40_O12_ISF -> AB40_O12_PVS; (1.0 - sigma_ISF_PVS_oligomer2) * Q_PVS * (AB40_O12_ISF/V_ISF)
+AB40_O13_ISF -> AB40_O13_PVS; (1.0 - sigma_ISF_PVS_oligomer2) * Q_PVS * (AB40_O13_ISF/V_ISF)
+AB40_O14_ISF -> AB40_O14_PVS; (1.0 - sigma_ISF_PVS_oligomer2) * Q_PVS * (AB40_O14_ISF/V_ISF)
+AB40_O15_ISF -> AB40_O15_PVS; (1.0 - sigma_ISF_PVS_oligomer2) * Q_PVS * (AB40_O15_ISF/V_ISF)
+AB40_O16_ISF -> AB40_O16_PVS; (1.0 - sigma_ISF_PVS_oligomer2) * Q_PVS * (AB40_O16_ISF/V_ISF)
+AB40_O17_ISF -> AB40_O17_PVS; (1.0 - sigma_ISF_PVS_proto) * Q_PVS * (AB40_O17_ISF/V_ISF)
+AB40_O18_ISF -> AB40_O18_PVS; (1.0 - sigma_ISF_PVS_proto) * Q_PVS * (AB40_O18_ISF/V_ISF)
+AB40_O19_ISF -> AB40_O19_PVS; (1.0 - sigma_ISF_PVS_proto) * Q_PVS * (AB40_O19_ISF/V_ISF)
+AB40_O20_ISF -> AB40_O20_PVS; (1.0 - sigma_ISF_PVS_proto) * Q_PVS * (AB40_O20_ISF/V_ISF)
+AB40_O21_ISF -> AB40_O21_PVS; (1.0 - sigma_ISF_PVS_proto) * Q_PVS * (AB40_O21_ISF/V_ISF)
+AB40_O22_ISF -> AB40_O22_PVS; (1.0 - sigma_ISF_PVS_proto) * Q_PVS * (AB40_O22_ISF/V_ISF)
+AB40_O23_ISF -> AB40_O23_PVS; (1.0 - sigma_ISF_PVS_proto) * Q_PVS * (AB40_O23_ISF/V_ISF)
+AB40_O24_ISF -> AB40_O24_PVS; (1.0 - sigma_ISF_PVS_proto) * Q_PVS * (AB40_O24_ISF/V_ISF)
+AB42_O2_ISF -> AB42_O2_PVS; (1.0 - sigma_ISF_PVS_oligomer1) * Q_PVS * (AB42_O2_ISF/V_ISF)
+AB42_O3_ISF -> AB42_O3_PVS; (1.0 - sigma_ISF_PVS_oligomer1) * Q_PVS * (AB42_O3_ISF/V_ISF)
+AB42_O4_ISF -> AB42_O4_PVS; (1.0 - sigma_ISF_PVS_oligomer1) * Q_PVS * (AB42_O4_ISF/V_ISF)
+AB42_O5_ISF -> AB42_O5_PVS; (1.0 - sigma_ISF_PVS_oligomer1) * Q_PVS * (AB42_O5_ISF/V_ISF)
+AB42_O6_ISF -> AB42_O6_PVS; (1.0 - sigma_ISF_PVS_oligomer1) * Q_PVS * (AB42_O6_ISF/V_ISF)
+AB42_O7_ISF -> AB42_O7_PVS; (1.0 - sigma_ISF_PVS_oligomer1) * Q_PVS * (AB42_O7_ISF/V_ISF)
+AB42_O8_ISF -> AB42_O8_PVS; (1.0 - sigma_ISF_PVS_oligomer1) * Q_PVS * (AB42_O8_ISF/V_ISF)
+AB42_O9_ISF -> AB42_O9_PVS; (1.0 - sigma_ISF_PVS_oligomer1) * Q_PVS * (AB42_O9_ISF/V_ISF)
+AB42_O10_ISF -> AB42_O10_PVS; (1.0 - sigma_ISF_PVS_oligomer2) * Q_PVS * (AB42_O10_ISF/V_ISF)
+AB42_O11_ISF -> AB42_O11_PVS; (1.0 - sigma_ISF_PVS_oligomer2) * Q_PVS * (AB42_O11_ISF/V_ISF)
+AB42_O12_ISF -> AB42_O12_PVS; (1.0 - sigma_ISF_PVS_oligomer2) * Q_PVS * (AB42_O12_ISF/V_ISF)
+AB42_O13_ISF -> AB42_O13_PVS; (1.0 - sigma_ISF_PVS_oligomer2) * Q_PVS * (AB42_O13_ISF/V_ISF)
+AB42_O14_ISF -> AB42_O14_PVS; (1.0 - sigma_ISF_PVS_oligomer2) * Q_PVS * (AB42_O14_ISF/V_ISF)
+AB42_O15_ISF -> AB42_O15_PVS; (1.0 - sigma_ISF_PVS_oligomer2) * Q_PVS * (AB42_O15_ISF/V_ISF)
+AB42_O16_ISF -> AB42_O16_PVS; (1.0 - sigma_ISF_PVS_oligomer2) * Q_PVS * (AB42_O16_ISF/V_ISF)
+AB42_O17_ISF -> AB42_O17_PVS; (1.0 - sigma_ISF_PVS_proto) * Q_PVS * (AB42_O17_ISF/V_ISF)
+AB42_O18_ISF -> AB42_O18_PVS; (1.0 - sigma_ISF_PVS_proto) * Q_PVS * (AB42_O18_ISF/V_ISF)
+AB42_O19_ISF -> AB42_O19_PVS; (1.0 - sigma_ISF_PVS_proto) * Q_PVS * (AB42_O19_ISF/V_ISF)
+AB42_O20_ISF -> AB42_O20_PVS; (1.0 - sigma_ISF_PVS_proto) * Q_PVS * (AB42_O20_ISF/V_ISF)
+AB42_O21_ISF -> AB42_O21_PVS; (1.0 - sigma_ISF_PVS_proto) * Q_PVS * (AB42_O21_ISF/V_ISF)
+AB42_O22_ISF -> AB42_O22_PVS; (1.0 - sigma_ISF_PVS_proto) * Q_PVS * (AB42_O22_ISF/V_ISF)
+AB42_O23_ISF -> AB42_O23_PVS; (1.0 - sigma_ISF_PVS_proto) * Q_PVS * (AB42_O23_ISF/V_ISF)
+AB42_O24_ISF -> AB42_O24_PVS; (1.0 - sigma_ISF_PVS_proto) * Q_PVS * (AB42_O24_ISF/V_ISF)
+AB40_O2_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O2_PVS/V_PVS)
+AB40_O3_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O3_PVS/V_PVS)
+AB40_O4_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O4_PVS/V_PVS)
+AB40_O5_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O5_PVS/V_PVS)
+AB40_O6_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O6_PVS/V_PVS)
+AB40_O7_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O7_PVS/V_PVS)
+AB40_O8_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O8_PVS/V_PVS)
+AB40_O9_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O9_PVS/V_PVS)
+AB40_O10_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O10_PVS/V_PVS)
+AB40_O11_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O11_PVS/V_PVS)
+AB40_O12_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O12_PVS/V_PVS)
+AB40_O13_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O13_PVS/V_PVS)
+AB40_O14_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O14_PVS/V_PVS)
+AB40_O15_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O15_PVS/V_PVS)
+AB40_O16_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O16_PVS/V_PVS)
+AB40_O17_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O17_PVS/V_PVS)
+AB40_O18_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O18_PVS/V_PVS)
+AB40_O19_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O19_PVS/V_PVS)
+AB40_O20_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O20_PVS/V_PVS)
+AB40_O21_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O21_PVS/V_PVS)
+AB40_O22_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O22_PVS/V_PVS)
+AB40_O23_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O23_PVS/V_PVS)
+AB40_O24_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O24_PVS/V_PVS)
+AB42_O2_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O2_PVS/V_PVS)
+AB42_O3_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O3_PVS/V_PVS)
+AB42_O4_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O4_PVS/V_PVS)
+AB42_O5_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O5_PVS/V_PVS)
+AB42_O6_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O6_PVS/V_PVS)
+AB42_O7_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O7_PVS/V_PVS)
+AB42_O8_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O8_PVS/V_PVS)
+AB42_O9_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O9_PVS/V_PVS)
+AB42_O10_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O10_PVS/V_PVS)
+AB42_O11_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O11_PVS/V_PVS)
+AB42_O12_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O12_PVS/V_PVS)
+AB42_O13_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O13_PVS/V_PVS)
+AB42_O14_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O14_PVS/V_PVS)
+AB42_O15_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O15_PVS/V_PVS)
+AB42_O16_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O16_PVS/V_PVS)
+AB42_O17_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O17_PVS/V_PVS)
+AB42_O18_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O18_PVS/V_PVS)
+AB42_O19_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O19_PVS/V_PVS)
+AB42_O20_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O20_PVS/V_PVS)
+AB42_O21_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O21_PVS/V_PVS)
+AB42_O22_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O22_PVS/V_PVS)
+AB42_O23_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O23_PVS/V_PVS)
+AB42_O24_PVS ->; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O24_PVS/V_PVS)
+AB40_O2__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O2__Antibody_PVS/V_PVS)
+AB40_O3__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O3__Antibody_PVS/V_PVS)
+AB40_O4__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O4__Antibody_PVS/V_PVS)
+AB40_O5__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O5__Antibody_PVS/V_PVS)
+AB40_O6__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O6__Antibody_PVS/V_PVS)
+AB40_O7__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O7__Antibody_PVS/V_PVS)
+AB40_O8__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O8__Antibody_PVS/V_PVS)
+AB40_O9__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O9__Antibody_PVS/V_PVS)
+AB40_O10__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O10__Antibody_PVS/V_PVS)
+AB40_O11__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O11__Antibody_PVS/V_PVS)
+AB40_O12__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O12__Antibody_PVS/V_PVS)
+AB40_O13__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O13__Antibody_PVS/V_PVS)
+AB40_O14__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O14__Antibody_PVS/V_PVS)
+AB40_O15__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O15__Antibody_PVS/V_PVS)
+AB40_O16__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O16__Antibody_PVS/V_PVS)
+AB40_O17__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O17__Antibody_PVS/V_PVS)
+AB40_O18__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O18__Antibody_PVS/V_PVS)
+AB40_O19__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O19__Antibody_PVS/V_PVS)
+AB40_O20__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O20__Antibody_PVS/V_PVS)
+AB40_O21__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O21__Antibody_PVS/V_PVS)
+AB40_O22__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O22__Antibody_PVS/V_PVS)
+AB40_O23__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O23__Antibody_PVS/V_PVS)
+AB40_O24__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O24__Antibody_PVS/V_PVS)
+AB42_O2__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O2__Antibody_PVS/V_PVS)
+AB42_O3__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O3__Antibody_PVS/V_PVS)
+AB42_O4__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O4__Antibody_PVS/V_PVS)
+AB42_O5__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O5__Antibody_PVS/V_PVS)
+AB42_O6__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O6__Antibody_PVS/V_PVS)
+AB42_O7__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O7__Antibody_PVS/V_PVS)
+AB42_O8__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O8__Antibody_PVS/V_PVS)
+AB42_O9__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O9__Antibody_PVS/V_PVS)
+AB42_O10__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O10__Antibody_PVS/V_PVS)
+AB42_O11__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O11__Antibody_PVS/V_PVS)
+AB42_O12__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O12__Antibody_PVS/V_PVS)
+AB42_O13__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O13__Antibody_PVS/V_PVS)
+AB42_O14__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O14__Antibody_PVS/V_PVS)
+AB42_O15__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O15__Antibody_PVS/V_PVS)
+AB42_O16__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O16__Antibody_PVS/V_PVS)
+AB42_O17__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O17__Antibody_PVS/V_PVS)
+AB42_O18__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O18__Antibody_PVS/V_PVS)
+AB42_O19__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O19__Antibody_PVS/V_PVS)
+AB42_O20__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O20__Antibody_PVS/V_PVS)
+AB42_O21__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O21__Antibody_PVS/V_PVS)
+AB42_O22__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O22__Antibody_PVS/V_PVS)
+AB42_O23__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O23__Antibody_PVS/V_PVS)
+AB42_O24__Antibody_PVS ->; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O24__Antibody_PVS/V_PVS)
+AB40_O1_PVS -> AB40_O1_central; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O1_PVS/V_PVS)
+AB40_O1_ISF -> AB40_O1_central; (1.0 - sigma_ISF_central_Abeta) * (Qbrain_ISF - Q_PVS) * (AB40_O1_ISF/V_ISF)
+AB40_O1_ISF -> AB40_O1_LV; f_LV*Qglymph * (AB40_O1_ISF/V_ISF)
+AB40_O1_ISF -> AB40_O1_TFV; (1.0 - f_LV) * Qglymph * (AB40_O1_ISF/V_ISF)
+AB40_O1_BrainPlasma -> AB40_O1_ISF; (1.0 - sigma_BBB)*Qbrain_ISF * (AB40_O1_BrainPlasma/V_BrainPlasma)
+AB40_O1_BrainPlasma -> AB40_O1_LV; f_LV*(1.0 - sigma_BCSFB)*Q_CSF * (AB40_O1_BrainPlasma/V_BrainPlasma)
+AB40_O1_BrainPlasma -> AB40_O1_TFV; (1.0 - f_LV)*(1.0 - sigma_BCSFB)*Q_CSF * (AB40_O1_BrainPlasma/V_BrainPlasma)
+AB40_O1_LV -> AB40_O1_TFV; f_LV*(Q_CSF + Qglymph) * (AB40_O1_LV/V_LV)
+AB40_O1_TFV -> AB40_O1_CM; (Q_CSF + Qglymph) * (AB40_O1_TFV/V_TFV)
+AB40_O1_CM -> AB40_O1_SAS; (Q_CSF + Qglymph) * (AB40_O1_CM/V_CM)
+AB40_O1_SAS -> AB40_O1_ISF; Qglymph * (AB40_O1_SAS/V_SAS)
+AB40_O1_SAS -> AB40_O1_central; (1 - sigma_SAS_central_Abeta)*Q_CSF * (AB40_O1_SAS/V_SAS)
+AB40_O1_BrainPlasma -> AB40_O1_central; (Qbrain_plasma - Q_CSF - Qbrain_ISF) * (AB40_O1_BrainPlasma/V_BrainPlasma)
+AB40_O1_central -> AB40_O1_BrainPlasma; Qbrain_plasma * (AB40_O1_central/V_central)
+AB42_O1_PVS -> AB42_O1_central; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O1_PVS/V_PVS)
+AB42_O1_ISF -> AB42_O1_central; (1.0 - sigma_ISF_central_Abeta) * (Qbrain_ISF - Q_PVS) * (AB42_O1_ISF/V_ISF)
+AB42_O1_ISF -> AB42_O1_LV; f_LV*Qglymph * (AB42_O1_ISF/V_ISF)
+AB42_O1_ISF -> AB42_O1_TFV; (1.0 - f_LV) * Qglymph * (AB42_O1_ISF/V_ISF)
+AB42_O1_BrainPlasma -> AB42_O1_ISF; (1.0 - sigma_BBB)*Qbrain_ISF * (AB42_O1_BrainPlasma/V_BrainPlasma)
+AB42_O1_BrainPlasma -> AB42_O1_LV; f_LV*(1.0 - sigma_BCSFB)*Q_CSF * (AB42_O1_BrainPlasma/V_BrainPlasma)
+AB42_O1_BrainPlasma -> AB42_O1_TFV; (1.0 - f_LV)*(1.0 - sigma_BCSFB)*Q_CSF * (AB42_O1_BrainPlasma/V_BrainPlasma)
+AB42_O1_LV -> AB42_O1_TFV; f_LV*(Q_CSF + Qglymph) * (AB42_O1_LV/V_LV)
+AB42_O1_TFV -> AB42_O1_CM; (Q_CSF + Qglymph) * (AB42_O1_TFV/V_TFV)
+AB42_O1_CM -> AB42_O1_SAS; (Q_CSF + Qglymph) * (AB42_O1_CM/V_CM)
+AB42_O1_SAS -> AB42_O1_ISF; Qglymph * (AB42_O1_SAS/V_SAS)
+AB42_O1_SAS -> AB42_O1_central; (1 - sigma_SAS_central_Abeta)*Q_CSF * (AB42_O1_SAS/V_SAS)
+AB42_O1_BrainPlasma -> AB42_O1_central; (Qbrain_plasma - Q_CSF - Qbrain_ISF) * (AB42_O1_BrainPlasma/V_BrainPlasma)
+AB42_O1_central -> AB42_O1_BrainPlasma; Qbrain_plasma * (AB42_O1_central/V_central)
+AB40_O1__Antibody_PVS -> AB40_O1__Antibody_centralAntibody; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB40_O1__Antibody_PVS/V_PVS)
+AB40_O1__Antibody_ISF -> AB40_O1__Antibody_centralAntibody; (1.0 - sigma_ISF_centralAntibody_Antibody) * (Qbrain_ISF - Q_PVS) * (AB40_O1__Antibody_ISF/V_ISF)
+AB40_O1__Antibody_ISF -> AB40_O1__Antibody_LV; f_LV*Qglymph * (AB40_O1__Antibody_ISF/V_ISF)
+AB40_O1__Antibody_ISF -> AB40_O1__Antibody_TFV; (1.0 - f_LV) * Qglymph * (AB40_O1__Antibody_ISF/V_ISF)
+AB40_O1__Antibody_BrainPlasma -> AB40_O1__Antibody_ISF; (1.0 - sigma_BBB)*Qbrain_ISF * (AB40_O1__Antibody_BrainPlasma/V_BrainPlasma)
+AB40_O1__Antibody_BrainPlasma -> AB40_O1__Antibody_LV; f_LV*(1.0 - sigma_BCSFB)*Q_CSF * (AB40_O1__Antibody_BrainPlasma/V_BrainPlasma)
+AB40_O1__Antibody_BrainPlasma -> AB40_O1__Antibody_TFV; (1.0 - f_LV)*(1.0 - sigma_BCSFB)*Q_CSF * (AB40_O1__Antibody_BrainPlasma/V_BrainPlasma)
+AB40_O1__Antibody_LV -> AB40_O1__Antibody_TFV; f_LV*(Q_CSF + Qglymph) * (AB40_O1__Antibody_LV/V_LV)
+AB40_O1__Antibody_TFV -> AB40_O1__Antibody_CM; (Q_CSF + Qglymph) * (AB40_O1__Antibody_TFV/V_TFV)
+AB40_O1__Antibody_CM -> AB40_O1__Antibody_SAS; (Q_CSF + Qglymph) * (AB40_O1__Antibody_CM/V_CM)
+AB40_O1__Antibody_SAS -> AB40_O1__Antibody_ISF; Qglymph * (AB40_O1__Antibody_SAS/V_SAS)
+AB40_O1__Antibody_SAS -> AB40_O1__Antibody_centralAntibody; (1 - sigma_SAS_centralAntibody_Antibody)*Q_CSF * (AB40_O1__Antibody_SAS/V_SAS)
+AB40_O1__Antibody_BrainPlasma -> AB40_O1__Antibody_centralAntibody; (Qbrain_plasma - Q_CSF - Qbrain_ISF) * (AB40_O1__Antibody_BrainPlasma/V_BrainPlasma)
+AB40_O1__Antibody_centralAntibody -> AB40_O1__Antibody_BrainPlasma; Qbrain_plasma * (AB40_O1__Antibody_centralAntibody/V_centralAntibody)
+AB42_O1__Antibody_PVS -> AB42_O1__Antibody_centralAntibody; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (AB42_O1__Antibody_PVS/V_PVS)
+AB42_O1__Antibody_ISF -> AB42_O1__Antibody_centralAntibody; (1.0 - sigma_ISF_centralAntibody_Antibody) * (Qbrain_ISF - Q_PVS) * (AB42_O1__Antibody_ISF/V_ISF)
+AB42_O1__Antibody_ISF -> AB42_O1__Antibody_LV; f_LV*Qglymph * (AB42_O1__Antibody_ISF/V_ISF)
+AB42_O1__Antibody_ISF -> AB42_O1__Antibody_TFV; (1.0 - f_LV) * Qglymph * (AB42_O1__Antibody_ISF/V_ISF)
+AB42_O1__Antibody_BrainPlasma -> AB42_O1__Antibody_ISF; (1.0 - sigma_BBB)*Qbrain_ISF * (AB42_O1__Antibody_BrainPlasma/V_BrainPlasma)
+AB42_O1__Antibody_BrainPlasma -> AB42_O1__Antibody_LV; f_LV*(1.0 - sigma_BCSFB)*Q_CSF * (AB42_O1__Antibody_BrainPlasma/V_BrainPlasma)
+AB42_O1__Antibody_BrainPlasma -> AB42_O1__Antibody_TFV; (1.0 - f_LV)*(1.0 - sigma_BCSFB)*Q_CSF * (AB42_O1__Antibody_BrainPlasma/V_BrainPlasma)
+AB42_O1__Antibody_LV -> AB42_O1__Antibody_TFV; f_LV*(Q_CSF + Qglymph) * (AB42_O1__Antibody_LV/V_LV)
+AB42_O1__Antibody_TFV -> AB42_O1__Antibody_CM; (Q_CSF + Qglymph) * (AB42_O1__Antibody_TFV/V_TFV)
+AB42_O1__Antibody_CM -> AB42_O1__Antibody_SAS; (Q_CSF + Qglymph) * (AB42_O1__Antibody_CM/V_CM)
+AB42_O1__Antibody_SAS -> AB42_O1__Antibody_ISF; Qglymph * (AB42_O1__Antibody_SAS/V_SAS)
+AB42_O1__Antibody_SAS -> AB42_O1__Antibody_centralAntibody; (1 - sigma_SAS_centralAntibody_Antibody)*Q_CSF * (AB42_O1__Antibody_SAS/V_SAS)
+AB42_O1__Antibody_BrainPlasma -> AB42_O1__Antibody_centralAntibody; (Qbrain_plasma - Q_CSF - Qbrain_ISF) * (AB42_O1__Antibody_BrainPlasma/V_BrainPlasma)
+AB42_O1__Antibody_centralAntibody -> AB42_O1__Antibody_BrainPlasma; Qbrain_plasma * (AB42_O1__Antibody_centralAntibody/V_centralAntibody)
+Antibody_PVS -> Antibody_centralAntibody; (1.0 - sigma_PVS_centralAntibody_Antibody) * Q_PVS * (Antibody_PVS/V_PVS)
+Antibody_ISF -> Antibody_centralAntibody; (1.0 - sigma_ISF_centralAntibody_Antibody) * (Qbrain_ISF - Q_PVS) * (Antibody_ISF/V_ISF)
+Antibody_ISF -> Antibody_LV; f_LV*Qglymph * (Antibody_ISF/V_ISF)
+Antibody_ISF -> Antibody_TFV; (1.0 - f_LV) * Qglymph * (Antibody_ISF/V_ISF)
+Antibody_BrainPlasma -> Antibody_ISF; (1.0 - sigma_BBB)*Qbrain_ISF * (Antibody_BrainPlasma/V_BrainPlasma)
+Antibody_BrainPlasma -> Antibody_LV; f_LV*(1.0 - sigma_BCSFB)*Q_CSF * (Antibody_BrainPlasma/V_BrainPlasma)
+Antibody_BrainPlasma -> Antibody_TFV; (1.0 - f_LV)*(1.0 - sigma_BCSFB)*Q_CSF * (Antibody_BrainPlasma/V_BrainPlasma)
+Antibody_LV -> Antibody_TFV; f_LV*(Q_CSF + Qglymph) * (Antibody_LV/V_LV)
+Antibody_TFV -> Antibody_CM; (Q_CSF + Qglymph) * (Antibody_TFV/V_TFV)
+Antibody_CM -> Antibody_SAS; (Q_CSF + Qglymph) * (Antibody_CM/V_CM)
+Antibody_SAS -> Antibody_ISF; Qglymph * (Antibody_SAS/V_SAS)
+Antibody_SAS -> Antibody_centralAntibody; (1 - sigma_SAS_centralAntibody_Antibody)*Q_CSF * (Antibody_SAS/V_SAS)
+Antibody_BrainPlasma -> Antibody_centralAntibody; (Qbrain_plasma - Q_CSF - Qbrain_ISF) * (Antibody_BrainPlasma/V_BrainPlasma)
+Antibody_centralAntibody -> Antibody_BrainPlasma; Qbrain_plasma * (Antibody_centralAntibody/V_centralAntibody)
+AB40_O1_ISF -> AB40_O1_PVS; (1.0 - sigma_ISF_PVS_O1) * Q_PVS * (AB40_O1_ISF/V_ISF)
+AB42_O1_ISF -> AB42_O1_PVS; (1.0 - sigma_ISF_PVS_O1) * Q_PVS * (AB42_O1_ISF/V_ISF)
+Antibody_ISF -> Antibody_PVS; (1.0 - sigma_ISF_PVS_Antibody) * Q_PVS * (Antibody_ISF/V_ISF)
+AB40_O1_BBB ->; kdeg * (AB40_O1_BBB/V_BBB) * V_BBB
+AB40_O1_BCSFB ->; kdeg * (AB40_O1_BCSFB/V_BCSFB) * V_BCSFB
+AB42_O1_BBB ->; kdeg * (AB42_O1_BBB/V_BBB) * V_BBB
+AB42_O1_BCSFB ->; kdeg * (AB42_O1_BCSFB/V_BCSFB) * V_BCSFB
+AB40_O1__Antibody_BBB ->; kdeg * (AB40_O1__Antibody_BBB/V_BBB) * V_BBB
+AB40_O1__Antibody_BCSFB ->; kdeg * (AB40_O1__Antibody_BCSFB/V_BCSFB) * V_BCSFB
+AB42_O1__Antibody_BBB ->; kdeg * (AB42_O1__Antibody_BBB/V_BBB) * V_BBB
+AB42_O1__Antibody_BCSFB ->; kdeg * (AB42_O1__Antibody_BCSFB/V_BCSFB) * V_BCSFB
+Antibody_BBB ->; kdeg * (Antibody_BBB/V_BBB) * V_BBB
+Antibody_BCSFB ->; kdeg * (Antibody_BCSFB/V_BCSFB) * V_BCSFB
+AB40_O1_ISF -> AB40_O1_BBB; CL_up_brain*fBBB*Vol_brain_ES * (AB40_O1_ISF/V_ISF)
+AB40_O1_BrainPlasma -> AB40_O1_BBB; CL_up_brain*fBBB*Vol_brain_ES * (AB40_O1_BrainPlasma/V_BrainPlasma)
+AB40_O1_BrainPlasma -> AB40_O1_BCSFB; CL_up_brain*(1.0 - fBBB)*Vol_brain_ES * (AB40_O1_BrainPlasma/V_BrainPlasma)
+AB40_O1_TFV -> AB40_O1_BCSFB; (1.0 - f_LV)*CL_up_brain*(1.0 - fBBB)*Vol_brain_ES * (AB40_O1_TFV/V_TFV)
+AB40_O1_LV -> AB40_O1_BCSFB; f_LV*CL_up_brain*(1.0 - fBBB)*Vol_brain_ES * (AB40_O1_LV/V_LV)
+AB42_O1_ISF -> AB42_O1_BBB; CL_up_brain*fBBB*Vol_brain_ES * (AB42_O1_ISF/V_ISF)
+AB42_O1_BrainPlasma -> AB42_O1_BBB; CL_up_brain*fBBB*Vol_brain_ES * (AB42_O1_BrainPlasma/V_BrainPlasma)
+AB42_O1_BrainPlasma -> AB42_O1_BCSFB; CL_up_brain*(1.0 - fBBB)*Vol_brain_ES * (AB42_O1_BrainPlasma/V_BrainPlasma)
+AB42_O1_TFV -> AB42_O1_BCSFB; (1.0 - f_LV)*CL_up_brain*(1.0 - fBBB)*Vol_brain_ES * (AB42_O1_TFV/V_TFV)
+AB42_O1_LV -> AB42_O1_BCSFB; f_LV*CL_up_brain*(1.0 - fBBB)*Vol_brain_ES * (AB42_O1_LV/V_LV)
+AB40_O1__Antibody_ISF -> AB40_O1__Antibody_BBB; CL_up_brain*fBBB*Vol_brain_ES * (AB40_O1__Antibody_ISF/V_ISF)
+AB40_O1__Antibody_BrainPlasma -> AB40_O1__Antibody_BBB; CL_up_brain*fBBB*Vol_brain_ES * (AB40_O1__Antibody_BrainPlasma/V_BrainPlasma)
+AB40_O1__Antibody_BrainPlasma -> AB40_O1__Antibody_BCSFB; CL_up_brain*(1.0 - fBBB)*Vol_brain_ES * (AB40_O1__Antibody_BrainPlasma/V_BrainPlasma)
+AB40_O1__Antibody_TFV -> AB40_O1__Antibody_BCSFB; (1.0 - f_LV)*CL_up_brain*(1.0 - fBBB)*Vol_brain_ES * (AB40_O1__Antibody_TFV/V_TFV)
+AB40_O1__Antibody_LV -> AB40_O1__Antibody_BCSFB; f_LV*CL_up_brain*(1.0 - fBBB)*Vol_brain_ES * (AB40_O1__Antibody_LV/V_LV)
+AB42_O1__Antibody_ISF -> AB42_O1__Antibody_BBB; CL_up_brain*fBBB*Vol_brain_ES * (AB42_O1__Antibody_ISF/V_ISF)
+AB42_O1__Antibody_BrainPlasma -> AB42_O1__Antibody_BBB; CL_up_brain*fBBB*Vol_brain_ES * (AB42_O1__Antibody_BrainPlasma/V_BrainPlasma)
+AB42_O1__Antibody_BrainPlasma -> AB42_O1__Antibody_BCSFB; CL_up_brain*(1.0 - fBBB)*Vol_brain_ES * (AB42_O1__Antibody_BrainPlasma/V_BrainPlasma)
+AB42_O1__Antibody_TFV -> AB42_O1__Antibody_BCSFB; (1.0 - f_LV)*CL_up_brain*(1.0 - fBBB)*Vol_brain_ES * (AB42_O1__Antibody_TFV/V_TFV)
+AB42_O1__Antibody_LV -> AB42_O1__Antibody_BCSFB; f_LV*CL_up_brain*(1.0 - fBBB)*Vol_brain_ES * (AB42_O1__Antibody_LV/V_LV)
+Antibody_ISF -> Antibody_BBB; CL_up_brain*fBBB*Vol_brain_ES * (Antibody_ISF/V_ISF)
+Antibody_BrainPlasma -> Antibody_BBB; CL_up_brain*fBBB*Vol_brain_ES * (Antibody_BrainPlasma/V_BrainPlasma)
+Antibody_BrainPlasma -> Antibody_BCSFB; CL_up_brain*(1.0 - fBBB)*Vol_brain_ES * (Antibody_BrainPlasma/V_BrainPlasma)
+Antibody_TFV -> Antibody_BCSFB; (1.0 - f_LV)*CL_up_brain*(1.0 - fBBB)*Vol_brain_ES * (Antibody_TFV/V_TFV)
+Antibody_LV -> Antibody_BCSFB; f_LV*CL_up_brain*(1.0 - fBBB)*Vol_brain_ES * (Antibody_LV/V_LV)
+AB40_O1__Antibody__FCRn_BBB -> AB40_O1__Antibody_ISF + FCRn_BBB; CL_up_brain*fBBB*(1.0 - FR)*Vol_brain_ES * (AB40_O1__Antibody__FCRn_BBB/V_BBB)
+AB40_O1__Antibody__FCRn_BCSFB -> AB40_O1__Antibody_LV + FCRn_BCSFB; f_LV*CL_up_brain*(1.0 - fBBB)*(1.0 - FR)*Vol_brain_ES * (AB40_O1__Antibody__FCRn_BCSFB/V_BCSFB)
+AB40_O1__Antibody__FCRn_BCSFB -> AB40_O1__Antibody_TFV + FCRn_BCSFB; (1.0 - f_LV)*CL_up_brain*(1.0 - fBBB)*(1.0 - FR)*Vol_brain_ES * (AB40_O1__Antibody__FCRn_BCSFB/V_BCSFB)
+AB40_O1__Antibody__FCRn_BBB -> AB40_O1__Antibody_BrainPlasma + FCRn_BBB; CL_up_brain*fBBB*FR*Vol_brain_ES * (AB40_O1__Antibody__FCRn_BBB/V_BBB)
+AB40_O1__Antibody__FCRn_BCSFB -> AB40_O1__Antibody_BrainPlasma + FCRn_BCSFB; CL_up_brain*(1.0 - fBBB)*FR*Vol_brain_ES * (AB40_O1__Antibody__FCRn_BCSFB/V_BCSFB)
+AB42_O1__Antibody__FCRn_BBB -> AB42_O1__Antibody_ISF + FCRn_BBB; CL_up_brain*fBBB*(1.0 - FR)*Vol_brain_ES * (AB42_O1__Antibody__FCRn_BBB/V_BBB)
+AB42_O1__Antibody__FCRn_BCSFB -> AB42_O1__Antibody_LV + FCRn_BCSFB; f_LV*CL_up_brain*(1.0 - fBBB)*(1.0 - FR)*Vol_brain_ES * (AB42_O1__Antibody__FCRn_BCSFB/V_BCSFB)
+AB42_O1__Antibody__FCRn_BCSFB -> AB42_O1__Antibody_TFV + FCRn_BCSFB; (1.0 - f_LV)*CL_up_brain*(1.0 - fBBB)*(1.0 - FR)*Vol_brain_ES * (AB42_O1__Antibody__FCRn_BCSFB/V_BCSFB)
+AB42_O1__Antibody__FCRn_BBB -> AB42_O1__Antibody_BrainPlasma + FCRn_BBB; CL_up_brain*fBBB*FR*Vol_brain_ES * (AB42_O1__Antibody__FCRn_BBB/V_BBB)
+AB42_O1__Antibody__FCRn_BCSFB -> AB42_O1__Antibody_BrainPlasma + FCRn_BCSFB; CL_up_brain*(1.0 - fBBB)*FR*Vol_brain_ES * (AB42_O1__Antibody__FCRn_BCSFB/V_BCSFB)
+Antibody__FCRn_BBB -> Antibody_ISF + FCRn_BBB; CL_up_brain*fBBB*(1.0 - FR)*Vol_brain_ES * (Antibody__FCRn_BBB/V_BBB)
+Antibody__FCRn_BCSFB -> Antibody_LV + FCRn_BCSFB; f_LV*CL_up_brain*(1.0 - fBBB)*(1.0 - FR)*Vol_brain_ES * (Antibody__FCRn_BCSFB/V_BCSFB)
+Antibody__FCRn_BCSFB -> Antibody_TFV + FCRn_BCSFB; (1.0 - f_LV)*CL_up_brain*(1.0 - fBBB)*(1.0 - FR)*Vol_brain_ES * (Antibody__FCRn_BCSFB/V_BCSFB)
+Antibody__FCRn_BBB -> Antibody_BrainPlasma + FCRn_BBB; CL_up_brain*fBBB*FR*Vol_brain_ES * (Antibody__FCRn_BBB/V_BBB)
+Antibody__FCRn_BCSFB -> Antibody_BrainPlasma + FCRn_BCSFB; CL_up_brain*(1.0 - fBBB)*FR*Vol_brain_ES * (Antibody__FCRn_BCSFB/V_BCSFB)
+AB40_O1__Antibody_BBB + FCRn_BBB -> AB40_O1__Antibody__FCRn_BBB; kon_FCRn * (AB40_O1__Antibody_BBB/V_BBB) * (FCRn_BBB/V_BBB) * V_BBB
+AB40_O1__Antibody__FCRn_BBB -> AB40_O1__Antibody_BBB + FCRn_BBB; koff_FCRn * (AB40_O1__Antibody__FCRn_BBB/V_BBB) * V_BBB
+AB40_O1__Antibody_BCSFB + FCRn_BCSFB -> AB40_O1__Antibody__FCRn_BCSFB; kon_FCRn * (AB40_O1__Antibody_BCSFB/V_BCSFB) * (FCRn_BCSFB/V_BCSFB) * V_BCSFB
+AB40_O1__Antibody__FCRn_BCSFB -> AB40_O1__Antibody_BCSFB + FCRn_BCSFB; koff_FCRn * (AB40_O1__Antibody__FCRn_BCSFB/V_BCSFB) * V_BCSFB
+AB42_O1__Antibody_BBB + FCRn_BBB -> AB42_O1__Antibody__FCRn_BBB; kon_FCRn * (AB42_O1__Antibody_BBB/V_BBB) * (FCRn_BBB/V_BBB) * V_BBB
+AB42_O1__Antibody__FCRn_BBB -> AB42_O1__Antibody_BBB + FCRn_BBB; koff_FCRn * (AB42_O1__Antibody__FCRn_BBB/V_BBB) * V_BBB
+AB42_O1__Antibody_BCSFB + FCRn_BCSFB -> AB42_O1__Antibody__FCRn_BCSFB; kon_FCRn * (AB42_O1__Antibody_BCSFB/V_BCSFB) * (FCRn_BCSFB/V_BCSFB) * V_BCSFB
+AB42_O1__Antibody__FCRn_BCSFB -> AB42_O1__Antibody_BCSFB + FCRn_BCSFB; koff_FCRn * (AB42_O1__Antibody__FCRn_BCSFB/V_BCSFB) * V_BCSFB
+Antibody_BBB + FCRn_BBB -> Antibody__FCRn_BBB; kon_FCRn * (Antibody_BBB/V_BBB) * (FCRn_BBB/V_BBB) * V_BBB
+Antibody__FCRn_BBB -> Antibody_BBB + FCRn_BBB; koff_FCRn * (Antibody__FCRn_BBB/V_BBB) * V_BBB
+Antibody_BCSFB + FCRn_BCSFB -> Antibody__FCRn_BCSFB; kon_FCRn * (Antibody_BCSFB/V_BCSFB) * (FCRn_BCSFB/V_BCSFB) * V_BCSFB
+Antibody__FCRn_BCSFB -> Antibody_BCSFB + FCRn_BCSFB; koff_FCRn * (Antibody__FCRn_BCSFB/V_BCSFB) * V_BCSFB
+AB40_O1_central ->; AB_O1_CL * (AB40_O1_central/V_central)
+AB42_O1_central ->; AB_O1_CL * (AB42_O1_central/V_central)
+AB40_O1__Antibody_centralAntibody ->; Antibody_CL * (AB40_O1__Antibody_centralAntibody/V_centralAntibody)
+AB42_O1__Antibody_centralAntibody ->; Antibody_CL * (AB42_O1__Antibody_centralAntibody/V_centralAntibody)
+Antibody_centralAntibody ->; Antibody_CL * (Antibody_centralAntibody/V_centralAntibody)
+AB40_O1_central -> AB40_O1_peripheral; AB_O1_CLd2 * (AB40_O1_central/V_central)
+AB40_O1_peripheral -> AB40_O1_central; AB_O1_CLd2 * (AB40_O1_peripheral/V_peripheral)
+AB42_O1_central -> AB42_O1_peripheral; AB_O1_CLd2 * (AB42_O1_central/V_central)
+AB42_O1_peripheral -> AB42_O1_central; AB_O1_CLd2 * (AB42_O1_peripheral/V_peripheral)
+AB40_O1__Antibody_centralAntibody -> AB40_O1__Antibody_peripheralAntibody; Antibody_CLd2 * (AB40_O1__Antibody_centralAntibody/V_centralAntibody)
+AB40_O1__Antibody_peripheralAntibody -> AB40_O1__Antibody_centralAntibody; Antibody_CLd2 * (AB40_O1__Antibody_peripheralAntibody/V_peripheralAntibody)
+AB42_O1__Antibody_centralAntibody -> AB42_O1__Antibody_peripheralAntibody; Antibody_CLd2 * (AB42_O1__Antibody_centralAntibody/V_centralAntibody)
+AB42_O1__Antibody_peripheralAntibody -> AB42_O1__Antibody_centralAntibody; Antibody_CLd2 * (AB42_O1__Antibody_peripheralAntibody/V_peripheralAntibody)
+Antibody_centralAntibody -> Antibody_peripheralAntibody; Antibody_CLd2 * (Antibody_centralAntibody/V_centralAntibody)
+Antibody_peripheralAntibody -> Antibody_centralAntibody; Antibody_CLd2 * (Antibody_peripheralAntibody/V_peripheralAntibody)
+Antibody_SubCutComp -> Antibody_centralAntibody; SubCut_ka*V_SubCutComp*SubCut_bioavailability * (Antibody_SubCutComp/V_SubCutComp)
+Antibody_SubCutComp ->; SubCut_ka*(1.0 - SubCut_bioavailability) * (Antibody_SubCutComp/V_SubCutComp) * V_SubCutComp
+
+Anti_ABeta_ISF_sum := Antibody_ISF + AB42_O2__Antibody_ISF + AB42_O3__Antibody_ISF + AB42_O4__Antibody_ISF  + AB42_O5__Antibody_ISF + AB42_O6__Antibody_ISF + AB42_O7__Antibody_ISF + AB42_O8__Antibody_ISF + AB42_O9__Antibody_ISF + AB42_O10__Antibody_ISF + AB42_O11__Antibody_ISF + AB42_O12__Antibody_ISF + AB42_O13__Antibody_ISF + AB42_O14__Antibody_ISF + AB42_O15__Antibody_ISF + AB42_O16__Antibody_ISF + AB42_O17__Antibody_ISF + AB42_O18__Antibody_ISF + AB42_O19__Antibody_ISF + AB42_O20__Antibody_ISF + AB42_O21__Antibody_ISF + AB42_O22__Antibody_ISF + AB42_O23__Antibody_ISF + AB42_O24__Antibody_ISF + AB42_O25__Antibody_ISF
+Anti_ABeta_PVS_sum := Antibody_PVS + AB42_O1__Antibody_PVS + AB42_O2__Antibody_PVS + AB42_O3__Antibody_PVS + AB42_O4__Antibody_PVS  + AB42_O5__Antibody_PVS + AB42_O6__Antibody_PVS + AB42_O7__Antibody_PVS + AB42_O8__Antibody_PVS + AB42_O9__Antibody_PVS + AB42_O10__Antibody_PVS + AB42_O11__Antibody_PVS + AB42_O12__Antibody_PVS + AB42_O13__Antibody_PVS + AB42_O14__Antibody_PVS + AB42_O15__Antibody_PVS + AB42_O16__Antibody_PVS + AB42_O17__Antibody_PVS + AB42_O18__Antibody_PVS + AB42_O19__Antibody_PVS + AB42_O20__Antibody_PVS + AB42_O21__Antibody_PVS + AB42_O22__Antibody_PVS + AB42_O23__Antibody_PVS + AB42_O24__Antibody_PVS + AB42_O25__Antibody_PVS
+
+// Errors in Geerts modeled, needed to reproduce results
+
+AB40_O1_central -> ;(1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O1_PVS/V_PVS)*(1-1/V_central)
+AB40_O1_central -> ;(1.0 - sigma_ISF_central_Abeta) * (Qbrain_ISF - Q_PVS) * (AB40_O1_ISF/V_ISF)*(1-1/V_central)
+AB40_O1_central -> ;(1 - sigma_SAS_central_Abeta)*Q_CSF * (AB40_O1_SAS/V_SAS)*(1-1/V_central)
+AB40_O1_central -> ;(Qbrain_plasma - Q_CSF - Qbrain_ISF) * (AB40_O1_BrainPlasma/V_BrainPlasma)*(1-1/V_central)
+AB42_O1_central -> ; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O1_PVS/V_PVS)*(1-1/V_central)
+AB42_O1_central -> ;(1.0 - sigma_ISF_central_Abeta) * (Qbrain_ISF - Q_PVS) * (AB42_O1_ISF/V_ISF)
+AB42_O1_central -> ; (1 - sigma_SAS_central_Abeta)*Q_CSF * (AB42_O1_SAS/V_SAS)*(1-1/V_central)
+AB42_O1_central -> ; (Qbrain_plasma - Q_CSF - Qbrain_ISF) * (AB42_O1_BrainPlasma/V_BrainPlasma)*(1-1/V_central)
+AB40_O1__Antibody_central -> ; (1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB40_O1__Antibody_PVS/V_PVS)*(1 - 1/V_centralAntibody)
+AB40_O1__Antibody_central -> ;(1.0 - sigma_ISF_centralAntibody_Antibody) * (Qbrain_ISF - Q_PVS) * (AB40_O1__Antibody_ISF/V_ISF)*(1 - 1/V_centralAntibody)
+AB42_O1__Antibody_central -> ;(1.0 - sigma_PVS_central_Abeta) * Q_PVS * (AB42_O1__Antibody_PVS/V_PVS)*(1 - V_centralAntibody)
+AB42_O1__Antibody_central -> ;(1.0 - sigma_ISF_centralAntibody_Antibody) * (Qbrain_ISF - Q_PVS) * (AB42_O1__Antibody_ISF/V_ISF)*(1 - V_centralAntibody)
+
+
+// Rate Rules:
+  Microglia_high_frac' = (1 + SmaxUp*Anti_ABeta_ISF_sum/(EC50_Up + Anti_ABeta_ISF_sum))*gamma_fr*Microglia_high_frac*(Microglia_Hi_fract_max - Microglia_high_frac)/(Microglia_Hi_fract_max - Microglia_Hi_fract_base) - gamma_fr*Microglia_high_frac;
+  Microglia' = ((1 + SmaxPro*Anti_ABeta_ISF_sum/(EC50_pro + Anti_ABeta_ISF_sum))*gamma_MG*Microglia_cells_max/(Microglia_cells_max - Microglia_baseline))*Microglia*(Microglia_cells_max - Microglia)/Microglia_cells_max - gamma_MG*Microglia;
+    #AB40_IDE_Kcat_ISF' = -k_exp_decline_IDE_40*AB40_IDE_Kcat_ISF
+    AB40_IDE_Kcat_ISF := 26.0 - 1.5E-5*time
+    #AB42_IDE_Kcat_ISF' = -k_exp_decline_IDE_42*AB42_IDE_Kcat_ISF
+    AB42_IDE_Kcat_ISF := 900.0 - 1E-3*time
+FCRn_BBB = 49820
+FCRn_BCSFB = 49820
+
+SmaxUp = 100;
+EC50_Up = 1;
+gamma_fr = 0.0416667;
+Microglia_Hi_fract_max = 1; Microglia_Hi_fract_max has dimensionless;
+Microglia_Hi_fract_base = 0;  Microglia_Hi_fract_base has dimensionless;
+  SmaxPro = 100;  SmaxPro has dimensionless;
+  EC50_pro = 1;  EC50_pro has nanomole_per_litre;
+  gamma_MG = 0.002851928;  gamma_MG has per_hour;
+Microglia_cells_max = 4;  Microglia_cells_max has dimensionless;
+  Microglia_baseline = 1;  Microglia_baseline has dimensionless;
+#var AB40_IDE_Kcat_ISF				=	260.0/10	;	AB40_IDE_Kcat_ISF	has	1	/	h	
+#var AB42_IDE_Kcat_ISF				=	260	;
+var Anti_ABeta_ISF_sum
+AB40_IDE_Hill_ISF				=	2	;	AB40_IDE_Hill_ISF	has	dimensionless							
+AB40_IDE_IC50_ISF				=	14.142136	;	AB40_IDE_IC50_ISF	has	dimensionless								
+AB40_PDMA_EC50_ISF				=	50	;	AB40_PDMA_EC50_ISF	has	nanomol	/	L					
+AB40_PDMA_Vmax_ISF				=	0.05	;	AB40_PDMA_Vmax_ISF	has	dimensionless							
+AB40_systemic_synthesis_rate	=	1.16	;	AB40_systemic_synthesis_rate	has	nanomol	/	h					
+AB42_IDE_Hill_ISF				=	2	;	AB42_IDE_Hill_ISF	has	dimensionless							
+AB42_IDE_IC50_ISF				=	28.635642	;	AB42_IDE_IC50_ISF	has	dimensionless	
+k_exp_decline_IDE_40				=	2.5*1.15E-06*0.2525	;	k_exp_decline_IDE_40	has	1	/	h						
+k_exp_decline_IDE_42				=	1.15E-06	;	k_exp_decline_IDE_42	has	1	/	h					
+AB42_PDMA_EC50_ISF				=	50	;	AB42_PDMA_EC50_ISF	has	nanomol	/	L					
+AB42_PDMA_Vmax_ISF				=	0.07	;	AB42_PDMA_Vmax_ISF	has	dimensionless							
+AB42_systemic_synthesis_rate	=	1.16	;	AB42_systemic_synthesis_rate	has	nanomol	/	h					
+AB_O1_CL				=	12.6	;	AB_O1_CL	has	L	/	h					
+AB_O1_CLd2				=	0.01	;	AB_O1_CLd2	has	L	/	h					
+Antibody_CL				=	0.0191 	;	Antibody_CL has L/h									
+Antibody_CLd2				=	0.035	;	Antibody_CLd2 has L/h									
+Baseline_AB40_O_P				=	5.00E-06	;	Baseline_AB40_O_P	has	L	/	(nanomol	*	h)			
+Baseline_AB42_O_P				=	0.06#5.0E-5	;	Baseline_AB42_O_P	has	L	/	(nanomol	*	h)			
+CL_up_brain				=	0.03047	;	CL_up_brain	has	1	/	h					
+FR				=	0.715	;	FR has dimensionless									
+Hi_lo_ratio				=	10.0;		Hi_lo_ratio has dimensionless									
+IDE_conc_ISF				=	1;	IDE_conc_ISF	has	nanomol	/	L						
+var Microglia				= 1	; Microglia	has	dimensionless							
+Microglia_EC50_AB40				=	8	;	Microglia_EC50_AB40	has	nanomol	/	L					
+Microglia_EC50_AB42				=	120	#Not	APOE4;	Microglia_EC50_AB42	has	nanomol	/	L				
+Microglia_Vmax_AB40				=	0.00015	;	Microglia_Vmax_AB40	has	nanomol	/	L	/	h			
+Microglia_Vmax_AB42				=	0.00015	#Not	APOE4;	Microglia_Vmax_AB42	has	nanomol	/	L	/	h		
+var Microglia_high_frac				=	1e-12	;	Microglia_high_frac	has	dimensionless							
+Microglia_high_rate_AB40	=	1.60E-05	;	Microglia_high_rate_AB40	has	1	/	h					
+Microglia_high_rate_AB42	=	2.22E-06	;	Microglia_high_rate_AB42	has	1	/	h					
+Microglia_high_rate_mAb		=	0.002	;	Microglia_high_rate_mAb has 1/h									
+Microglia_low_rate_AB40		=	8.00E-06	;	Microglia_low_rate_AB40	has	1	/	h					
+Microglia_low_rate_AB42		=	1.11E-06	;	Microglia_low_rate_AB42	has	1	/	h					
+Microglia_low_rate_mAb		=	0.001	;	Microglia_low_rate_mAb has 1/h									
+Q_CSF				=	0.024	;	Q_CSF	has	L	/	h					
+Q_PVS				=	0.0021	;	Q_PVS	has	L	/	h					
+Qbrain_ISF				=	0.0105	;	Qbrain_ISF	has	L	/	h					
+Qbrain_plasma				=	21.453	;	Qbrain_plasma	has	L	/	h					
+Qglymph				=	0.00105	;	Qglymph	has	L	/	h					
+V_BBB				=	0.0065909	;	V_BBB	has	L							
+V_BCSFB				=	0.0006591	;	V_BCSFB	has	L							
+V_BrainPlasma				=	0.0319	;	V_BrainPlasma	has	L							
+V_CM				=	0.0075	;	V_CM	has	L							
+V_ISF				=	0.2505	;	V_ISF	has	L							
+V_LV				=	0.0225	;	V_LV	has	L							
+V_PVS				=	0.00235	;	V_PVS	has	L							
+V_SAS				=	0.09875	;	V_SAS	has	L							
+V_TFV				=	0.0225	;	V_TFV	has	L							
+V_central				=	3.5	;	V_central	has	L	
+V_centralAntibody = 		3.18	  ; V_centralAntibody has L			
+V_peripheral				=	7.5 	;	V_peripheral	has	L	
+V_peripheralAntibody				=	2.24	;	V_peripheralAntibody	has	L	
+V_SubCutComp    = 1; V_SubCutComp has L					
+Vol_brain_ES				=	0.00725	;	Vol_brain_ES	has	L							
+fBBB				=	0.9090909	;	fBBB	has	dimensionless							
+f_LV				=	0.5	;	f_LV	has	dimensionless							
+# 1/KD
+k0_Antibody				=	0.000436681	;	k0_Antibody has (nanomol/L)^-1*h^-1									
+k1_Antibody				=	0.014858841;	k0_Antibody has (nanomol/L)^-1*h^-1										
+k2_Antibody				=	6.25; k2_Antibody has (nanomol/L)^-1*h^-1										
+k3_Antibody				=	0.558659218	;	k0_Antibody has (nanomol/L)^-1*h^-1		
+# ka SPR
+/* 
+k0_Antibody				=	0.1332	;	k0_Antibody has (nanomol/L)^-1*h^-1									
+k1_Antibody				=	1.656;	k0_Antibody has (nanomol/L)^-1*h^-1										
+k2_Antibody				=	1.44; k2_Antibody has (nanomol/L)^-1*h^-1										
+k3_Antibody				=	0.504	;	k0_Antibody has (nanomol/L)^-1*h^-1										
+*/
+k_AB40				=	0.238	;	k_AB40	has	1	/	h					
+k_AB42				=	0.015	;	k_AB42	has	1	/	h					
+k_APP_production	=	293#1173;	k_APP_production	has	nanomol	/	(L	*	h)				
+k_C99				=	0.666	;	k_C99	has	1	/	h					
+k_O10_O11_AB40_ISF				=	2.22E-05	;	k_O10_O11_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O10_O11_AB42_ISF				=	0.000273561	;	k_O10_O11_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O10_O9_AB40_ISF				=	1.00E-05	;	k_O10_O9_AB40_ISF	has	1	/	h					
+k_O10_O9_AB42_ISF				=	2.00E-05	;	k_O10_O9_AB42_ISF	has	1	/	h					
+k_O11_O10_AB40_ISF				=	1.00E-05	;	k_O11_O10_AB40_ISF	has	1	/	h					
+k_O11_O10_AB42_ISF				=	2.00E-05	;	k_O11_O10_AB42_ISF	has	1	/	h					
+k_O11_O12_AB40_ISF				=	2.21E-05	;	k_O11_O12_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O11_O12_AB42_ISF				=	0.00027357	;	k_O11_O12_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O12_O11_AB40_ISF				=	1.00E-05	;	k_O12_O11_AB40_ISF	has	1	/	h					
+k_O12_O11_AB42_ISF				=	2.00E-05	;	k_O12_O11_AB42_ISF	has	1	/	h					
+k_O12_O13_AB40_ISF				=	2.20E-05	;	k_O12_O13_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O12_O13_AB42_ISF				=	0.000273577	;	k_O12_O13_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O13_O12_AB40_ISF				=	1.00E-05	;	k_O13_O12_AB40_ISF	has	1	/	h					
+k_O13_O12_AB42_ISF				=	2.00E-05	;	k_O13_O12_AB42_ISF	has	1	/	h					
+k_O13_O14_AB40_ISF				=	2.20E-05	;	k_O13_O14_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O13_O14_AB42_ISF				=	0.000273581	;	k_O13_O14_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O14_O13_AB40_ISF				=	1.00E-05	;	k_O14_O13_AB40_ISF	has	1	/	h					
+k_O14_O13_AB42_ISF				=	2.00E-05	;	k_O14_O13_AB42_ISF	has	1	/	h					
+k_O14_O15_AB40_ISF				=	2.19E-05	;	k_O14_O15_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O14_O15_AB42_ISF				=	0.000273585	;	k_O14_O15_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O15_O14_AB40_ISF				=	1.00E-05	;	k_O15_O14_AB40_ISF	has	1	/	h					
+k_O15_O14_AB42_ISF				=	2.00E-05	;	k_O15_O14_AB42_ISF	has	1	/	h					
+k_O15_O16_AB40_ISF				=	2.19E-05	;	k_O15_O16_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O15_O16_AB42_ISF				=	0.000273587	;	k_O15_O16_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O16_O15_AB40_ISF				=	1.00E-05	;	k_O16_O15_AB40_ISF	has	1	/	h					
+k_O16_O15_AB42_ISF				=	2.00E-05	;	k_O16_O15_AB42_ISF	has	1	/	h					
+k_O16_O17_AB40_ISF				=	2.19E-05	;	k_O16_O17_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O16_O17_AB42_ISF				=	0.000273589	;	k_O16_O17_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O17_O16_AB40_ISF				=	1.00E-05	;	k_O17_O16_AB40_ISF	has	1	/	h					
+k_O17_O16_AB42_ISF				=	2.00E-05	;	k_O17_O16_AB42_ISF	has	1	/	h					
+k_O17_O18_AB40_ISF				=	2.18E-05	;	k_O17_O18_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O17_O18_AB42_ISF				=	0.000273591	;	k_O17_O18_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O18_O17_AB40_ISF				=	1.00E-05	;	k_O18_O17_AB40_ISF	has	1	/	h					
+k_O18_O17_AB42_ISF				=	2.00E-05	;	k_O18_O17_AB42_ISF	has	1	/	h					
+k_O18_O19_AB40_ISF				=	2.18E-05	;	k_O18_O19_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O18_O19_AB42_ISF				=	0.000273592	;	k_O18_O19_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O19_O18_AB40_ISF				=	1.00E-05	;	k_O19_O18_AB40_ISF	has	1	/	h					
+k_O19_O18_AB42_ISF				=	2.00E-05	;	k_O19_O18_AB42_ISF	has	1	/	h					
+k_O19_O20_AB40_ISF				=	2.18E-05	;	k_O19_O20_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O19_O20_AB42_ISF				=	0.000273594	;	k_O19_O20_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O1_O2_AB40_ISF				=	0.00000018	;	k_O1_O2_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O1_O2_AB42_ISF				=	0.0003564	#0.0003564;	k_O1_O2_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O20_O19_AB40_ISF				=	1.00E-05	;	k_O20_O19_AB40_ISF	has	1	/	h					
+k_O20_O19_AB42_ISF				=	2.00E-05	;	k_O20_O19_AB42_ISF	has	1	/	h					
+k_O20_O21_AB40_ISF				=	2.18E-05	;	k_O20_O21_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O20_O21_AB42_ISF				=	0.000273594	;	k_O20_O21_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O21_O20_AB40_ISF				=	1.00E-05	;	k_O21_O20_AB40_ISF	has	1	/	h					
+k_O21_O20_AB42_ISF				=	2.00E-05	;	k_O21_O20_AB42_ISF	has	1	/	h					
+k_O21_O22_AB40_ISF				=	2.18E-05	;	k_O21_O22_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O21_O22_AB42_ISF				=	0.000273595	;	k_O21_O22_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O22_O21_AB40_ISF				=	1.00E-05	;	k_O22_O21_AB40_ISF	has	1	/	h					
+k_O22_O21_AB42_ISF				=	2.00E-05	;	k_O22_O21_AB42_ISF	has	1	/	h					
+k_O22_O23_AB40_ISF				=	2.17E-05	;	k_O22_O23_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O22_O23_AB42_ISF				=	0.000273596	;	k_O22_O23_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O23_O22_AB40_ISF				=	1.00E-05	;	k_O23_O22_AB40_ISF	has	1	/	h					
+k_O23_O22_AB42_ISF				=	2.00E-05	;	k_O23_O22_AB42_ISF	has	1	/	h					
+k_O23_O24_AB40_ISF				=	2.17E-05	;	k_O23_O24_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O23_O24_AB42_ISF				=	0.000273596	;	k_O23_O24_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O24_O12_AB40_ISF				=	2	;	k_O24_O12_AB40_ISF	has	dimensionless							
+k_O24_O12_AB42_ISF				=	100	#1;	k_O24_O12_AB42_ISF	has	dimensionless							
+k_O24_O23_AB40_ISF				=	1.00E-05	;	k_O24_O23_AB40_ISF	has	1	/	h					
+k_O24_O23_AB42_ISF				=	2.00E-05	;	k_O24_O23_AB42_ISF	has	1	/	h					
+k_O2_O1_AB40_ISF				=	9.72	;	k_O2_O1_AB40_ISF	has	1	/	h					
+k_O2_O1_AB42_ISF				=	45.72	;	k_O2_O1_AB42_ISF	has	1	/	h					
+k_O2_O3_AB40_ISF				=	7.20E-09	;	k_O2_O3_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O2_O3_AB42_ISF				=	0.01368	#0.0001368;	k_O2_O3_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O3_O2_AB40_ISF				=	1.00E-05	;	k_O3_O2_AB40_ISF	has	1	/	h					
+k_O3_O2_AB42_ISF				=	0.00001	;	k_O3_O2_AB42_ISF	has	1	/	h					
+k_O3_O4_AB40_ISF				=	2.61E-05	;	k_O3_O4_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O3_O4_AB42_ISF				=	0.01	#0.000272786;	k_O3_O4_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O4_O3_AB40_ISF				=	1.00E-05	;	k_O4_O3_AB40_ISF	has	1	/	h					
+k_O4_O3_AB42_ISF				=	1.98E-05	;	k_O4_O3_AB42_ISF	has	1	/	h					
+k_O4_O5_AB40_ISF				=	2.45E-05	;	k_O4_O5_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O4_O5_AB42_ISF				=	0.00273185	#0.000273185	;	k_O4_O5_AB42_ISF	has	L	/	(nano	*	mol	*	h)
+k_O5_O4_AB40_ISF				=	1.00E-05	;	k_O5_O4_AB40_ISF	has	1	/	h					
+k_O5_O4_AB42_ISF				=	1.99E-05	;	k_O5_O4_AB42_ISF	has	1	/	h					
+k_O5_O6_AB40_ISF				=	2.36E-05	;	k_O5_O6_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O5_O6_AB42_ISF				=	0.00273361	#0.000273361	;	k_O5_O6_AB42_ISF	has	L	/	(nano	*	mol	*	h)
+k_O6_O5_AB40_ISF				=	1.00E-05	;	k_O6_O5_AB40_ISF	has	1	/	h					
+k_O6_O5_AB42_ISF				=	2.00E-05	;	k_O6_O5_AB42_ISF	has	1	/	h					
+k_O6_O7_AB40_ISF				=	2.31E-05	;	k_O6_O7_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O6_O7_AB42_ISF				=	0.000273449	;	k_O6_O7_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O7_O6_AB40_ISF				=	1.00E-05	;	k_O7_O6_AB40_ISF	has	1	/	h					
+k_O7_O6_AB42_ISF				=	2.00E-05	;	k_O7_O6_AB42_ISF	has	1	/	h					
+k_O7_O8_AB40_ISF				=	2.27E-05	;	k_O7_O8_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O7_O8_AB42_ISF				=	0.000273499	;	k_O7_O8_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O8_O7_AB40_ISF				=	1.00E-05	;	k_O8_O7_AB40_ISF	has	1	/	h					
+k_O8_O7_AB42_ISF				=	2.00E-05	;	k_O8_O7_AB42_ISF	has	1	/	h					
+k_O8_O9_AB40_ISF				=	2.25E-05	;	k_O8_O9_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O8_O9_AB42_ISF				=	0.000273529	;	k_O8_O9_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O9_O10_AB40_ISF				=	2.23E-05	;	k_O9_O10_AB40_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O9_O10_AB42_ISF				=	0.000273548	;	k_O9_O10_AB42_ISF	has	L	/	(nano	*	mol	*	h)	
+k_O9_O8_AB40_ISF				=	1.00E-05	;	k_O9_O8_AB40_ISF	has	1	/	h					
+k_O9_O8_AB42_ISF				=	2.00E-05	;	k_O9_O8_AB42_ISF	has	1	/	h					
+kdeg				=	26.6	;	kdeg	has	1	/	h					
+koff_FCRn				=	23.9	;	koff_FCRn	has	1/h							
+kon_FCRn				=	0.559	;	kon_FCRn	has	L/(nanomol*h)							
+sigma_BBB				=	1	;	sigma_BBB	has	dimensionless							
+sigma_BCSFB				=	0.9974											
+sigma_ISF_PVS_Antibody				=	0.2	;	sigma_ISF_PVS_Antibody has dimensionless									
+sigma_ISF_PVS_O1				=	0.2	;	sigma_ISF_PVS_O1	has	dimensionless							
+sigma_ISF_PVS_oligomer1				=	0.9	;	sigma_ISF_PVS_oligomer1	has	dimensionless							
+sigma_ISF_PVS_oligomer2				=	0.99	;	sigma_ISF_PVS_oligomer2	has	dimensionless							
+sigma_ISF_PVS_proto				=	0.999	;	sigma_ISF_PVS_proto	has	dimensionless							
+sigma_ISF_central_Abeta				=	0	;	sigma_ISF_central_Abeta	has	dimensionless							
+sigma_ISF_centralAntibody_Antibody				=	0.2	;										
+sigma_PVS_central_Abeta				=	0.999	;	sigma_PVS_central_Abeta	has	dimensionless							
+sigma_PVS_centralAntibody_Antibody				=	0	;	sigma_PVS_centralAntibody_Antibody has dimensionless									
+sigma_SAS_central_Abeta				=	0	;	sigma_SAS_central_Abeta	has	dimensionless							
+sigma_SAS_centralAntibody_Antibody				=	0.2	;	sigma_SAS_centralAntibody_Antibody has dimensionless									
+v_C99				=	0.333	;	v_C99	has	1	/	h					
+Antibody_SubCutComp_Dose = 0; Antibody_SubCutComp_Dose has nanomole // Subcutaneous dose amount (300 mg in nanomole)
+SubCut_ka = 0.0134807; SubCut_ka has per_hour;
+SubCut_bioavailability = 1;  SubCut_bioavailability has per_hour;
+Antibody_IV_Dose = 4513.89
+/*
+E1: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 0): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E2: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 1): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E3: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 2): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E4: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 3): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E5: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 4): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E6: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 5): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E7: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 6): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E8: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 7): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E9: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 8): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E10: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 9): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E11: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 10): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E12: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 11): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E13: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 12): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E14: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 13): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E15: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 14): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E16: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 15): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E17: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 16): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E18: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 17): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E19: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 18): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E20: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 19): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E21: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 20): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E22: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 21): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E23: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 22): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E24: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 23): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E25: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 24): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E26: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 25): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E27: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 26): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E28: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 27): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E29: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 28): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E30: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 29): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E31: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 30): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E32: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 31): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E33: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 32): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E34: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 33): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E35: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 34): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E36: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 35): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E37: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 36): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E38: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 37): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+E39: at (time >= 70 * 365 * 24 + 2 * 7 * 24 * 38): Antibody_centralAntibody = Antibody_centralAntibody + Antibody_IV_Dose
+*/
+
+  // Unit definitions:
+  unit hour = 3600 second;
+  unit per_hour = 1 / 0.000277778 second;
+  unit nanomole_per_hour = 1e-9 mole / 0.000277778 second;
+  unit nanomole = 1e-9 mole;
+  unit litre_per_hour = litre / 0.000277778 second;
+  unit nanomole_per_litre = mole / litre;
+  unit per_nanomole_per_hour = 1 / (mole * 0.000277778 second);
+  unit time_unit = hour;
+end
